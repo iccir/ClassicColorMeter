@@ -160,7 +160,7 @@ extern void ColorCalculatorGetAverageColor(CGImageRef image, CGRect apertureRect
             data = CFDataCreate(NULL, bytes, 4 * width * height);
 
             bytesPerRow = CGBitmapContextGetBytesPerRow(context);
-            alphaInfo   = kCGImageAlphaNoneSkipLast;
+            alphaInfo   = kCGImageAlphaLast;
         }
         
         CGColorSpaceRelease(space);

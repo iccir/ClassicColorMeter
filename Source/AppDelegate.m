@@ -43,7 +43,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     NSTimer       *_timer;
     NSPoint        _lastMouseLocation;
-    NSTimeInterval _lastMouseTimeInterval;
+    NSTimeInterval _lastUpdateTimeInterval;
     CGFloat        _screenZeroHeight;
 
     CGFloat        _lockedX;
@@ -75,11 +75,11 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     _preferences = [[Preferences sharedInstance] retain];
 
-    _lockedX               = NAN;
-    _lockedY               = NAN;
-    _lastMouseLocation     = NSMakePoint(NAN, NAN);
-    _lastMouseTimeInterval = NAN;
-    _zoomLevel             = 1.0;
+    _lockedX                = NAN;
+    _lockedY                = NAN;
+    _lastMouseLocation      = NSMakePoint(NAN, NAN);
+    _lastUpdateTimeInterval = NAN;
+    _zoomLevel              = 1.0;
 
     _timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
@@ -265,15 +265,15 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSPoint mouseLocation = [NSEvent mouseLocation];
     NSTimeInterval now    = [NSDate timeIntervalSinceReferenceDate];
     BOOL didMouseMove     = (_lastMouseLocation.x != mouseLocation.x) || (_lastMouseLocation.y != mouseLocation.y);
-    BOOL needsUpdateTick  = (now - _lastMouseTimeInterval > 0.5);
+    BOOL needsUpdateTick  = (now - _lastUpdateTimeInterval) > 0.5;
 
     if (didMouseMove) {
-        _lastMouseLocation     = mouseLocation;
-        _lastMouseTimeInterval = now;
+        _lastMouseLocation = mouseLocation;
     }
     
     if (_updatesContinuously || didMouseMove || needsUpdateTick) {
         [self _updateScreenshot];
+        _lastUpdateTimeInterval = now;
     }
 }
 
