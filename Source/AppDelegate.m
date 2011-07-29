@@ -13,6 +13,7 @@
 #import "ColorCalculator.h"
 #import "EtchingView.h"
 #import "Preferences.h"
+#import "PreferencesController.h"
 #import "PreviewView.h"
 #import "ResultView.h"
 
@@ -39,7 +40,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSTextField   *oValue2;
     NSTextField   *oValue3;
 
-    Preferences   *_preferences;
+    PreferencesController *_preferencesController;
 
     NSTimer       *_timer;
     NSPoint        _lastMouseLocation;
@@ -56,6 +57,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     Color          _color;
     
     // Cached prefs
+    BOOL           _usesLowercaseHex;
     ColorMode      _colorMode;
     NSInteger      _zoomLevel;
     NSInteger      _updatesContinuously;
@@ -65,6 +67,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (void) _updateStatusText;
 - (void) _handlePreferencesDidChange:(NSNotification *)note;
 - (void) _handleScreenColorSpaceDidChange:(NSNotification *)note;
+- (NSEvent *) _handleLocalEvent:(NSEvent *)event;
 
 @end
 
@@ -73,8 +76,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    _preferences = [[Preferences sharedInstance] retain];
-
     _lockedX                = NAN;
     _lockedY                = NAN;
     _lastMouseLocation      = NSMakePoint(NAN, NAN);
@@ -135,6 +136,10 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     addMenu( ColorMode_CIE_Lab     );
     addMenu( ColorMode_Tristimulus );
     
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *inEvent) {
+        return [self _handleLocalEvent:inEvent];
+    }];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)      name:PreferencesDidChangeNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScreenColorSpaceDidChange:) name:NSScreenColorSpaceDidChangeNotification object:nil];
     
@@ -147,8 +152,11 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) dealloc
 {
-    [_preferences release];  _preferences = nil;
-    [_timer       release];  _timer       = nil;
+    [_preferencesController release];
+    _preferencesController = nil;
+
+    [_timer release];
+    _timer = nil;
 
     [super dealloc];
 }
@@ -174,10 +182,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     SEL action = [menuItem action];
 
-    if (action == @selector(changeApertureColor:)) {
-        [menuItem setState:([menuItem tag] == [_preferences apertureColor])];
-    
-    } else if (action == @selector(lockPosition:)) {
+    if (action == @selector(lockPosition:)) {
         [menuItem setState:!isnan(_lockedX) && !isnan(_lockedY)];
     
     } else if (action == @selector(lockX:)) {
@@ -199,10 +204,18 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [menuItem setState:_isHoldingColor];
 
     } else if (action == @selector(toggleFloatWindow:)) {
-        [menuItem setState:[_preferences floatWindow]];
+        [menuItem setState:[[Preferences sharedInstance] floatWindow]];
     }
 
     return YES;
+}
+
+
+- (void) cancel:(id)sender
+{
+    if ([oWindow firstResponder] != oWindow) {
+        [oWindow makeFirstResponder:oWindow];
+    }
 }
 
 
@@ -224,7 +237,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     if (!isnan(_lockedX)) locationToUse.x = _lockedX;
     if (!isnan(_lockedY)) locationToUse.y = _lockedY;
 
-    CGPoint convertedPoint  = CGPointMake(locationToUse.x, _screenZeroHeight - locationToUse.y);
+    CGPoint convertedPoint = CGPointMake(locationToUse.x, _screenZeroHeight - locationToUse.y);
 
     CGRect screenBounds = _screenBounds;
     screenBounds.origin.x += convertedPoint.x;
@@ -241,7 +254,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSString *value2    = nil;
     NSString *value3    = nil;
     NSString *clipboard = nil;
-    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, &value1, &value2, &value3, &clipboard);
+    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, _usesLowercaseHex, &value1, &value2, &value3, &clipboard);
 
     if (value1) [oValue1 setStringValue:value1];
     if (value2) [oValue2 setStringValue:value2];
@@ -280,20 +293,22 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
-    NSInteger apertureSize = [_preferences apertureSize];
+    Preferences *preferences  = [Preferences sharedInstance];
+    NSInteger    apertureSize = [preferences apertureSize];
 
-    _colorMode            = [_preferences colorMode];
-    _zoomLevel            = [_preferences zoomLevel];
-    _updatesContinuously  = [_preferences updatesContinuously];
-    _showMouseCoordinates = [_preferences showMouseCoordinates];
+    _usesLowercaseHex     = [preferences usesLowercaseHex];
+    _colorMode            = [preferences colorMode];
+    _zoomLevel            = [preferences zoomLevel];
+    _updatesContinuously  = [preferences updatesContinuously];
+    _showMouseCoordinates = [preferences showMouseCoordinates];
 
     [oApertureSizeSlider setIntegerValue:apertureSize];
-    [oColorModePopUp selectItemWithTag:[_preferences colorMode]];
-    [oPreviewView setShowsLocation:[_preferences showMouseCoordinates]];
+    [oColorModePopUp selectItemWithTag:[preferences colorMode]];
+    [oPreviewView setShowsLocation:[preferences showMouseCoordinates]];
     [oPreviewView setApertureSize:apertureSize];
-    [oPreviewView setApertureColor:[_preferences apertureColor]];
+    [oPreviewView setApertureColor:[preferences apertureColor]];
 
-    if ([_preferences floatWindow]) {
+    if ([preferences floatWindow]) {
         [oWindow setLevel:NSFloatingWindowLevel];
     } else {
         [oWindow setLevel:NSNormalWindowLevel];
@@ -369,6 +384,77 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 }
 
 
+- (NSEvent *) _handleLocalEvent:(NSEvent *)event
+{
+    if (![oWindow isKeyWindow]) {
+        return event;
+    }
+
+    NSEventType type = [event type];
+
+    if (type == NSKeyDown) {
+        NSUInteger modifierFlags = [event modifierFlags];
+        NSUInteger modifierMask  = (NSCommandKeyMask | NSAlternateKeyMask | NSControlKeyMask);
+
+        if ((modifierFlags & modifierMask) == 0) {
+            id        firstResponder = [oWindow firstResponder];
+            NSString *characters     = [event charactersIgnoringModifiers];
+            unichar   c              = [characters length] ? [characters characterAtIndex:0] : 0; 
+            BOOL      isShift        = (modifierFlags & NSShiftKeyMask) > 0;
+            BOOL      isLeftOrRight  = (c == NSLeftArrowFunctionKey) || (c == NSRightArrowFunctionKey);
+            BOOL      isUpOrDown     = (c == NSUpArrowFunctionKey)   || (c == NSDownArrowFunctionKey);
+            BOOL      isArrowKey     = isLeftOrRight || isUpOrDown;
+
+            // Text fields get all events
+            if ([firstResponder isKindOfClass:[NSTextField class]]) {
+                return event;
+
+            // Pop-up menus that are first responder get up/down events
+            } else if ([firstResponder isKindOfClass:[NSPopUpButton class]] && isUpOrDown) {
+                return event;
+
+            // Sliders that are first responder get left/right events
+            } else if ([firstResponder isKindOfClass:[NSSlider class]] && isLeftOrRight) {
+                return event;
+            }
+
+            if (isArrowKey) {
+                if (firstResponder != oWindow) {
+                    [oWindow makeFirstResponder:oWindow];
+                }
+
+                CGFloat xDelta = 0.0;
+                CGFloat yDelta = 0.0;
+
+                if (c == NSUpArrowFunctionKey) {
+                    yDelta =  1.0;
+                } else if (c == NSDownArrowFunctionKey) {
+                    yDelta = -1.0;
+                } else if (c == NSLeftArrowFunctionKey) {
+                    xDelta = -1.0;
+                } else if (c == NSRightArrowFunctionKey) {
+                    xDelta =  1.0;
+                }
+                
+                if (isShift) {
+                    xDelta *= 10.0;
+                    yDelta *= 10.0;
+                }
+
+                CGPoint location = [NSEvent mouseLocation];
+                CGPoint convertedPoint = CGPointMake(location.x + xDelta, _screenZeroHeight - (location.y + yDelta));
+
+                CGWarpMouseCursorPosition(convertedPoint);
+
+                return nil;
+            }
+        }
+    }
+
+    return event;
+}
+
+
 - (void) _copyImageToClipboard:(NSImage *)image
 {
     NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
@@ -385,20 +471,25 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (IBAction) changeColorMode:(id)sender
 {
     NSInteger tag = [sender selectedTag];
-    [_preferences setColorMode:tag];
+    [[Preferences sharedInstance] setColorMode:tag];
 }
 
 
 - (IBAction) changeApertureSize:(id)sender
 {
-    [_preferences setApertureSize:[sender integerValue]];
+    [[Preferences sharedInstance] setApertureSize:[sender integerValue]];
 }
 
 
-- (IBAction) changeApertureColor:(id)sender
+- (IBAction) showPreferences:(id)sender
 {
-    [_preferences setApertureColor:[sender tag]];
+    if (!_preferencesController) {
+        _preferencesController = [[PreferencesController alloc] init];
+    }
+    
+    [_preferencesController showWindow:self];
 }
+
 
 - (IBAction) lockPosition:(id)sender
 {
@@ -446,7 +537,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (IBAction) updateMagnification:(id)sender
 {
     NSInteger tag = [sender tag];
-    [_preferences setZoomLevel:[sender tag]];
+    [[Preferences sharedInstance] setZoomLevel:[sender tag]];
     _zoomLevel = tag;
 
     [self _updateScreenshot];
@@ -455,22 +546,25 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (IBAction) toggleContinuous:(id)sender
 {
-    BOOL updatesContinuously = ![_preferences updatesContinuously];
-    [_preferences setUpdatesContinuously:updatesContinuously];
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL updatesContinuously = ![preferences updatesContinuously];
+    [preferences setUpdatesContinuously:updatesContinuously];
 }
 
 
 - (IBAction) toggleMouseLocation:(id)sender
 {
-    BOOL showMouseCoordinates = ![_preferences showMouseCoordinates];
-    [_preferences setShowMouseCoordinates:showMouseCoordinates];
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL showMouseCoordinates = ![preferences showMouseCoordinates];
+    [preferences setShowMouseCoordinates:showMouseCoordinates];
 }
 
 
 - (IBAction) toggleFloatWindow:(id)sender
 {
-    BOOL floatWindow = ![_preferences floatWindow];
-    [_preferences setFloatWindow:floatWindow];
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL floatWindow = ![preferences floatWindow];
+    [preferences setFloatWindow:floatWindow];
 }
 
 
@@ -510,7 +604,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSString *unused1, *unused2, *unused3;
     NSString *clipboard = nil;
 
-    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, &unused1, &unused2, &unused3, &clipboard);
+    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, _usesLowercaseHex, &unused1, &unused2, &unused3, &clipboard);
 
     if (clipboard) {
         NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];

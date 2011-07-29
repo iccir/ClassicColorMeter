@@ -14,7 +14,8 @@
 
 - (IBAction) changeColorMode:(id)sender;
 - (IBAction) changeApertureSize:(id)sender;
-- (IBAction) changeApertureColor:(id)sender;
+
+- (IBAction) showPreferences:(id)sender;
 
 // View menu
 - (IBAction) lockPosition:(id)sender;

@@ -21,6 +21,8 @@
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
+		55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FD8BCD13E2134200446286 /* PreferencesController.m */; };
+		55FD8BD113E2145800446286 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55FD8BCF13E2145800446286 /* Preferences.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,10 +51,12 @@
 		55E67D7F13CFC3000040DFDE /* Classic Color Meter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Classic Color Meter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55E67D8313CFC3000040DFDE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		55E67D8613CFC3000040DFDE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		55E67D8713CFC3000040DFDE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		55E67D8813CFC3000040DFDE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		55E67DC613D38E950040DFDE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Classic Color Meter.entitlements"; sourceTree = "<group>"; };
+		55FD8BCC13E2134200446286 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Source/PreferencesController.h; sourceTree = "<group>"; };
+		55FD8BCD13E2134200446286 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = "<group>"; };
+		55FD8BD013E2145800446286 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Preferences.xib; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,8 @@
 			children = (
 				558444A213D3C9CE006C6F51 /* AppDelegate.h */,
 				558444A313D3C9CE006C6F51 /* AppDelegate.m */,
+				55FD8BCC13E2134200446286 /* PreferencesController.h */,
+				55FD8BCD13E2134200446286 /* PreferencesController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -151,7 +157,6 @@
 			isa = PBXGroup;
 			children = (
 				55E67D8613CFC3000040DFDE /* AppKit.framework */,
-				55E67D8713CFC3000040DFDE /* CoreData.framework */,
 				55E67D8813CFC3000040DFDE /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
@@ -162,8 +167,9 @@
 			children = (
 				552B411F13D56ADE000EB55C /* icon.icns */,
 				558444C713D3CA3E006C6F51 /* InfoPlist.strings */,
-				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
 				558444BE13D3CA27006C6F51 /* ColorMeter-Info.plist */,
+				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
+				55FD8BCF13E2145800446286 /* Preferences.xib */,
 			);
 			name = Resources;
 			path = ColorMeter;
@@ -222,6 +228,7 @@
 				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
 				552B412013D56ADE000EB55C /* icon.icns in Resources */,
+				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +247,7 @@
 				558444B813D3C9CE006C6F51 /* PreviewView.m in Sources */,
 				558444B913D3C9CE006C6F51 /* ResultView.m in Sources */,
 				558444CF13D3EAAD006C6F51 /* EtchingView.m in Sources */,
+				55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +268,14 @@
 				558444CA13D3CA3E006C6F51 /* en */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		55FD8BCF13E2145800446286 /* Preferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55FD8BD013E2145800446286 /* en */,
+			);
+			name = Preferences.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

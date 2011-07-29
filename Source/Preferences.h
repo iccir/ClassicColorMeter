@@ -24,5 +24,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property BOOL showMouseCoordinates;
 @property BOOL swatchClickEnabled;
 @property BOOL swatchDragEnabled;
+@property BOOL arrowKeysEnabled;
+@property BOOL usesLowercaseHex;
+@property BOOL showsHoldColorSliders;
 
 @end

@@ -14,7 +14,7 @@ extern void ColorCalculatorGetLabColor(         uint32_t inDisplay, Color *inCol
 extern void ColorCalculatorGetTristimulusColor( uint32_t inDisplay, Color *inColor, float *outX, float *outY, float *outZ);
 
 extern void ColorCalculatorGetAverageColor(CGImageRef image, CGRect apertureRect, Color *outColor); 
-extern void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, NSString **outLabel1, NSString **outLabel2, NSString **outLabel3, NSString **outClipboard);
+extern void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, BOOL lowercaseHex, NSString **outLabel1, NSString **outLabel2, NSString **outLabel3, NSString **outClipboard);
 
 extern NSString *ColorCalculatorGetName(ColorMode mode);
 extern NSArray  *ColorCalculatorGetComponentLabels(ColorMode mode);

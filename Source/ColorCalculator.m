@@ -217,7 +217,7 @@ extern void ColorCalculatorGetAverageColor(CGImageRef image, CGRect apertureRect
 }
 
 
-void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, NSString **outValue1, NSString **outValue2, NSString **outValue3, NSString **outClipboard)
+void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, BOOL lowercaseHex, NSString **outValue1, NSString **outValue2, NSString **outValue3, NSString **outClipboard)
 {
     NSString *value1    = nil;
     NSString *value2    = nil;
@@ -246,10 +246,17 @@ void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, 
         long b = (blue  * 255);
         
         if (mode == ColorMode_RGB_HexValue_8) {
-            value1    = [NSString stringWithFormat:@"%02lX", r];
-            value2    = [NSString stringWithFormat:@"%02lX", g];
-            value3    = [NSString stringWithFormat:@"%02lX", b];
-            clipboard = [NSString stringWithFormat:@"#%02lX%02lX%02lX", r, g, b];
+            if (lowercaseHex) {
+                value1    = [NSString stringWithFormat:@"%02lx", r];
+                value2    = [NSString stringWithFormat:@"%02lx", g];
+                value3    = [NSString stringWithFormat:@"%02lx", b];
+                clipboard = [NSString stringWithFormat:@"#%02lx%02lx%02lx", r, g, b];
+            } else {
+                value1    = [NSString stringWithFormat:@"%02lX", r];
+                value2    = [NSString stringWithFormat:@"%02lX", g];
+                value3    = [NSString stringWithFormat:@"%02lX", b];
+                clipboard = [NSString stringWithFormat:@"#%02lX%02lX%02lX", r, g, b];
+            }
 
         } else {
             value1 = [NSString stringWithFormat:@"%ld", r];
@@ -266,10 +273,17 @@ void ColorCalculatorCalculate(uint32_t inDisplay, ColorMode mode, Color *color, 
         long b = (long)(blue  * 65535);
 
         if (mode == ColorMode_RGB_Value_16) {
-            value1    = [NSString stringWithFormat:@"%04lX", r];
-            value2    = [NSString stringWithFormat:@"%04lX", g];
-            value3    = [NSString stringWithFormat:@"%04lX", b];
-            clipboard = [NSString stringWithFormat:@"#%04lX%04lX%04lX", r, g, b];
+            if (lowercaseHex) {
+                value1    = [NSString stringWithFormat:@"%04lx", r];
+                value2    = [NSString stringWithFormat:@"%04lx", g];
+                value3    = [NSString stringWithFormat:@"%04lx", b];
+                clipboard = [NSString stringWithFormat:@"#%04lx%04lx%04lx", r, g, b];
+            } else {
+                value1    = [NSString stringWithFormat:@"%04lX", r];
+                value2    = [NSString stringWithFormat:@"%04lX", g];
+                value3    = [NSString stringWithFormat:@"%04lX", b];
+                clipboard = [NSString stringWithFormat:@"#%04lX%04lX%04lX", r, g, b];
+            }
 
         } else {
             value1    = [NSString stringWithFormat:@"%ld", r];

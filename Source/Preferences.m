@@ -19,6 +19,9 @@ static NSString * const sFloatWindowKey           = @"FloatWindow";
 static NSString * const sShowMouseCoordinatesKey  = @"ShowMouseCoordinates";
 static NSString * const sSwatchClickEnabledKey    = @"SwatchClickEnabled";
 static NSString * const sSwatchDragEnabledKey     = @"SwatchDragEnabled";
+static NSString * const sArrowKeysEnabledKey      = @"ArrowKeysEnabled";
+static NSString * const sUsesLowercaseHexKey      = @"UsesLowercaseHex";
+static NSString * const sShowsHoldColorSlidersKey = @"ShowsHoldColorSliders";
 
 
 @interface Preferences () {
@@ -32,6 +35,9 @@ static NSString * const sSwatchDragEnabledKey     = @"SwatchDragEnabled";
     BOOL _showMouseCoordinates;
     BOOL _swatchClickEnabled;
     BOOL _swatchDragEnabled;
+    BOOL _arrowKeysEnabled;
+    BOOL _showsHoldColorSliders;
+    BOOL _usesLowercaseHex;
 }
 
 - (void) _load;
@@ -59,11 +65,14 @@ static void sRegisterDefaults(void)
     i( sApertureSizeKey,  0 );
     i( sApertureColorKey, 3 );
 
-    b( sUpdatesContinuouslyKey,  NO );
-    b( sFloatWindowKey,          NO );
-    b( sShowMouseCoordinatesKey, NO );
-    b( sSwatchClickEnabledKey,   NO );
-    b( sSwatchDragEnabledKey,    NO );
+    b( sUpdatesContinuouslyKey,   NO  );
+    b( sFloatWindowKey,           NO  );
+    b( sShowMouseCoordinatesKey,  NO  );
+    b( sSwatchClickEnabledKey,    NO  );
+    b( sSwatchDragEnabledKey,     NO  );
+    b( sArrowKeysEnabledKey,      NO  );
+    b( sShowsHoldColorSlidersKey, NO  );
+    b( sUsesLowercaseHexKey,      NO  );
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
@@ -87,22 +96,24 @@ static void sRegisterDefaults(void)
 }
 
 
-
 - (id) init
 {
     if ((self = [super init])) {
         [self _load];
         
-        [self addObserver:self forKeyPath:@"colorMode"            options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"zoomLevel"            options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"apertureSize"         options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"apertureColor"        options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"colorMode"              options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"zoomLevel"              options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"apertureSize"           options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"apertureColor"          options:0 context:NULL];
 
-        [self addObserver:self forKeyPath:@"updatesContinuously"  options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"floatWindow"          options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"showMouseCoordinates" options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"swatchClickEnabled"   options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"swatchDragEnabled"    options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"updatesContinuously"    options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"floatWindow"            options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"showMouseCoordinates"   options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"swatchClickEnabled"     options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"swatchDragEnabled"      options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"arrowKeysEnabled"       options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"usesLowercaseHex"       options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"showsHoldColorSliders"  options:0 context:NULL];
     }
 
     return self;
@@ -113,16 +124,19 @@ static void sRegisterDefaults(void)
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    _colorMode            = [defaults integerForKey:sColorModeKey];
-    _zoomLevel            = [defaults integerForKey:sZoomLevelKey];
-    _apertureSize         = [defaults integerForKey:sApertureSizeKey];
-    _apertureColor        = [defaults integerForKey:sApertureColorKey];
+    _colorMode              = [defaults integerForKey:sColorModeKey];
+    _zoomLevel              = [defaults integerForKey:sZoomLevelKey];
+    _apertureSize           = [defaults integerForKey:sApertureSizeKey];
+    _apertureColor          = [defaults integerForKey:sApertureColorKey];
 
-    _updatesContinuously  = [defaults boolForKey:sUpdatesContinuouslyKey];
-    _floatWindow          = [defaults boolForKey:sFloatWindowKey];
-    _showMouseCoordinates = [defaults boolForKey:sShowMouseCoordinatesKey];
-    _swatchClickEnabled   = [defaults boolForKey:sSwatchClickEnabledKey];
-    _swatchDragEnabled    = [defaults boolForKey:sSwatchDragEnabledKey];
+    _updatesContinuously    = [defaults boolForKey:sUpdatesContinuouslyKey];
+    _floatWindow            = [defaults boolForKey:sFloatWindowKey];
+    _showMouseCoordinates   = [defaults boolForKey:sShowMouseCoordinatesKey];
+    _swatchClickEnabled     = [defaults boolForKey:sSwatchClickEnabledKey];
+    _swatchDragEnabled      = [defaults boolForKey:sSwatchDragEnabledKey];
+    _arrowKeysEnabled       = [defaults boolForKey:sArrowKeysEnabledKey];
+    _showsHoldColorSliders  = [defaults boolForKey:sShowsHoldColorSlidersKey];
+    _usesLowercaseHex       = [defaults boolForKey:sUsesLowercaseHexKey];
 }
 
 
@@ -130,16 +144,19 @@ static void sRegisterDefaults(void)
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    [defaults setInteger:_colorMode         forKey:sColorModeKey];
-    [defaults setInteger:_zoomLevel         forKey:sZoomLevelKey];
-    [defaults setInteger:_apertureSize      forKey:sApertureSizeKey];
-    [defaults setInteger:_apertureColor     forKey:sApertureColorKey];
+    [defaults setInteger:_colorMode          forKey:sColorModeKey];
+    [defaults setInteger:_zoomLevel          forKey:sZoomLevelKey];
+    [defaults setInteger:_apertureSize       forKey:sApertureSizeKey];
+    [defaults setInteger:_apertureColor      forKey:sApertureColorKey];
 
-    [defaults setBool:_updatesContinuously  forKey:sUpdatesContinuouslyKey];
-    [defaults setBool:_floatWindow          forKey:sFloatWindowKey];
-    [defaults setBool:_showMouseCoordinates forKey:sShowMouseCoordinatesKey];
-    [defaults setBool:_swatchClickEnabled   forKey:sSwatchClickEnabledKey];
-    [defaults setBool:_swatchDragEnabled    forKey:sSwatchDragEnabledKey];
+    [defaults setBool:_updatesContinuously   forKey:sUpdatesContinuouslyKey];
+    [defaults setBool:_floatWindow           forKey:sFloatWindowKey];
+    [defaults setBool:_showMouseCoordinates  forKey:sShowMouseCoordinatesKey];
+    [defaults setBool:_swatchClickEnabled    forKey:sSwatchClickEnabledKey];
+    [defaults setBool:_swatchDragEnabled     forKey:sSwatchDragEnabledKey];
+    [defaults setBool:_arrowKeysEnabled      forKey:sArrowKeysEnabledKey];
+    [defaults setBool:_usesLowercaseHex      forKey:sUsesLowercaseHexKey];
+    [defaults setBool:_showsHoldColorSliders forKey:sShowsHoldColorSlidersKey];
     
     [defaults synchronize];
 }
@@ -159,10 +176,13 @@ static void sRegisterDefaults(void)
             apertureSize  = _apertureSize,
             apertureColor = _apertureColor;
 
-@synthesize updatesContinuously  = _updatesContinuously,
-            floatWindow          = _floatWindow,
-            showMouseCoordinates = _showMouseCoordinates,
-            swatchClickEnabled   = _swatchClickEnabled,
-            swatchDragEnabled    = _swatchDragEnabled;
+@synthesize updatesContinuously   = _updatesContinuously,
+            floatWindow           = _floatWindow,
+            showMouseCoordinates  = _showMouseCoordinates,
+            swatchClickEnabled    = _swatchClickEnabled,
+            swatchDragEnabled     = _swatchDragEnabled,
+            arrowKeysEnabled      = _arrowKeysEnabled,
+            usesLowercaseHex      = _usesLowercaseHex,
+            showsHoldColorSliders = _showsHoldColorSliders;
 
 @end
