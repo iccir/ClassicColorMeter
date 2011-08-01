@@ -10,6 +10,6 @@
 
 @interface ResultView : NSView
 
-@property (nonatomic, assign) Color color;
+@property (nonatomic, retain) Color *color;
 
 @end

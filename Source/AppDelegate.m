@@ -10,12 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "BackgroundView.h"
-#import "ColorCalculator.h"
+#import "Util.h"
 #import "EtchingView.h"
 #import "Preferences.h"
 #import "PreferencesController.h"
 #import "PreviewView.h"
 #import "ResultView.h"
+#import "ColorSliderCell.h"
+
 
 static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorMeter";
 
@@ -23,6 +25,11 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 @interface AppDelegate () {
     NSWindow      *oWindow;
+
+    NSView        *oLeftContainer;
+    NSView        *oMiddleContainer;
+    NSView        *oRightContainer;
+
     PreviewView   *oPreviewView;
     NSPopUpButton *oColorModePopUp;
     NSView        *oContainer;
@@ -40,6 +47,15 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSTextField   *oValue2;
     NSTextField   *oValue3;
 
+    NSSlider      *oSlider1;
+    NSSlider      *oSlider2;
+    NSSlider      *oSlider3;
+
+    NSView        *_layerContainer;
+    CALayer       *_leftSnapshot;
+    CALayer       *_middleSnapshot;
+    CALayer       *_rightSnapshot;
+
     PreferencesController *_preferencesController;
 
     NSTimer       *_timer;
@@ -54,7 +70,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     CGRect         _apertureRect;
     
     BOOL           _isHoldingColor;
-    Color          _color;
+    Color         *_color;
     
     // Cached prefs
     BOOL           _usesLowercaseHex;
@@ -76,6 +92,13 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    _color = [[Color alloc] init];
+
+    [(ColorSliderCell *)[oSlider1 cell] setColor:_color];
+    [(ColorSliderCell *)[oSlider2 cell] setColor:_color];
+    [(ColorSliderCell *)[oSlider3 cell] setColor:_color];
+    [oResultView setColor:_color];
+
     _lockedX                = NAN;
     _lockedY                = NAN;
     _lastMouseLocation      = NSMakePoint(NAN, NAN);
@@ -110,7 +133,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     
     NSMenu *menu = [oColorModePopUp menu];
     void (^addMenu)(ColorMode) = ^(ColorMode mode) {
-        NSString   *title = ColorCalculatorGetName(mode);
+        NSString   *title = ColorModeGetName(mode);
         NSMenuItem *item  = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
         
         [item setTag:mode];
@@ -125,6 +148,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     addMenu( ColorMode_RGB_Value_16 );
     addMenu( ColorMode_RGB_HexValue_8 );
     addMenu( ColorMode_RGB_HexValue_16 );
+    [menu addItem:[NSMenuItem separatorItem]];
+    addMenu( ColorMode_HSB   );
     [menu addItem:[NSMenuItem separatorItem]];
     addMenu( ColorMode_YPbPr_601   );
     addMenu( ColorMode_YPbPr_709   );
@@ -143,10 +168,42 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)      name:PreferencesDidChangeNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScreenColorSpaceDidChange:) name:NSScreenColorSpaceDidChangeNotification object:nil];
     
+    NSRect frame = [oWindow frame];
+    frame.size.width = 350.0;
+    [oWindow setFrame:frame display:NO animate:NO];
+
+    NSView *contentView = [oWindow contentView];
+    _layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
+    [_layerContainer setWantsLayer:YES];
+
+    _leftSnapshot   = [[CALayer alloc] init];
+    _middleSnapshot = [[CALayer alloc] init];
+    _rightSnapshot  = [[CALayer alloc] init];
+
+    [_leftSnapshot   setDelegate:self];
+    [_middleSnapshot setDelegate:self];
+    [_rightSnapshot  setDelegate:self];
+
+    [_leftSnapshot   setAnchorPoint:CGPointMake(0, 0)];
+    [_middleSnapshot setAnchorPoint:CGPointMake(0, 0)];
+    [_rightSnapshot  setAnchorPoint:CGPointMake(0, 0)];
+    
+    [[_layerContainer layer] addSublayer:_leftSnapshot];
+    [[_layerContainer layer] addSublayer:_middleSnapshot];
+    [[_layerContainer layer] addSublayer:_rightSnapshot];
+
+    [_leftSnapshot   setFrame:[oLeftContainer   frame]];
+    [_middleSnapshot setFrame:[oMiddleContainer frame]];
+    [_rightSnapshot  setFrame:[oRightContainer  frame]];
+
+    [contentView addSubview:_layerContainer];
+
     [self applicationDidChangeScreenParameters:nil];
     [self _updateStatusText];
     [self _handlePreferencesDidChange:nil];
     [self _handleScreenColorSpaceDidChange:nil];
+    
+    [oWindow makeKeyAndOrderFront:self];
 }
 
 
@@ -154,6 +211,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     [_preferencesController release];
     _preferencesController = nil;
+
+    [_layerContainer release];
+    _layerContainer = nil;
 
     [_timer release];
     _timer = nil;
@@ -228,6 +288,109 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 
 #pragma mark -
+#pragma mark Glue
+
+static void sUpdateSnapshots(AppDelegate *self)
+{
+    void (^updateSnapshot)(NSView *, CALayer *) = ^(NSView *view, CALayer *layer) {
+        NSRect   bounds = [view bounds];
+        NSImage *image  = [[NSImage alloc] initWithSize:bounds.size];
+
+        [image lockFocus];
+        [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
+        [image unlockFocus];
+        [layer setContents:image];
+
+        [image release];
+    };
+
+    updateSnapshot(self->oLeftContainer,   self->_leftSnapshot);
+    updateSnapshot(self->oMiddleContainer, self->_middleSnapshot);
+    updateSnapshot(self->oRightContainer,  self->_rightSnapshot);
+}
+
+
+static void sUpdateColorViews(AppDelegate *self)
+{
+    [self->oResultView setNeedsDisplay:YES];
+    [self->oSlider1 setNeedsDisplay:YES];
+    [self->oSlider2 setNeedsDisplay:YES];
+    [self->oSlider3 setNeedsDisplay:YES];
+}
+
+
+static void sUpdateSliders(AppDelegate *self)
+{
+    NSSlider *slider1   = self->oSlider1;
+    NSSlider *slider2   = self->oSlider2;
+    NSSlider *slider3   = self->oSlider3;
+    ColorMode colorMode = self->_colorMode;
+    Color    *color     = self->_color;
+
+    BOOL      isRGB     = ColorModeIsRGB(colorMode);
+    BOOL      isHSB     = ColorModeIsHSB(colorMode);
+
+    BOOL      isEnabled = NO;
+
+    ColorComponent component1 = ColorComponentNone;
+    ColorComponent component2 = ColorComponentNone;
+    ColorComponent component3 = ColorComponentNone;
+
+    if (isRGB) {
+        isEnabled = YES;
+
+        component1 = ColorComponentRed;
+        component2 = ColorComponentGreen;
+        component3 = ColorComponentBlue;
+
+    } else if (isHSB) {
+        isEnabled = YES;
+
+        component1 = ColorComponentHue;
+        component2 = ColorComponentSaturation;
+        component3 = ColorComponentBrightness;
+    }
+    
+    ColorSliderCell *cell1 = (ColorSliderCell *)[slider1 cell];
+    ColorSliderCell *cell2 = (ColorSliderCell *)[slider2 cell];
+    ColorSliderCell *cell3 = (ColorSliderCell *)[slider3 cell];
+
+    [slider1 setEnabled:isEnabled];
+    [slider2 setEnabled:isEnabled];
+    [slider3 setEnabled:isEnabled];
+    
+    [slider1 setFloatValue:[color floatValueForComponent:component1]];
+    [slider2 setFloatValue:[color floatValueForComponent:component2]];
+    [slider3 setFloatValue:[color floatValueForComponent:component3]];
+
+    [cell1 setComponent:component1];
+    [cell2 setComponent:component2];
+    [cell3 setComponent:component3];
+}
+
+
+static void sUpdateTextFields(AppDelegate *self)
+{
+    ColorMode colorMode = self->_colorMode;
+
+    NSString *value1    = nil;
+    NSString *value2    = nil;
+    NSString *value3    = nil;
+    NSString *clipboard = nil;
+    ColorModeMakeComponentStrings(colorMode, self->_color, self->_usesLowercaseHex, &value1, &value2, &value3, &clipboard);
+
+    if (value1) [self->oValue1 setStringValue:value1];
+    if (value2) [self->oValue2 setStringValue:value2];
+    if (value3) [self->oValue3 setStringValue:value3];
+    
+    BOOL isEditable = ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode);
+    [self->oValue1 setEditable:isEditable];
+    [self->oValue2 setEditable:isEditable];
+    [self->oValue3 setEditable:isEditable];
+}
+
+
+#pragma mark -
 #pragma mark Private Methods
 
 - (void) _updateScreenshot
@@ -245,20 +408,13 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     CGImageRef screenShot = CGWindowListCreateImage(screenBounds, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
     
     if (!_isHoldingColor) {
-        ColorCalculatorGetAverageColor(screenShot, _apertureRect, &_color);
+        float r, g, b;
+        GetAverageColor(screenShot, _apertureRect, &r, &g, &b);
+        [_color setRed:r green:g blue:b];
+
+        sUpdateColorViews(self);
+        sUpdateTextFields(self);
     }
-
-    [oResultView setColor:_color];
-    
-    NSString *value1    = nil;
-    NSString *value2    = nil;
-    NSString *value3    = nil;
-    NSString *clipboard = nil;
-    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, _usesLowercaseHex, &value1, &value2, &value3, &clipboard);
-
-    if (value1) [oValue1 setStringValue:value1];
-    if (value2) [oValue2 setStringValue:value2];
-    if (value3) [oValue3 setStringValue:value3];
 
     if (screenShot) {
         [oPreviewView setImage:screenShot];
@@ -314,12 +470,14 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [oWindow setLevel:NSNormalWindowLevel];
     }
 
-    NSArray *labels = ColorCalculatorGetComponentLabels(_colorMode);
+    NSArray *labels = ColorModeGetComponentLabels(_colorMode);
     if ([labels count] == 3) {
         [oLabel1 setStringValue:[labels objectAtIndex:0]];
         [oLabel2 setStringValue:[labels objectAtIndex:1]];
         [oLabel3 setStringValue:[labels objectAtIndex:2]];
     }
+
+    sUpdateSliders(self);
 
     if (_zoomLevel < 1) {
         _zoomLevel = 1;
@@ -336,6 +494,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         _apertureRect = CGRectMake( averageOffset,  averageOffset, pixelsToAverage, pixelsToAverage);
     }
 
+    sUpdateTextFields(self);
+    
     [self _updateScreenshot];
 }
 
@@ -370,6 +530,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     [status release];
 }
+
 
 - (NSImage *) _imageFromPreviewView
 {
@@ -418,7 +579,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
                 return event;
             }
 
-            if (isArrowKey) {
+            if (isArrowKey && [[Preferences sharedInstance] arrowKeysEnabled]) {
                 if (firstResponder != oWindow) {
                     [oWindow makeFirstResponder:oWindow];
                 }
@@ -465,6 +626,81 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 }
 
 
+- (void) _copyTextToClipboard:(NSString *)text
+{
+    if (!text) return;
+
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    [pboard clearContents];
+    [pboard addTypes:[NSArray arrayWithObject:NSPasteboardTypeString] owner:nil];
+    [pboard setString:text forType:NSPasteboardTypeString];
+}
+
+
+#pragma mark -
+#pragma mark Animation
+
+- (void) _doHoldColorAnimation
+{
+    void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
+        [oLeftContainer   setHidden:!yn];
+        [oMiddleContainer setHidden:!yn];
+        [oRightContainer  setHidden:!yn];
+        [_layerContainer  setHidden: yn];
+    };
+    
+    void (^layout)(NSView *, CALayer *, CGFloat *) = ^(NSView *view, CALayer *layer, CGFloat *inOutX) {
+        CGRect frame = [view frame];
+        frame.origin.x = *inOutX;
+
+        [view  setFrame:frame];
+        [layer setFrame:frame];
+
+        *inOutX = NSMaxX(frame);
+    };
+    
+    BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
+    CGFloat xOffset  = showSliders ? -128.0 : 0.0;
+
+    NSDisableScreenUpdates();
+    {
+        setSnapshotsHidden(NO);
+
+        [CATransaction setAnimationDuration:0.3];
+        [CATransaction setCompletionBlock:^{
+            NSDisableScreenUpdates();
+
+            setSnapshotsHidden(YES);
+            [oWindow displayIfNeeded];
+
+            NSEnableScreenUpdates();
+        }];
+
+        sUpdateSnapshots(self);
+
+        layout(oLeftContainer,   _leftSnapshot,   &xOffset);
+        layout(oMiddleContainer, _middleSnapshot, &xOffset);
+        layout(oRightContainer,  _rightSnapshot,  &xOffset);
+
+        [_leftSnapshot  setOpacity:showSliders ? 0.0 : 1.0];
+        [_rightSnapshot setOpacity:showSliders ? 1.0 : 0.0];
+
+        [oWindow displayIfNeeded];
+    }
+    NSEnableScreenUpdates();
+}
+
+
+- (id<CAAction>) actionForLayer:(CALayer *)layer forKey:(NSString *)event
+{
+    if (_isHoldingColor && [event isEqualToString:@"contents"]) {
+        return (id<CAAction>)[NSNull null];
+    }
+    
+    return nil;
+}
+
+
 #pragma mark -
 #pragma mark IBActions
 
@@ -478,6 +714,39 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (IBAction) changeApertureSize:(id)sender
 {
     [[Preferences sharedInstance] setApertureSize:[sender integerValue]];
+}
+
+
+- (IBAction) updateComponent:(id)sender
+{
+    BOOL  isRGB  = ColorModeIsRGB(_colorMode);
+    BOOL  isHSB  = ColorModeIsHSB(_colorMode);
+
+    ColorComponent component = ColorComponentNone;
+
+    if (isRGB || isHSB) {
+        if (sender == oSlider1 || sender == oValue1) {
+            component = isRGB ? ColorComponentRed :ColorComponentHue;
+        } else if (sender == oSlider2 || sender == oValue2) {
+            component = isRGB ? ColorComponentGreen : ColorComponentSaturation;
+        } else if (sender == oSlider3 || sender == oValue3) {
+            component = isRGB ? ColorComponentBlue  : ColorComponentBrightness;
+        }
+    }
+    
+    if (component != ColorComponentNone) {
+        float floatValue = [sender floatValue];
+
+        if ([sender isKindOfClass:[NSTextField class]]) {
+            floatValue = ColorModeParseComponentString(_colorMode, component, [sender stringValue]);            
+        }
+    
+        [_color setFloatValue:floatValue forComponent:component];
+    }
+
+    sUpdateColorViews(self);
+    sUpdateSliders(self);
+    sUpdateTextFields(self);
 }
 
 
@@ -596,6 +865,12 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     [self _updateStatusText];
     [self _updateScreenshot];
+
+    sUpdateSliders(self);
+    
+    if ([[Preferences sharedInstance] showsHoldColorSliders]) {
+        [self _doHoldColorAnimation];
+    }
 }
 
 
@@ -604,14 +879,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSString *unused1, *unused2, *unused3;
     NSString *clipboard = nil;
 
-    ColorCalculatorCalculate(CGMainDisplayID(), _colorMode, &_color, _usesLowercaseHex, &unused1, &unused2, &unused3, &clipboard);
+    ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, &unused1, &unused2, &unused3, &clipboard);
 
-    if (clipboard) {
-        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
-        [pboard clearContents];
-        [pboard addTypes:[NSArray arrayWithObject:NSPasteboardTypeString] owner:nil];
-        [pboard setString:clipboard forType:NSPasteboardTypeString];
-    }
+    [self _copyTextToClipboard:clipboard];
 }
 
 
@@ -631,6 +901,34 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 }
 
 
+- (IBAction) copyColorAsCodeSnippet:(id)sender
+{
+    NSInteger tag = [sender tag];
+    Preferences *preferences = [Preferences sharedInstance];
+    
+    NSString *template = nil;
+    
+    if (tag == 0) {
+        template = [preferences nsColorSnippetTemplate];
+    } else if (tag == 1) {
+        template = [preferences uiColorSnippetTemplate];
+    } else if (tag == 2) {
+        template = [preferences hexColorSnippetTemplate];
+    } else if (tag == 3) {
+        template = [preferences rgbColorSnippetTemplate];
+    } else if (tag == 4) {
+        template = [preferences rgbaColorSnippetTemplate];
+    }
+
+    if (template) {
+        NSString *snippet  = GetCodeSnippetForColor(_color, _usesLowercaseHex, template);
+        [self _copyTextToClipboard:snippet];
+    } else {
+        NSBeep();
+    }
+}
+
+
 - (IBAction) sendFeedback:(id)sender
 {
     NSURL *url = [NSURL URLWithString:sFeedbackURL];
@@ -642,6 +940,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 #pragma mark Accessors
 
 @synthesize window             = oWindow,
+            leftContainer      = oLeftContainer,
+            middleContainer    = oMiddleContainer,
+            rightContainer     = oRightContainer,
             colorModePopUp     = oColorModePopUp,
             previewView        = oPreviewView,
             resultView         = oResultView,
@@ -653,6 +954,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
             label3             = oLabel3,
             value1             = oValue1,
             value2             = oValue2,
-            value3             = oValue3;
+            value3             = oValue3,
+            slider1            = oSlider1,
+            slider2            = oSlider2,
+            slider3            = oSlider3;
 
 @end

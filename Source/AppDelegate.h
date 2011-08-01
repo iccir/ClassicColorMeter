@@ -32,9 +32,18 @@
 - (IBAction) holdColor:(id)sender;
 - (IBAction) copyColorAsText:(id)sender;
 - (IBAction) copyColorAsImage:(id)sender;
+- (IBAction) copyColorAsCodeSnippet:(id)sender;
+
+- (IBAction) updateComponent:(id)sender;
+
 - (IBAction) sendFeedback:(id)sender;
 
 @property (nonatomic, retain) IBOutlet NSWindow      *window;
+
+@property (nonatomic, retain) IBOutlet NSView        *leftContainer;
+@property (nonatomic, retain) IBOutlet NSView        *middleContainer;
+@property (nonatomic, retain) IBOutlet NSView        *rightContainer;
+
 @property (nonatomic, retain) IBOutlet NSPopUpButton *colorModePopUp;
 @property (nonatomic, retain) IBOutlet NSSlider      *apertureSizeSlider;
 @property (nonatomic, retain) IBOutlet PreviewView   *previewView;
@@ -51,5 +60,9 @@
 @property (nonatomic, retain) IBOutlet NSTextField   *value1;
 @property (nonatomic, retain) IBOutlet NSTextField   *value2;
 @property (nonatomic, retain) IBOutlet NSTextField   *value3;
+
+@property (nonatomic, retain) IBOutlet NSSlider      *slider1;
+@property (nonatomic, retain) IBOutlet NSSlider      *slider2;
+@property (nonatomic, retain) IBOutlet NSSlider      *slider3;
 
 @end

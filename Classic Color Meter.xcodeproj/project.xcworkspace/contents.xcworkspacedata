@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:ColorMeter.xcodeproj">
+      location = "self:Classic Color Meter.xcodeproj">
    </FileRef>
 </Workspace>

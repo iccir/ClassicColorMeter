@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
+		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
 		552B412013D56ADE000EB55C /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 552B411F13D56ADE000EB55C /* icon.icns */; };
 		558444B213D3C9CE006C6F51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A313D3C9CE006C6F51 /* AppDelegate.m */; };
 		558444B313D3C9CE006C6F51 /* BackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A513D3C9CE006C6F51 /* BackgroundView.m */; };
-		558444B413D3C9CE006C6F51 /* ColorCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A713D3C9CE006C6F51 /* ColorCalculator.m */; };
+		558444B413D3C9CE006C6F51 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A713D3C9CE006C6F51 /* Util.m */; };
 		558444B513D3C9CE006C6F51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A813D3C9CE006C6F51 /* main.m */; };
 		558444B613D3C9CE006C6F51 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444AA13D3C9CE006C6F51 /* Preferences.m */; };
 		558444B813D3C9CE006C6F51 /* PreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444AF13D3C9CE006C6F51 /* PreviewView.m */; };
@@ -19,6 +21,13 @@
 		558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558444C913D3CA3E006C6F51 /* MainMenu.xib */; };
 		558444CF13D3EAAD006C6F51 /* EtchingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444CE13D3EAAD006C6F51 /* EtchingView.m */; };
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
+		55E0602B13E4BB5800E35B3E /* beta.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602A13E4BB5800E35B3E /* beta.icns */; };
+		55E0603213E4CD7E00E35B3E /* slider_cover_center.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */; };
+		55E0603313E4CD7E00E35B3E /* slider_cover_center@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602D13E4CD7E00E35B3E /* slider_cover_center@2x.png */; };
+		55E0603413E4CD7E00E35B3E /* slider_cover_leftcap.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602E13E4CD7E00E35B3E /* slider_cover_leftcap.png */; };
+		55E0603513E4CD7E00E35B3E /* slider_cover_leftcap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602F13E4CD7E00E35B3E /* slider_cover_leftcap@2x.png */; };
+		55E0603613E4CD7E00E35B3E /* slider_cover_rightcap.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0603013E4CD7E00E35B3E /* slider_cover_rightcap.png */; };
+		55E0603713E4CD7E00E35B3E /* slider_cover_rightcap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0603113E4CD7E00E35B3E /* slider_cover_rightcap@2x.png */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
 		55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FD8BCD13E2134200446286 /* PreferencesController.m */; };
@@ -26,14 +35,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		550F240C13E3838F0026A060 /* ColorSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorSliderCell.h; path = Source/ColorSliderCell.h; sourceTree = "<group>"; };
+		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
+		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
+		5518713E13E62E5500272170 /* Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Color.m; path = Source/Color.m; sourceTree = "<group>"; };
 		552B411D13D4FB30000EB55C /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = Source/Types.h; sourceTree = "<group>"; };
 		552B411F13D56ADE000EB55C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = SOURCE_ROOT; };
 		558444A213D3C9CE006C6F51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
 		558444A313D3C9CE006C6F51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = "<group>"; };
 		558444A413D3C9CE006C6F51 /* BackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackgroundView.h; path = Source/BackgroundView.h; sourceTree = "<group>"; };
 		558444A513D3C9CE006C6F51 /* BackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BackgroundView.m; path = Source/BackgroundView.m; sourceTree = "<group>"; };
-		558444A613D3C9CE006C6F51 /* ColorCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorCalculator.h; path = Source/ColorCalculator.h; sourceTree = "<group>"; };
-		558444A713D3C9CE006C6F51 /* ColorCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorCalculator.m; path = Source/ColorCalculator.m; sourceTree = "<group>"; };
+		558444A613D3C9CE006C6F51 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; name = Util.h; path = Source/Util.h; sourceTree = "<group>"; };
+		558444A713D3C9CE006C6F51 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Util.m; path = Source/Util.m; sourceTree = "<group>"; };
 		558444A813D3C9CE006C6F51 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
 		558444A913D3C9CE006C6F51 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Source/Preferences.h; sourceTree = "<group>"; };
 		558444AA13D3C9CE006C6F51 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Preferences.m; path = Source/Preferences.m; sourceTree = "<group>"; };
@@ -42,12 +55,20 @@
 		558444AF13D3C9CE006C6F51 /* PreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewView.m; path = Source/PreviewView.m; sourceTree = "<group>"; };
 		558444B013D3C9CE006C6F51 /* ResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResultView.h; path = Source/ResultView.h; sourceTree = "<group>"; };
 		558444B113D3C9CE006C6F51 /* ResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResultView.m; path = Source/ResultView.m; sourceTree = "<group>"; };
-		558444BE13D3CA27006C6F51 /* ColorMeter-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ColorMeter-Info.plist"; path = "Resources/ColorMeter-Info.plist"; sourceTree = SOURCE_ROOT; };
+		558444BE13D3CA27006C6F51 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		558444C813D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		558444CA13D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		558444CD13D3EAAD006C6F51 /* EtchingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EtchingView.h; path = Source/EtchingView.h; sourceTree = "<group>"; };
 		558444CE13D3EAAD006C6F51 /* EtchingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EtchingView.m; path = Source/EtchingView.m; sourceTree = "<group>"; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		55E0602713E4B93200E35B3E /* Beta-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Beta-Info.plist"; path = "Resources/Beta-Info.plist"; sourceTree = SOURCE_ROOT; };
+		55E0602A13E4BB5800E35B3E /* beta.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = beta.icns; path = Resources/beta.icns; sourceTree = SOURCE_ROOT; };
+		55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = slider_cover_center.png; path = Resources/slider_cover_center.png; sourceTree = SOURCE_ROOT; };
+		55E0602D13E4CD7E00E35B3E /* slider_cover_center@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider_cover_center@2x.png"; path = "Resources/slider_cover_center@2x.png"; sourceTree = SOURCE_ROOT; };
+		55E0602E13E4CD7E00E35B3E /* slider_cover_leftcap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = slider_cover_leftcap.png; path = Resources/slider_cover_leftcap.png; sourceTree = SOURCE_ROOT; };
+		55E0602F13E4CD7E00E35B3E /* slider_cover_leftcap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider_cover_leftcap@2x.png"; path = "Resources/slider_cover_leftcap@2x.png"; sourceTree = SOURCE_ROOT; };
+		55E0603013E4CD7E00E35B3E /* slider_cover_rightcap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = slider_cover_rightcap.png; path = Resources/slider_cover_rightcap.png; sourceTree = SOURCE_ROOT; };
+		55E0603113E4CD7E00E35B3E /* slider_cover_rightcap@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider_cover_rightcap@2x.png"; path = "Resources/slider_cover_rightcap@2x.png"; sourceTree = SOURCE_ROOT; };
 		55E67D7F13CFC3000040DFDE /* Classic Color Meter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Classic Color Meter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55E67D8313CFC3000040DFDE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		55E67D8613CFC3000040DFDE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -96,6 +117,8 @@
 				558444B113D3C9CE006C6F51 /* ResultView.m */,
 				558444CD13D3EAAD006C6F51 /* EtchingView.h */,
 				558444CE13D3EAAD006C6F51 /* EtchingView.m */,
+				550F240C13E3838F0026A060 /* ColorSliderCell.h */,
+				550F240D13E3838F0026A060 /* ColorSliderCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -117,8 +140,10 @@
 				552B411D13D4FB30000EB55C /* Types.h */,
 				558444A913D3C9CE006C6F51 /* Preferences.h */,
 				558444AA13D3C9CE006C6F51 /* Preferences.m */,
-				558444A613D3C9CE006C6F51 /* ColorCalculator.h */,
-				558444A713D3C9CE006C6F51 /* ColorCalculator.m */,
+				5518713D13E62E5500272170 /* Color.h */,
+				5518713E13E62E5500272170 /* Color.m */,
+				558444A613D3C9CE006C6F51 /* Util.h */,
+				558444A713D3C9CE006C6F51 /* Util.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -165,9 +190,17 @@
 		55E67D8913CFC3000040DFDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */,
+				55E0602D13E4CD7E00E35B3E /* slider_cover_center@2x.png */,
+				55E0602E13E4CD7E00E35B3E /* slider_cover_leftcap.png */,
+				55E0602F13E4CD7E00E35B3E /* slider_cover_leftcap@2x.png */,
+				55E0603013E4CD7E00E35B3E /* slider_cover_rightcap.png */,
+				55E0603113E4CD7E00E35B3E /* slider_cover_rightcap@2x.png */,
+				55E0602A13E4BB5800E35B3E /* beta.icns */,
 				552B411F13D56ADE000EB55C /* icon.icns */,
 				558444C713D3CA3E006C6F51 /* InfoPlist.strings */,
-				558444BE13D3CA27006C6F51 /* ColorMeter-Info.plist */,
+				558444BE13D3CA27006C6F51 /* Info.plist */,
+				55E0602713E4B93200E35B3E /* Beta-Info.plist */,
 				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
 				55FD8BCF13E2145800446286 /* Preferences.xib */,
 			);
@@ -203,7 +236,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = 55E67D7913CFC3000040DFDE /* Build configuration list for PBXProject "ColorMeter" */;
+			buildConfigurationList = 55E67D7913CFC3000040DFDE /* Build configuration list for PBXProject "Classic Color Meter" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -229,6 +262,13 @@
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
 				552B412013D56ADE000EB55C /* icon.icns in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
+				55E0602B13E4BB5800E35B3E /* beta.icns in Resources */,
+				55E0603213E4CD7E00E35B3E /* slider_cover_center.png in Resources */,
+				55E0603313E4CD7E00E35B3E /* slider_cover_center@2x.png in Resources */,
+				55E0603413E4CD7E00E35B3E /* slider_cover_leftcap.png in Resources */,
+				55E0603513E4CD7E00E35B3E /* slider_cover_leftcap@2x.png in Resources */,
+				55E0603613E4CD7E00E35B3E /* slider_cover_rightcap.png in Resources */,
+				55E0603713E4CD7E00E35B3E /* slider_cover_rightcap@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,13 +281,15 @@
 			files = (
 				558444B213D3C9CE006C6F51 /* AppDelegate.m in Sources */,
 				558444B313D3C9CE006C6F51 /* BackgroundView.m in Sources */,
-				558444B413D3C9CE006C6F51 /* ColorCalculator.m in Sources */,
+				558444B413D3C9CE006C6F51 /* Util.m in Sources */,
 				558444B513D3C9CE006C6F51 /* main.m in Sources */,
 				558444B613D3C9CE006C6F51 /* Preferences.m in Sources */,
 				558444B813D3C9CE006C6F51 /* PreviewView.m in Sources */,
 				558444B913D3C9CE006C6F51 /* ResultView.m in Sources */,
 				558444CF13D3EAAD006C6F51 /* EtchingView.m in Sources */,
 				55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */,
+				550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */,
+				5518713F13E62E5500272170 /* Color.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,14 +375,11 @@
 		55E67D9E13CFC3000040DFDE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				INFOPLIST_FILE = "Resources/ColorMeter-Info.plist";
+				INFOPLIST_FILE = "Resources/Beta-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -353,7 +392,7 @@
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				INFOPLIST_FILE = "Resources/ColorMeter-Info.plist";
+				INFOPLIST_FILE = Resources/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -365,7 +404,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		55E67D7913CFC3000040DFDE /* Build configuration list for PBXProject "ColorMeter" */ = {
+		55E67D7913CFC3000040DFDE /* Build configuration list for PBXProject "Classic Color Meter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				55E67D9B13CFC3000040DFDE /* Debug */,

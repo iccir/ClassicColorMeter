@@ -17,13 +17,6 @@ enum {
 typedef NSInteger ApertureColor;
 
 
-typedef struct {
-    float red;
-    float green;
-    float blue;
-} Color;
-
-
 enum {
     ColorMode_RGB_Percentage,
 
@@ -41,6 +34,8 @@ enum {
     ColorMode_CIE_1931,
     ColorMode_CIE_1976,
     ColorMode_CIE_Lab,
-    ColorMode_Tristimulus
+    ColorMode_Tristimulus,
+    
+    ColorMode_HSB
 };
 typedef NSInteger ColorMode;

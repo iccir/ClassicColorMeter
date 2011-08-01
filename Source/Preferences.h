@@ -14,18 +14,24 @@ extern NSString * const PreferencesDidChangeNotification;
 
 + (id) sharedInstance;
 
-@property ColorMode colorMode;
-@property NSInteger zoomLevel;
-@property NSInteger apertureSize;
-@property ApertureColor apertureColor;
+@property (nonatomic, assign) ColorMode colorMode;
+@property (nonatomic, assign) NSInteger zoomLevel;
+@property (nonatomic, assign) NSInteger apertureSize;
+@property (nonatomic, assign) ApertureColor apertureColor;
 
-@property BOOL updatesContinuously;
-@property BOOL floatWindow;
-@property BOOL showMouseCoordinates;
-@property BOOL swatchClickEnabled;
-@property BOOL swatchDragEnabled;
-@property BOOL arrowKeysEnabled;
-@property BOOL usesLowercaseHex;
-@property BOOL showsHoldColorSliders;
+@property (nonatomic, retain) NSString *nsColorSnippetTemplate;
+@property (nonatomic, retain) NSString *uiColorSnippetTemplate;
+@property (nonatomic, retain) NSString *hexColorSnippetTemplate;
+@property (nonatomic, retain) NSString *rgbColorSnippetTemplate;
+@property (nonatomic, retain) NSString *rgbaColorSnippetTemplate;
+
+@property (nonatomic, assign) BOOL updatesContinuously;
+@property (nonatomic, assign) BOOL floatWindow;
+@property (nonatomic, assign) BOOL showMouseCoordinates;
+@property (nonatomic, assign) BOOL swatchClickEnabled;
+@property (nonatomic, assign) BOOL swatchDragEnabled;
+@property (nonatomic, assign) BOOL arrowKeysEnabled;
+@property (nonatomic, assign) BOOL usesLowercaseHex;
+@property (nonatomic, assign) BOOL showsHoldColorSliders;
 
 @end

@@ -9,13 +9,20 @@
 #import "ResultView.h"
 
 @interface ResultView () {
-    Color _color;
+    Color *_color;
 }
 
 @end
 
 
 @implementation ResultView
+
+- (void) dealloc
+{
+    [_color release];
+    [super dealloc];
+}
+
 
 - (void) drawRect:(NSRect)dirtyRect
 {
@@ -34,11 +41,15 @@
 }
 
 
-- (void) setColor:(Color)color
+- (void) setColor:(Color *)color
 {
-    _color = color;
-    [self setNeedsDisplay:YES];
+    if (_color != color) {
+        [_color release];
+        _color = [color retain];
+        [self setNeedsDisplay:YES];
+    }
 }
+
 
 @synthesize color = _color;
 
