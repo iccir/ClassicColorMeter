@@ -2,8 +2,8 @@
 //  Color.m
 //  Classic Color Meter
 //
-//  Created by Ricci Adams on 7/31/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by Ricci Adams on 2011-07-31.
+//  Copyright 2011 Ricci Adams. All rights reserved.
 //
 
 #import "Color.h"
@@ -37,7 +37,7 @@ static void sDidChangeHSB(Color *self)
         r = g = b = brightness;
 
     } else {
-        if (hue > 1.0) hue -= 1.0;
+        if (hue >= 1.0) hue -= 1.0;
 
         float sectorAsFloat = hue * 6;
         int   sectorAsInt   = (int)(sectorAsFloat);
@@ -219,6 +219,12 @@ static void sDidChangeRGB(Color *self)
 
 #pragma mark -
 #pragma mark Accessors
+
+- (NSColor *) NSColor
+{
+    return [NSColor colorWithDeviceRed:_red green:_green blue:_blue alpha:1.0];
+}
+
 
 - (void) setRed:(float)red
 {

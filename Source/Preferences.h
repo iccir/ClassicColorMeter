@@ -18,6 +18,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, assign) NSInteger zoomLevel;
 @property (nonatomic, assign) NSInteger apertureSize;
 @property (nonatomic, assign) ApertureColor apertureColor;
+@property (nonatomic, assign) NSInteger clickInSwatchAction;
+@property (nonatomic, assign) NSInteger dragInSwatchAction;
 
 @property (nonatomic, retain) NSString *nsColorSnippetTemplate;
 @property (nonatomic, retain) NSString *uiColorSnippetTemplate;
@@ -28,10 +30,11 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, assign) BOOL updatesContinuously;
 @property (nonatomic, assign) BOOL floatWindow;
 @property (nonatomic, assign) BOOL showMouseCoordinates;
-@property (nonatomic, assign) BOOL swatchClickEnabled;
-@property (nonatomic, assign) BOOL swatchDragEnabled;
+@property (nonatomic, assign) BOOL clickInSwatchEnabled;
+@property (nonatomic, assign) BOOL dragInSwatchEnabled;
 @property (nonatomic, assign) BOOL arrowKeysEnabled;
 @property (nonatomic, assign) BOOL usesLowercaseHex;
 @property (nonatomic, assign) BOOL showsHoldColorSliders;
+@property (nonatomic, assign) BOOL showsHoldLabels;
 
 @end

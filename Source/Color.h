@@ -2,8 +2,8 @@
 //  Color.h
 //  Classic Color Meter
 //
-//  Created by Ricci Adams on 7/31/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by Ricci Adams on 2011-07-31.
+//  Copyright 2011 Ricci Adams. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -38,5 +38,7 @@ typedef NSInteger ColorComponent;
 @property (nonatomic, assign) float hue;        // 0 degrees -> 360 degrees
 @property (nonatomic, assign) float saturation; // 0%        -> 100%
 @property (nonatomic, assign) float brightness; // 0%        -> 100%
+
+@property (nonatomic, copy, readonly) NSColor *NSColor;
 
 @end

@@ -2,8 +2,8 @@
 //  ColorSliderCell.m
 //  ColorMeter
 //
-//  Created by Ricci Adams on 7/29/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Created by Ricci Adams on 2011-07-29.
+//  Copyright 2011 Ricci Adams. All rights reserved.
 //
 
 #import "ColorSliderCell.h"

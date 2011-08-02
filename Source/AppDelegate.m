@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-#import "BackgroundView.h"
 #import "Util.h"
 #import "EtchingView.h"
 #import "Preferences.h"
@@ -17,6 +16,21 @@
 #import "PreviewView.h"
 #import "ResultView.h"
 #import "ColorSliderCell.h"
+
+
+
+enum {
+    CopyColorAsColor            = 0,
+
+    CopyColorAsText             = 1,
+    CopyColorAsImage            = 2,
+
+    CopyColorAsNSColorSnippet   = 3,
+    CopyColorAsUIColorSnippet   = 4,
+    CopyColorAsHexColorSnippet  = 5,
+    CopyColorAsRGBColorSnippet  = 6,
+    CopyColorAsRGBAColorSnippet = 7
+};
 
 
 static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorMeter";
@@ -36,6 +50,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     ResultView    *oResultView;
     NSSlider      *oApertureSizeSlider;
 
+    NSTextField   *oApertureSizeLabel;
     NSTextField   *oProfileField;
     NSTextField   *oStatusText;
 
@@ -46,6 +61,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSTextField   *oValue1;
     NSTextField   *oValue2;
     NSTextField   *oValue3;
+
+    NSTextField   *oHoldLabel1;
+    NSTextField   *oHoldLabel2;
 
     NSSlider      *oSlider1;
     NSSlider      *oSlider2;
@@ -85,6 +103,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (void) _handleScreenColorSpaceDidChange:(NSNotification *)note;
 - (NSEvent *) _handleLocalEvent:(NSEvent *)event;
 
+- (void) _animateSnapshotsIfNeeded;
+
 @end
 
 
@@ -98,6 +118,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     [(ColorSliderCell *)[oSlider2 cell] setColor:_color];
     [(ColorSliderCell *)[oSlider3 cell] setColor:_color];
     [oResultView setColor:_color];
+    
+    [oResultView setDelegate:self];
 
     _lockedX                = NAN;
     _lockedY                = NAN;
@@ -172,7 +194,22 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     frame.size.width = 350.0;
     [oWindow setFrame:frame display:NO animate:NO];
 
+    [oWindow setContentBorderThickness:0.0 forEdge:NSMinYEdge];
+    [oWindow setContentBorderThickness:172.0 forEdge:NSMaxYEdge];
+    [oWindow setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+    [oWindow setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+
+    [[oApertureSizeLabel cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oProfileField      cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oStatusText        cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oLabel1            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oLabel2            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oLabel3            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oHoldLabel1        cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oHoldLabel2        cell] setBackgroundStyle:NSBackgroundStyleRaised];
+
     NSView *contentView = [oWindow contentView];
+    
     _layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
     [_layerContainer setWantsLayer:YES];
 
@@ -292,21 +329,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 static void sUpdateSnapshots(AppDelegate *self)
 {
-    void (^updateSnapshot)(NSView *, CALayer *) = ^(NSView *view, CALayer *layer) {
-        NSRect   bounds = [view bounds];
-        NSImage *image  = [[NSImage alloc] initWithSize:bounds.size];
-
-        [image lockFocus];
-        [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
-        [image unlockFocus];
-        [layer setContents:image];
-
-        [image release];
-    };
-
-    updateSnapshot(self->oLeftContainer,   self->_leftSnapshot);
-    updateSnapshot(self->oMiddleContainer, self->_middleSnapshot);
-    updateSnapshot(self->oRightContainer,  self->_rightSnapshot);
+    [self->_leftSnapshot   setContents:GetSnapshotImageForView(self->oLeftContainer)];
+    [self->_middleSnapshot setContents:GetSnapshotImageForView(self->oMiddleContainer)];
+    [self->_rightSnapshot  setContents:GetSnapshotImageForView(self->oRightContainer)];
 }
 
 
@@ -316,6 +341,42 @@ static void sUpdateColorViews(AppDelegate *self)
     [self->oSlider1 setNeedsDisplay:YES];
     [self->oSlider2 setNeedsDisplay:YES];
     [self->oSlider3 setNeedsDisplay:YES];
+}
+
+
+static void sUpdateHoldLabels(AppDelegate *self)
+{
+    ColorMode mode      = self->_colorMode;
+    BOOL      lowercase = self->_usesLowercaseHex;
+    Color    *color     = self->_color;
+
+    long r = lroundf([color red]   * 255);
+    long g = lroundf([color green] * 255);
+    long b = lroundf([color blue]  * 255);
+    
+    NSString *hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
+    NSString *hexString = [NSString stringWithFormat:hexFormat, r, g, b];
+    
+    if (ColorModeIsRGB(mode)) {
+        long h = lroundf([color hue]        * 360);
+        long s = lroundf([color saturation] * 100);
+        long b = lroundf([color brightness] * 100);
+
+        NSString *hsbString = [NSString stringWithFormat:@"%ld%C, %ld%%, %ld%%", h, 0x00b0, s, b];
+
+        [self->oHoldLabel1 setStringValue:hsbString];
+        [self->oHoldLabel2 setStringValue:hexString];
+
+    } else if (ColorModeIsHSB(mode)) {
+        long r100 = lroundf([color red]   * 100);
+        long g100 = lroundf([color green] * 100);
+        long b100 = lroundf([color blue]  * 100);
+
+        NSString *decimalString = [NSString stringWithFormat:@"%ld%%, %ld%%, %ld%%", r100, g100, b100];
+
+        [self->oHoldLabel1 setStringValue:decimalString];
+        [self->oHoldLabel2 setStringValue:hexString];
+    }
 }
 
 
@@ -383,7 +444,7 @@ static void sUpdateTextFields(AppDelegate *self)
     if (value2) [self->oValue2 setStringValue:value2];
     if (value3) [self->oValue3 setStringValue:value3];
     
-    BOOL isEditable = ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode);
+    BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode)) && self->_isHoldingColor;
     [self->oValue1 setEditable:isEditable];
     [self->oValue2 setEditable:isEditable];
     [self->oValue3 setEditable:isEditable];
@@ -458,11 +519,18 @@ static void sUpdateTextFields(AppDelegate *self)
     _updatesContinuously  = [preferences updatesContinuously];
     _showMouseCoordinates = [preferences showMouseCoordinates];
 
+    BOOL showsHoldLabels = [preferences showsHoldLabels];
+    [oHoldLabel1 setHidden:!showsHoldLabels];
+    [oHoldLabel2 setHidden:!showsHoldLabels];
+
     [oApertureSizeSlider setIntegerValue:apertureSize];
     [oColorModePopUp selectItemWithTag:[preferences colorMode]];
     [oPreviewView setShowsLocation:[preferences showMouseCoordinates]];
     [oPreviewView setApertureSize:apertureSize];
     [oPreviewView setApertureColor:[preferences apertureColor]];
+
+    [oResultView setClickEnabled:[preferences clickInSwatchEnabled]];
+    [oResultView setDragEnabled: [preferences dragInSwatchEnabled]];
 
     if ([preferences floatWindow]) {
         [oWindow setLevel:NSFloatingWindowLevel];
@@ -478,6 +546,7 @@ static void sUpdateTextFields(AppDelegate *self)
     }
 
     sUpdateSliders(self);
+    sUpdateHoldLabels(self);
 
     if (_zoomLevel < 1) {
         _zoomLevel = 1;
@@ -497,6 +566,10 @@ static void sUpdateTextFields(AppDelegate *self)
     sUpdateTextFields(self);
     
     [self _updateScreenshot];
+    
+    if (_isHoldingColor) {
+        [self _animateSnapshotsIfNeeded];
+    }
 }
 
 
@@ -567,7 +640,9 @@ static void sUpdateTextFields(AppDelegate *self)
             BOOL      isArrowKey     = isLeftOrRight || isUpOrDown;
 
             // Text fields get all events
-            if ([firstResponder isKindOfClass:[NSTextField class]]) {
+            if ([firstResponder isKindOfClass:[NSTextField class]] ||
+                [firstResponder isKindOfClass:[NSTextView  class]])
+            {
                 return event;
 
             // Pop-up menus that are first responder get up/down events
@@ -616,31 +691,173 @@ static void sUpdateTextFields(AppDelegate *self)
 }
 
 
-- (void) _copyImageToClipboard:(NSImage *)image
+- (void) _addImage:(NSImage *)image toPasteboard:(NSPasteboard *)pboard
 {
-    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
-
     [pboard clearContents];
     [pboard addTypes:[NSArray arrayWithObjects:NSPasteboardTypeTIFF, nil] owner:nil];
     [pboard setData:[image TIFFRepresentation] forType:NSPasteboardTypeTIFF];
 }
 
+#pragma mark -
+#pragma mark Pasteboard / Dragging
 
-- (void) _copyTextToClipboard:(NSString *)text
+- (id<NSPasteboardWriting>) _pasteboardWriterForColorAction:(NSInteger)actionTag
 {
-    if (!text) return;
+    Preferences *preferences = [Preferences sharedInstance];
 
-    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
-    [pboard clearContents];
-    [pboard addTypes:[NSArray arrayWithObject:NSPasteboardTypeString] owner:nil];
-    [pboard setString:text forType:NSPasteboardTypeString];
+    id<NSPasteboardWriting> result = nil;
+
+    NSString *template      = nil;
+    NSString *clipboardText = nil;
+
+    if (actionTag == CopyColorAsColor) {
+        result = [_color NSColor];
+
+    } else if (actionTag == CopyColorAsText) {
+        ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, NULL, NULL, NULL, &clipboardText);
+    
+    } else if (actionTag == CopyColorAsImage) {
+        NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
+        NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
+        
+        [image lockFocus];
+        [[_color NSColor] set];
+        NSRectFill(bounds);
+        [image unlockFocus];
+
+        result = image;
+
+    } else if (actionTag == CopyColorAsNSColorSnippet) {
+        template = [preferences nsColorSnippetTemplate];
+
+    } else if (actionTag == CopyColorAsUIColorSnippet) {
+        template = [preferences uiColorSnippetTemplate];
+
+    } else if (actionTag == CopyColorAsHexColorSnippet) {
+        template = [preferences hexColorSnippetTemplate];
+
+    } else if (actionTag == CopyColorAsRGBColorSnippet) {
+        template = [preferences rgbColorSnippetTemplate];
+    
+    } else if (actionTag == CopyColorAsRGBAColorSnippet) {
+        template = [preferences rgbaColorSnippetTemplate];
+    }
+
+    if (template) {
+        clipboardText = GetCodeSnippetForColor(_color, _usesLowercaseHex, template);
+    }
+    
+    if (clipboardText) {
+        NSPasteboardItem *item = [[[NSPasteboardItem alloc] initWithPasteboardPropertyList:clipboardText ofType:NSPasteboardTypeString] autorelease];
+        result = item;
+    }
+
+    return result;
+}
+
+
+- (NSDraggingImageComponent *) _draggingImageComponentForColor:(Color *)color action:(NSInteger)colorAction
+{
+    CGRect imageRect  = CGRectMake(0, 0, 48.0, 48.0);
+    CGRect circleRect = CGRectInset(imageRect, 8.0, 8.0);
+    
+    NSImage *image = [[NSImage alloc] initWithSize:imageRect.size];
+    
+    [image lockFocus];
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:circleRect];
+
+    {
+        CGContextSaveGState(context);
+
+        NSShadow *shadow = [[NSShadow alloc] init];
+        
+        [shadow setShadowOffset:CGSizeMake(0.0, -1.0)];
+        [shadow setShadowBlurRadius:4.0];
+        [shadow setShadowColor:[NSColor colorWithDeviceWhite:0.0 alpha:1.0]];
+
+        [shadow set];
+        [[NSColor whiteColor] set];
+        [path fill];
+
+        [shadow release];
+        
+        CGContextRestoreGState(context);
+    }
+
+    {
+        CGContextSaveGState(context);
+        [path addClip];
+
+        [[color NSColor] set];
+        NSRectFill(circleRect);
+
+        {
+            NSColor *startColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.2];
+            NSColor *endColor   = [NSColor colorWithCalibratedWhite:1.0 alpha:0.0];
+
+            NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
+            [gradient drawInRect:circleRect angle:-90];
+            [gradient release];
+        }
+        
+        CGContextRestoreGState(context);
+    }
+
+    [[NSColor whiteColor] set];
+    [path setLineWidth:2.0];
+    [path stroke];
+
+    [image unlockFocus];
+    
+
+    NSString *key = NSDraggingImageComponentIconKey;
+    NSDraggingImageComponent *component = [[[NSDraggingImageComponent alloc] initWithKey:key] autorelease];
+
+    [component setContents:image];
+    [component setFrame:imageRect];
+
+    [image release];
+    
+    return component;
+}
+
+
+- (NSDraggingItem *) _draggingItemForColorAction:(NSInteger)colorAction cursorOffset:(NSPoint)location
+{
+    id<NSPasteboardWriting> pboardWriter = [self _pasteboardWriterForColorAction:colorAction];
+
+    Color *colorCopy = [_color copy];
+
+    NSDraggingItem *draggingItem = [[NSDraggingItem alloc] initWithPasteboardWriter:pboardWriter];
+
+    [draggingItem setImageComponentsProvider: ^{
+        NSDraggingImageComponent *component = [self _draggingImageComponentForColor:colorCopy action:colorAction];
+        
+        NSRect frame = [component frame];
+        frame.origin = NSMakePoint(location.x - (frame.size.width / 2.0), location.y - (frame.size.height / 2.0));
+        [component setFrame:frame];
+
+        return [NSArray arrayWithObject:component];
+    }];
+    
+    [colorCopy release];
+
+    return [draggingItem autorelease];
+}
+
+
+- (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
+{
+    return NSDragOperationGeneric;
 }
 
 
 #pragma mark -
 #pragma mark Animation
 
-- (void) _doHoldColorAnimation
+- (void) _animateSnapshotsIfNeeded
 {
     void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
         [oLeftContainer   setHidden:!yn];
@@ -702,6 +919,44 @@ static void sUpdateTextFields(AppDelegate *self)
 
 
 #pragma mark -
+#pragma mark ResultViewDelegate
+
+- (void) resultViewClicked:(ResultView *)view
+{
+    Preferences *preferences = [Preferences sharedInstance];
+
+    if ([preferences clickInSwatchEnabled]) {
+        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+        
+        id<NSPasteboardWriting> pboardWriter = [self _pasteboardWriterForColorAction:[preferences clickInSwatchAction]];
+
+        [pboard clearContents];
+        [pboard writeObjects:[NSArray arrayWithObject:pboardWriter]];
+        
+        [oResultView doPopOutAnimation];
+    }
+}
+
+
+- (void) resultView:(ResultView *)view dragInitiatedWithEvent:(NSEvent *)event
+{
+    Preferences *preferences = [Preferences sharedInstance];
+
+    if ([preferences dragInSwatchEnabled]) {
+        NSInteger action   = [preferences dragInSwatchAction];
+        NSPoint   location = [event locationInWindow];
+
+        location = [oResultView convertPoint:location fromView:nil];
+
+        NSDraggingItem *item  = [self _draggingItemForColorAction:action cursorOffset:location];
+        NSArray        *items = [NSArray arrayWithObject:item];
+
+        [oResultView beginDraggingSessionWithItems:items event:event source:self];
+    }
+}
+
+
+#pragma mark -
 #pragma mark IBActions
 
 - (IBAction) changeColorMode:(id)sender
@@ -719,8 +974,8 @@ static void sUpdateTextFields(AppDelegate *self)
 
 - (IBAction) updateComponent:(id)sender
 {
-    BOOL  isRGB  = ColorModeIsRGB(_colorMode);
-    BOOL  isHSB  = ColorModeIsHSB(_colorMode);
+    BOOL isRGB = ColorModeIsRGB(_colorMode);
+    BOOL isHSB = ColorModeIsHSB(_colorMode);
 
     ColorComponent component = ColorComponentNone;
 
@@ -746,6 +1001,7 @@ static void sUpdateTextFields(AppDelegate *self)
 
     sUpdateColorViews(self);
     sUpdateSliders(self);
+    sUpdateHoldLabels(self);
     sUpdateTextFields(self);
 }
 
@@ -840,7 +1096,8 @@ static void sUpdateTextFields(AppDelegate *self)
 - (IBAction) copyImage:(id)sender
 {
     NSImage *image = [self _imageFromPreviewView];
-    [self _copyImageToClipboard:image];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    [self _addImage:image toPasteboard:pboard];
 }
 
 
@@ -867,65 +1124,23 @@ static void sUpdateTextFields(AppDelegate *self)
     [self _updateScreenshot];
 
     sUpdateSliders(self);
+    sUpdateHoldLabels(self);
     
     if ([[Preferences sharedInstance] showsHoldColorSliders]) {
-        [self _doHoldColorAnimation];
+        [self _animateSnapshotsIfNeeded];
     }
 }
 
 
-- (IBAction) copyColorAsText:(id)sender
-{
-    NSString *unused1, *unused2, *unused3;
-    NSString *clipboard = nil;
-
-    ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, &unused1, &unused2, &unused3, &clipboard);
-
-    [self _copyTextToClipboard:clipboard];
-}
-
-
-- (IBAction) copyColorAsImage:(id)sender
-{
-    NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
-    NSImage *image = [[NSImage alloc] initWithSize:bounds.size];
-    
-    [image lockFocus];
-    [[NSColor colorWithDeviceRed:_color.red green:_color.green blue:_color.blue alpha:1.0] set];
-    NSRectFill(bounds);
-    [image unlockFocus];
-
-    [self _copyImageToClipboard:image];
-
-    [image release];
-}
-
-
-- (IBAction) copyColorAsCodeSnippet:(id)sender
+- (IBAction) performColorActionForSender:(id)sender
 {
     NSInteger tag = [sender tag];
-    Preferences *preferences = [Preferences sharedInstance];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
     
-    NSString *template = nil;
+    id<NSPasteboardWriting> writer = [self _pasteboardWriterForColorAction:tag];
     
-    if (tag == 0) {
-        template = [preferences nsColorSnippetTemplate];
-    } else if (tag == 1) {
-        template = [preferences uiColorSnippetTemplate];
-    } else if (tag == 2) {
-        template = [preferences hexColorSnippetTemplate];
-    } else if (tag == 3) {
-        template = [preferences rgbColorSnippetTemplate];
-    } else if (tag == 4) {
-        template = [preferences rgbaColorSnippetTemplate];
-    }
-
-    if (template) {
-        NSString *snippet  = GetCodeSnippetForColor(_color, _usesLowercaseHex, template);
-        [self _copyTextToClipboard:snippet];
-    } else {
-        NSBeep();
-    }
+    [pboard clearContents];
+    [pboard writeObjects:[NSArray arrayWithObject:writer]];
 }
 
 
@@ -946,6 +1161,7 @@ static void sUpdateTextFields(AppDelegate *self)
             colorModePopUp     = oColorModePopUp,
             previewView        = oPreviewView,
             resultView         = oResultView,
+            apertureSizeLabel  = oApertureSizeLabel,
             profileField       = oProfileField,
             statusText         = oStatusText,
             apertureSizeSlider = oApertureSizeSlider,
@@ -955,6 +1171,8 @@ static void sUpdateTextFields(AppDelegate *self)
             value1             = oValue1,
             value2             = oValue2,
             value3             = oValue3,
+            holdLabel1         = oHoldLabel1,
+            holdLabel2         = oHoldLabel2,
             slider1            = oSlider1,
             slider2            = oSlider2,
             slider3            = oSlider3;

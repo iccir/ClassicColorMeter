@@ -1,5 +1,5 @@
 //
-//  ColorCalculator.h
+//  Util.h
 //  Classic Color Meter
 //
 //  Created by Ricci Adams on 2011-07-17.
@@ -29,3 +29,6 @@ extern float ColorModeParseComponentString(ColorMode mode, ColorComponent compon
 extern void GetAverageColor(CGImageRef image, CGRect apertureRect, float *outRed, float *outGreen, float *outBlue);
 
 extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSString *inTemplate);
+
+
+extern NSImage *GetSnapshotImageForView(NSView *view);

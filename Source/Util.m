@@ -1,5 +1,5 @@
 //
-//  ColorCalculator.m
+//  Util.h
 //  Classic Color Meter
 //
 //  Created by Ricci Adams on 2011-07-17.
@@ -351,16 +351,15 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
         value2 = [NSString stringWithFormat:@"%ld", (long) ([color saturation] * 100)];
         value3 = [NSString stringWithFormat:@"%ld", (long) ([color brightness] * 100)];
     }
-
-    *outValue1 = value1;
-    *outValue2 = value2;
-    *outValue3 = value3;
     
     if (!clipboard) {
         clipboard = [NSString stringWithFormat:@"%@\t%@\t%@", value1, value2, value3];
     }
-    
-    *outClipboard = clipboard;
+
+    if (outValue1)    { *outValue1    = value1;    }
+    if (outValue2)    { *outValue2    = value2;    }
+    if (outValue3)    { *outValue3    = value3;    }
+    if (outClipboard) { *outClipboard = clipboard; }
 }
 
 
@@ -507,5 +506,19 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
     [result replaceOccurrencesOfString:@"$$" withString:@"$" options:NSLiteralSearch range:NSMakeRange(0, [result length])];
 
     return result;
+}
+
+
+
+NSImage *GetSnapshotImageForView(NSView *view)
+{
+    NSRect   bounds = [view bounds];
+    NSImage *image  = [[NSImage alloc] initWithSize:bounds.size];
+
+    [image lockFocus];
+    [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
+    [image unlockFocus];
+
+    return [image autorelease];
 }
 

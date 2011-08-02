@@ -8,8 +8,22 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol ResultViewDelegate;
+
+
 @interface ResultView : NSView
 
-@property (nonatomic, retain) Color *color;
+- (void) doPopOutAnimation;
 
+@property (nonatomic, retain) Color *color;
+@property (nonatomic, assign) id<ResultViewDelegate> delegate;
+@property (nonatomic, assign, getter=isClickEnabled) BOOL clickEnabled;
+@property (nonatomic, assign, getter=isDragEnabled)  BOOL dragEnabled;
+
+@end
+
+
+@protocol ResultViewDelegate <NSObject>
+- (void) resultViewClicked:(ResultView *)view;
+- (void) resultView:(ResultView *)view dragInitiatedWithEvent:(NSEvent *)event;
 @end

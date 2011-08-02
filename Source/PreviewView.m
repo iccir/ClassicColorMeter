@@ -32,6 +32,12 @@
 }
 
 
+- (BOOL) isOpaque
+{
+    return YES;
+}
+
+
 - (void) drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];

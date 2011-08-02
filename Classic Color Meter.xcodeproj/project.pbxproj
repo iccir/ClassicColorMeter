@@ -11,7 +11,6 @@
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
 		552B412013D56ADE000EB55C /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 552B411F13D56ADE000EB55C /* icon.icns */; };
 		558444B213D3C9CE006C6F51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A313D3C9CE006C6F51 /* AppDelegate.m */; };
-		558444B313D3C9CE006C6F51 /* BackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A513D3C9CE006C6F51 /* BackgroundView.m */; };
 		558444B413D3C9CE006C6F51 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A713D3C9CE006C6F51 /* Util.m */; };
 		558444B513D3C9CE006C6F51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A813D3C9CE006C6F51 /* main.m */; };
 		558444B613D3C9CE006C6F51 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444AA13D3C9CE006C6F51 /* Preferences.m */; };
@@ -43,9 +42,7 @@
 		552B411F13D56ADE000EB55C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = SOURCE_ROOT; };
 		558444A213D3C9CE006C6F51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
 		558444A313D3C9CE006C6F51 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Source/AppDelegate.m; sourceTree = "<group>"; };
-		558444A413D3C9CE006C6F51 /* BackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackgroundView.h; path = Source/BackgroundView.h; sourceTree = "<group>"; };
-		558444A513D3C9CE006C6F51 /* BackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BackgroundView.m; path = Source/BackgroundView.m; sourceTree = "<group>"; };
-		558444A613D3C9CE006C6F51 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; name = Util.h; path = Source/Util.h; sourceTree = "<group>"; };
+		558444A613D3C9CE006C6F51 /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Util.h; path = Source/Util.h; sourceTree = "<group>"; };
 		558444A713D3C9CE006C6F51 /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Util.m; path = Source/Util.m; sourceTree = "<group>"; };
 		558444A813D3C9CE006C6F51 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
 		558444A913D3C9CE006C6F51 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Preferences.h; path = Source/Preferences.h; sourceTree = "<group>"; };
@@ -109,8 +106,6 @@
 		5584449F13D3C8BA006C6F51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				558444A413D3C9CE006C6F51 /* BackgroundView.h */,
-				558444A513D3C9CE006C6F51 /* BackgroundView.m */,
 				558444AE13D3C9CE006C6F51 /* PreviewView.h */,
 				558444AF13D3C9CE006C6F51 /* PreviewView.m */,
 				558444B013D3C9CE006C6F51 /* ResultView.h */,
@@ -280,7 +275,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				558444B213D3C9CE006C6F51 /* AppDelegate.m in Sources */,
-				558444B313D3C9CE006C6F51 /* BackgroundView.m in Sources */,
 				558444B413D3C9CE006C6F51 /* Util.m in Sources */,
 				558444B513D3C9CE006C6F51 /* main.m in Sources */,
 				558444B613D3C9CE006C6F51 /* Preferences.m in Sources */,

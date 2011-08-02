@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ResultView.h"
 
-@class PreviewView, ResultView;
+@class PreviewView;
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, ResultViewDelegate, NSDraggingSource>
 
 - (IBAction) changeColorMode:(id)sender;
 - (IBAction) changeApertureSize:(id)sender;
@@ -30,9 +31,8 @@
 
 // Color menu
 - (IBAction) holdColor:(id)sender;
-- (IBAction) copyColorAsText:(id)sender;
-- (IBAction) copyColorAsImage:(id)sender;
-- (IBAction) copyColorAsCodeSnippet:(id)sender;
+
+- (IBAction) performColorActionForSender:(id)sender;
 
 - (IBAction) updateComponent:(id)sender;
 
@@ -50,12 +50,16 @@
 
 @property (nonatomic, retain) IBOutlet ResultView    *resultView;
 
+@property (nonatomic, retain) IBOutlet NSTextField   *apertureSizeLabel;
 @property (nonatomic, retain) IBOutlet NSTextField   *profileField;
 @property (nonatomic, retain) IBOutlet NSTextField   *statusText;
 
 @property (nonatomic, retain) IBOutlet NSTextField   *label1;
 @property (nonatomic, retain) IBOutlet NSTextField   *label2;
 @property (nonatomic, retain) IBOutlet NSTextField   *label3;
+
+@property (nonatomic, retain) IBOutlet NSTextField   *holdLabel1;
+@property (nonatomic, retain) IBOutlet NSTextField   *holdLabel2;
 
 @property (nonatomic, retain) IBOutlet NSTextField   *value1;
 @property (nonatomic, retain) IBOutlet NSTextField   *value2;
