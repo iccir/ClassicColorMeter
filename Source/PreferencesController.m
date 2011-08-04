@@ -34,7 +34,7 @@
 - (id) initWithWindow:(NSWindow *)window
 {
     if ((self = [super initWithWindow:window])) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification        object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
     }
     
     return self;

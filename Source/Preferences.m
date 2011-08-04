@@ -90,19 +90,19 @@ static void sRegisterDefaults(void)
     i( sSwatchClickActionKey, 0 );
     i( sSwatchDragActionKey,  0 );
 
-    o( sCodeSnippetTemplateNSKey,   @"[NSColor colorWithDeviceRed:(0x$RHEX/255f) green:(0x$GHEX/255f) blue:(0x$BHEX/255f) alpha:1.0]" );
-    o( sCodeSnippetTemplateUIKey,   @"[UIColor colorWithRed:(0x$RHEX/255f) green:(0x$GHEX/255f) blue:(0x$BHEX/255f) alpha:1.0]");
+    o( sCodeSnippetTemplateNSKey,   @"[NSColor colorWithDeviceRed:(0x$RHEX / 255.0) green:(0x$GHEX / 255.0) blue:(0x$BHEX / 255.0) alpha:1.0]" );
+    o( sCodeSnippetTemplateUIKey,   @"[UIColor colorWithRed:(0x$RHEX / 255.0) green:(0x$GHEX / 255.0) blue:(0x$BHEX / 255.0) alpha:1.0]");
     o( sCodeSnippetTemplateHexKey,  @"#$RHEX$GHEX$BHEX");
-    o( sCodeSnippetTemplateRGBKey,  @"rgb($RFLOAT3, $GFLOAT3, $BFLOAT3)" );
-    o( sCodeSnippetTemplateRGBAKey, @"rgba($RFLOAT3, $GFLOAT3, $BFLOAT3, 1.0)" );
+    o( sCodeSnippetTemplateRGBKey,  @"rgb($RN255, $GN255, $BN255)" );
+    o( sCodeSnippetTemplateRGBAKey, @"rgba($RN255, $GN255, $BN255, 1.0)" );
     
     b( sUpdatesContinuouslyKey,   NO  );
     b( sFloatWindowKey,           NO  );
     b( sShowMouseCoordinatesKey,  NO  );
     b( sSwatchClickEnabledKey,    NO  );
     b( sSwatchDragEnabledKey,     NO  );
-    b( sArrowKeysEnabledKey,      NO  );
-    b( sShowsHoldColorSlidersKey, NO  );
+    b( sArrowKeysEnabledKey,      YES );
+    b( sShowsHoldColorSlidersKey, YES );
     b( sShowsHoldLabelsKey,       YES );
     b( sUsesLowercaseHexKey,      NO  );
     

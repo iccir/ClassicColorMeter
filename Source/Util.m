@@ -476,8 +476,21 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
         [result replaceOccurrencesOfString:key withString:hexValue options:NSLiteralSearch range:NSMakeRange(0, [result length])];
     };
     
+    void (^replaceNumber)(NSString *, float, float) = ^(NSString *key, float multiplier, float component) {
+        NSRange range = [result rangeOfString:key];
+
+        if (range.location != NSNotFound) {
+            NSString *string = [NSString stringWithFormat: @"%ld", lroundf(multiplier * component)];
+            
+            if (string) {
+                [result replaceOccurrencesOfString:key withString:string options:NSLiteralSearch range:NSMakeRange(0, [result length])];
+            }
+        }
+    };
+    
     void (^replaceFloat)(NSString *, float) = ^(NSString *key, float component) {
         NSRange range = [result rangeOfString:key];
+
         if (range.location != NSNotFound) {
             unichar number = [result characterAtIndex:(range.location + 7)];
             
@@ -498,6 +511,10 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
     replaceHex(@"$RHEX", red);
     replaceHex(@"$GHEX", green);
     replaceHex(@"$BHEX", blue);
+
+    replaceNumber(@"$RN255", 255, red);
+    replaceNumber(@"$GN255", 255, green);
+    replaceNumber(@"$BN255", 255, blue);
     
     replaceFloat(@"$RFLOAT", red);
     replaceFloat(@"$GFLOAT", green);

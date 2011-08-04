@@ -677,7 +677,7 @@
 									<string key="NSReuseIdentifierKey">_NS:3935</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="601120808">
-										<int key="NSCellFlags">68288064</int>
+										<int key="NSCellFlags">70385217</int>
 										<int key="NSCellFlags2">138413056</int>
 										<string key="NSContents">&lt;DO NOT LOCALIZE&gt;</string>
 										<reference key="NSSupport" ref="26"/>
@@ -693,11 +693,10 @@
 									<string key="NSFrame">{{5, 8}, {120, 14}}</string>
 									<reference key="NSSuperview" ref="714504242"/>
 									<reference key="NSWindow"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:3935</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="556931269">
-										<int key="NSCellFlags">68288064</int>
+										<int key="NSCellFlags">70385217</int>
 										<int key="NSCellFlags2">138413056</int>
 										<string key="NSContents">&lt;DO NOT LOCALIZE&gt;</string>
 										<reference key="NSSupport" ref="26"/>

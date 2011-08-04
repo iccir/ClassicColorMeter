@@ -213,6 +213,7 @@
 				55E67D7B13CFC3000040DFDE /* Sources */,
 				55E67D7C13CFC3000040DFDE /* Frameworks */,
 				55E67D7D13CFC3000040DFDE /* Resources */,
+				5545C9D613EB491E00B50670 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -268,6 +269,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5545C9D613EB491E00B50670 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "RESOURCES_FULL_PATH=\"$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\n\nif [ $CONFIGURATION == \"Release\" ]; then \n    rm \"$RESOURCES_FULL_PATH/beta.icns\"\nelse  \n    rm \"$RESOURCES_FULL_PATH/icon.icns\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		55E67D7B13CFC3000040DFDE /* Sources */ = {

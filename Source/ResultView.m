@@ -81,7 +81,8 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (BOOL) mouseDownCanMoveWindow
 {
-    return !(_clickEnabled || _dragEnabled);
+    // This is cached by AppKit, so we can't generate it dynamically based on _clickEnabled/_dragEnabled :(
+    return NO;
 }
 
 

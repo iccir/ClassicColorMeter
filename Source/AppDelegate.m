@@ -18,7 +18,6 @@
 #import "ColorSliderCell.h"
 
 
-
 enum {
     CopyColorAsColor            = 0,
 
@@ -850,7 +849,7 @@ static void sUpdateTextFields(AppDelegate *self)
 
 - (NSDragOperation) draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
-    return NSDragOperationGeneric;
+    return NSDragOperationGeneric | NSDragOperationCopy;
 }
 
 
