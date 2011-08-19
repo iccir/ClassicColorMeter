@@ -15,6 +15,9 @@ extern NSString * const PreferencesDidChangeNotification;
 + (id) sharedInstance;
 
 @property (nonatomic, assign) ColorMode colorMode;
+@property (nonatomic, assign) HoldColorMode holdColorMode;
+@property (nonatomic, assign) HoldColorSlidersType holdColorSlidersType;
+
 @property (nonatomic, assign) NSInteger zoomLevel;
 @property (nonatomic, assign) NSInteger apertureSize;
 @property (nonatomic, assign) ApertureColor apertureColor;
@@ -34,7 +37,7 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, assign) BOOL dragInSwatchEnabled;
 @property (nonatomic, assign) BOOL arrowKeysEnabled;
 @property (nonatomic, assign) BOOL usesLowercaseHex;
-@property (nonatomic, assign) BOOL showsHoldColorSliders;
+@property (nonatomic, assign) BOOL usesPoundPrefix;
 @property (nonatomic, assign) BOOL showsHoldLabels;
 
 @end

@@ -11,6 +11,7 @@
 NSString * const PreferencesDidChangeNotification = @"PreferencesDidChange";
 
 static NSString * const sColorModeKey               = @"ColorMode";
+static NSString * const sHoldColorModeKey           = @"HoldColorMode";
 static NSString * const sZoomLevelKey               = @"ZoomLevel";
 static NSString * const sApertureSizeKey            = @"ApertureSize";
 static NSString * const sApertureColorKey           = @"ApertureColor";
@@ -30,12 +31,16 @@ static NSString * const sSwatchClickEnabledKey      = @"SwatchClickEnabled";
 static NSString * const sSwatchDragEnabledKey       = @"SwatchDragEnabled";
 static NSString * const sArrowKeysEnabledKey        = @"ArrowKeysEnabled";
 static NSString * const sUsesLowercaseHexKey        = @"UsesLowercaseHex";
+static NSString * const sUsesPoundPrefixKey         = @"UsesPoundPrefixForHex";
 static NSString * const sShowsHoldColorSlidersKey   = @"ShowsHoldColorSliders";
 static NSString * const sShowsHoldLabelsKey         = @"ShowsHoldLabels";
 
 
 @interface Preferences () {
-    ColorMode _colorMode;
+    ColorMode            _colorMode;
+    HoldColorMode        _holdColorMode;
+    HoldColorSlidersType _holdColorSlidersType;
+
     NSInteger _zoomLevel;
     NSInteger _apertureSize;
     NSInteger _apertureColor;
@@ -54,9 +59,9 @@ static NSString * const sShowsHoldLabelsKey         = @"ShowsHoldLabels";
     BOOL _clickInSwatchEnabled;
     BOOL _dragInSwatchEnabled;
     BOOL _arrowKeysEnabled;
-    BOOL _showsHoldColorSliders;
     BOOL _usesLowercaseHex;
     BOOL _showsHoldLabels;
+    BOOL _usesPoundPrefix;
 }
 
 - (void) _load;
@@ -105,6 +110,7 @@ static void sRegisterDefaults(void)
     b( sShowsHoldColorSlidersKey, YES );
     b( sShowsHoldLabelsKey,       YES );
     b( sUsesLowercaseHexKey,      NO  );
+    b( sUsesPoundPrefixKey,       YES );
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
@@ -134,6 +140,9 @@ static void sRegisterDefaults(void)
         [self _load];
         
         [self addObserver:self forKeyPath:@"colorMode"                options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"holdColorMode"            options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"holdColorSlidersType"     options:0 context:NULL];
+
         [self addObserver:self forKeyPath:@"zoomLevel"                options:0 context:NULL];
         [self addObserver:self forKeyPath:@"apertureSize"             options:0 context:NULL];
         [self addObserver:self forKeyPath:@"apertureColor"            options:0 context:NULL];
@@ -153,8 +162,8 @@ static void sRegisterDefaults(void)
         [self addObserver:self forKeyPath:@"dragInSwatchEnabled"      options:0 context:NULL];
         [self addObserver:self forKeyPath:@"arrowKeysEnabled"         options:0 context:NULL];
         [self addObserver:self forKeyPath:@"usesLowercaseHex"         options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"showsHoldColorSliders"    options:0 context:NULL];
         [self addObserver:self forKeyPath:@"showsHoldLabels"          options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"usesPoundPrefix"          options:0 context:NULL];
     }
 
     return self;
@@ -166,6 +175,9 @@ static void sRegisterDefaults(void)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     _colorMode                = [defaults integerForKey:sColorModeKey];
+    _holdColorMode            = [defaults integerForKey:sHoldColorModeKey];
+    _holdColorSlidersType     = [defaults integerForKey:sShowsHoldColorSlidersKey];
+
     _zoomLevel                = [defaults integerForKey:sZoomLevelKey];
     _apertureSize             = [defaults integerForKey:sApertureSizeKey];
     _apertureColor            = [defaults integerForKey:sApertureColorKey];
@@ -184,9 +196,9 @@ static void sRegisterDefaults(void)
     _clickInSwatchEnabled     = [defaults boolForKey:sSwatchClickEnabledKey];
     _dragInSwatchEnabled      = [defaults boolForKey:sSwatchDragEnabledKey];
     _arrowKeysEnabled         = [defaults boolForKey:sArrowKeysEnabledKey];
-    _showsHoldColorSliders    = [defaults boolForKey:sShowsHoldColorSlidersKey];
     _showsHoldLabels          = [defaults boolForKey:sShowsHoldLabelsKey];
     _usesLowercaseHex         = [defaults boolForKey:sUsesLowercaseHexKey];
+    _usesPoundPrefix          = [defaults boolForKey:sUsesPoundPrefixKey];
 }
 
 
@@ -194,12 +206,15 @@ static void sRegisterDefaults(void)
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; 
 
-    [defaults setInteger:_colorMode           forKey:sColorModeKey];
-    [defaults setInteger:_zoomLevel           forKey:sZoomLevelKey];
-    [defaults setInteger:_apertureSize        forKey:sApertureSizeKey];
-    [defaults setInteger:_apertureColor       forKey:sApertureColorKey];
-    [defaults setInteger:_clickInSwatchAction forKey:sSwatchClickActionKey];
-    [defaults setInteger:_dragInSwatchAction  forKey:sSwatchDragActionKey];
+    [defaults setInteger:_colorMode             forKey:sColorModeKey];
+    [defaults setInteger:_holdColorMode         forKey:sHoldColorModeKey];
+    [defaults setInteger:_holdColorSlidersType  forKey:sShowsHoldColorSlidersKey];
+
+    [defaults setInteger:_zoomLevel             forKey:sZoomLevelKey];
+    [defaults setInteger:_apertureSize          forKey:sApertureSizeKey];
+    [defaults setInteger:_apertureColor         forKey:sApertureColorKey];
+    [defaults setInteger:_clickInSwatchAction   forKey:sSwatchClickActionKey];
+    [defaults setInteger:_dragInSwatchAction    forKey:sSwatchDragActionKey];
 
     [defaults setObject:_nsColorSnippetTemplate   forKey:sCodeSnippetTemplateNSKey];
     [defaults setObject:_uiColorSnippetTemplate   forKey:sCodeSnippetTemplateUIKey];
@@ -214,7 +229,7 @@ static void sRegisterDefaults(void)
     [defaults setBool:_dragInSwatchEnabled   forKey:sSwatchDragEnabledKey];
     [defaults setBool:_arrowKeysEnabled      forKey:sArrowKeysEnabledKey];
     [defaults setBool:_usesLowercaseHex      forKey:sUsesLowercaseHexKey];
-    [defaults setBool:_showsHoldColorSliders forKey:sShowsHoldColorSlidersKey];
+    [defaults setBool:_usesPoundPrefix       forKey:sUsesPoundPrefixKey];
     [defaults setBool:_showsHoldLabels       forKey:sShowsHoldLabelsKey];
     
     [defaults synchronize];
@@ -230,8 +245,11 @@ static void sRegisterDefaults(void)
 }
 
 
-@synthesize colorMode           = _colorMode,
-            zoomLevel           = _zoomLevel,
+@synthesize colorMode            = _colorMode,
+            holdColorMode        = _holdColorMode,
+            holdColorSlidersType = _holdColorSlidersType;
+            
+@synthesize zoomLevel           = _zoomLevel,
             apertureSize        = _apertureSize,
             apertureColor       = _apertureColor,
             clickInSwatchAction = _clickInSwatchAction,
@@ -250,7 +268,7 @@ static void sRegisterDefaults(void)
             dragInSwatchEnabled   = _dragInSwatchEnabled,
             arrowKeysEnabled      = _arrowKeysEnabled,
             usesLowercaseHex      = _usesLowercaseHex,
-            showsHoldColorSliders = _showsHoldColorSliders,
-            showsHoldLabels       = _showsHoldLabels;
+            showsHoldLabels       = _showsHoldLabels,
+            usesPoundPrefix       = _usesPoundPrefix;
 
 @end

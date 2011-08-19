@@ -12,6 +12,7 @@
 
 @interface PreferencesController () {
     NSPopUpButton *oApertureColorPopUp;
+    NSPopUpButton *oHoldSlidersPopUp;
 
     NSButton      *oClickInSwatchButton;
     NSPopUpButton *oClickInSwatchPopUp;
@@ -20,8 +21,8 @@
     NSPopUpButton *oDragInSwatchPopUp;
 
     NSButton      *oUseLowercaseHexButton;
+    NSButton      *oUsePoundPrefixButton;
     NSButton      *oArrowKeysButton;
-    NSButton      *oShowSliderButton;
 }
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note;
@@ -45,22 +46,24 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [oApertureColorPopUp    setTarget:nil];  [oApertureColorPopUp    setAction:NULL];
+    [oHoldSlidersPopUp      setTarget:nil];  [oHoldSlidersPopUp      setAction:NULL];
     [oClickInSwatchButton   setTarget:nil];  [oClickInSwatchButton   setAction:NULL];
     [oClickInSwatchPopUp    setTarget:nil];  [oClickInSwatchPopUp    setAction:NULL];
     [oDragInSwatchButton    setTarget:nil];  [oDragInSwatchButton    setAction:NULL];
     [oDragInSwatchPopUp     setTarget:nil];  [oDragInSwatchPopUp     setAction:NULL];
     [oUseLowercaseHexButton setTarget:nil];  [oUseLowercaseHexButton setAction:NULL];
     [oArrowKeysButton       setTarget:nil];  [oArrowKeysButton       setAction:NULL];
-    [oShowSliderButton      setTarget:nil];  [oShowSliderButton      setAction:NULL];
+    [oUsePoundPrefixButton  setTarget:nil];  [oUsePoundPrefixButton  setAction:NULL];
 
     [self setApertureColorPopUp:nil];
+    [self setHoldSlidersPopUp:nil];
     [self setClickInSwatchButton:nil];
     [self setClickInSwatchPopUp:nil];
     [self setDragInSwatchButton:nil];
     [self setDragInSwatchPopUp:nil];
     [self setUseLowercaseHexButton:nil];
     [self setArrowKeysButton:nil];
-    [self setShowSliderButton:nil];
+    [self setUsePoundPrefixButton:nil];
 
     [super dealloc];
 }
@@ -83,6 +86,7 @@
     Preferences *preferences = [Preferences sharedInstance];
 
     [oApertureColorPopUp selectItemWithTag:[preferences apertureColor]];
+    [oHoldSlidersPopUp   selectItemWithTag:[preferences holdColorSlidersType]];
 
     BOOL clickInSwatchEnabled = [preferences clickInSwatchEnabled];
     [oClickInSwatchButton setState:clickInSwatchEnabled];
@@ -95,8 +99,8 @@
     [oDragInSwatchPopUp   setEnabled:dragInSwatchEnabled];
 
     [oUseLowercaseHexButton setState:[preferences usesLowercaseHex]];
+    [oUsePoundPrefixButton  setState:[preferences usesPoundPrefix]];
     [oArrowKeysButton       setState:[preferences arrowKeysEnabled]];
-    [oShowSliderButton      setState:[preferences showsHoldColorSliders]];
 }
 
 
@@ -106,6 +110,9 @@
 
     if (sender == oApertureColorPopUp) {
         [preferences setApertureColor:[sender selectedTag]];
+
+    } else if (sender == oHoldSlidersPopUp) {
+        [preferences setHoldColorSlidersType:[sender selectedTag]];
 
     } else if (sender == oClickInSwatchButton) {
         [preferences setClickInSwatchEnabled:([sender state] == NSOnState)];
@@ -121,17 +128,18 @@
 
     } else if (sender == oUseLowercaseHexButton) {
         [preferences setUsesLowercaseHex:([sender state] == NSOnState)];
-    
+
+    } else if (sender == oUsePoundPrefixButton) {
+        [preferences setUsesPoundPrefix:([sender state] == NSOnState)];
+
     } else if (sender == oArrowKeysButton) {
         [preferences setArrowKeysEnabled:([sender state] == NSOnState)];
-
-    } else if (sender == oShowSliderButton) {
-        [preferences setShowsHoldColorSliders:([sender state] == NSOnState)];
     }
 }
 
 
 @synthesize apertureColorPopUp    = oApertureColorPopUp,
+            holdSlidersPopUp      = oHoldSlidersPopUp,
 
             clickInSwatchButton   = oClickInSwatchButton,
             clickInSwatchPopUp    = oClickInSwatchPopUp,
@@ -140,7 +148,7 @@
             dragInSwatchPopUp     = oDragInSwatchPopUp,
             
             useLowercaseHexButton = oUseLowercaseHexButton,
-            arrowKeysButton       = oArrowKeysButton,
-            showSliderButton      = oShowSliderButton;
+            usePoundPrefixButton  = oUsePoundPrefixButton,
+            arrowKeysButton       = oArrowKeysButton;
 
 @end

@@ -31,6 +31,7 @@
 
 // Color menu
 - (IBAction) holdColor:(id)sender;
+- (IBAction) pasteTextAsColor:(id)sender;
 
 - (IBAction) performColorActionForSender:(id)sender;
 

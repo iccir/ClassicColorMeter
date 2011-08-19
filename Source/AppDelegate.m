@@ -90,11 +90,12 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     Color         *_color;
     
     // Cached prefs
-    BOOL           _usesLowercaseHex;
     ColorMode      _colorMode;
     NSInteger      _zoomLevel;
     NSInteger      _updatesContinuously;
     NSInteger      _showMouseCoordinates;
+    BOOL           _usesLowercaseHex;
+    BOOL           _usesPoundPrefix;
 }
 
 - (void) _updateStatusText;
@@ -353,7 +354,13 @@ static void sUpdateHoldLabels(AppDelegate *self)
     long g = lroundf([color green] * 255);
     long b = lroundf([color blue]  * 255);
     
-    NSString *hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
+    NSString *hexFormat = nil;
+    if (self->_usesPoundPrefix) {
+        hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
+    } else {
+        hexFormat = lowercase ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
+    }
+
     NSString *hexString = [NSString stringWithFormat:hexFormat, r, g, b];
     
     if (ColorModeIsRGB(mode)) {
@@ -433,11 +440,10 @@ static void sUpdateTextFields(AppDelegate *self)
 {
     ColorMode colorMode = self->_colorMode;
 
-    NSString *value1    = nil;
-    NSString *value2    = nil;
-    NSString *value3    = nil;
-    NSString *clipboard = nil;
-    ColorModeMakeComponentStrings(colorMode, self->_color, self->_usesLowercaseHex, &value1, &value2, &value3, &clipboard);
+    NSString *value1 = nil;
+    NSString *value2 = nil;
+    NSString *value3 = nil;
+    ColorModeMakeComponentStrings(colorMode, self->_color, self->_usesLowercaseHex, self->_usesPoundPrefix, &value1, &value2, &value3, NULL);
 
     if (value1) [self->oValue1 setStringValue:value1];
     if (value2) [self->oValue2 setStringValue:value2];
@@ -513,6 +519,7 @@ static void sUpdateTextFields(AppDelegate *self)
     NSInteger    apertureSize = [preferences apertureSize];
 
     _usesLowercaseHex     = [preferences usesLowercaseHex];
+    _usesPoundPrefix      = [preferences usesPoundPrefix];
     _colorMode            = [preferences colorMode];
     _zoomLevel            = [preferences zoomLevel];
     _updatesContinuously  = [preferences updatesContinuously];
@@ -713,8 +720,8 @@ static void sUpdateTextFields(AppDelegate *self)
         result = [_color NSColor];
 
     } else if (actionTag == CopyColorAsText) {
-        ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, NULL, NULL, NULL, &clipboardText);
-    
+        ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, _usesPoundPrefix, NULL, NULL, NULL, &clipboardText);
+
     } else if (actionTag == CopyColorAsImage) {
         NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
         NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
@@ -744,6 +751,10 @@ static void sUpdateTextFields(AppDelegate *self)
 
     if (template) {
         clipboardText = GetCodeSnippetForColor(_color, _usesLowercaseHex, template);
+        
+        if (!_usesPoundPrefix && [clipboardText hasPrefix:@"#"]) {
+            clipboardText = [clipboardText substringFromIndex:1]; 
+        }
     }
     
     if (clipboardText) {
@@ -875,7 +886,8 @@ static void sUpdateTextFields(AppDelegate *self)
         *inOutX = NSMaxX(frame);
     };
     
-    BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
+    HoldColorSlidersType slidersType = [[Preferences sharedInstance] holdColorSlidersType];
+    BOOL showSliders = _isHoldingColor && (slidersType != HoldColorSlidersTypeNone);
     CGFloat xOffset  = showSliders ? -128.0 : 0.0;
 
     NSDisableScreenUpdates();
@@ -1120,14 +1132,41 @@ static void sUpdateTextFields(AppDelegate *self)
     _isHoldingColor = !_isHoldingColor;
 
     [self _updateStatusText];
-    [self _updateScreenshot];
+
+    // If coming from UI, we will have a sender.  Sender=nil for pasteTextAsColor:
+    if (sender) {
+        [self _updateScreenshot];
+    }
 
     sUpdateSliders(self);
     sUpdateHoldLabels(self);
     
-    if ([[Preferences sharedInstance] showsHoldColorSliders]) {
+    if ([[Preferences sharedInstance] holdColorSlidersType] != HoldColorSlidersTypeNone) {
         [self _animateSnapshotsIfNeeded];
     }
+}
+
+
+- (IBAction) pasteTextAsColor:(id)sender
+{
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    NSString     *string = [pboard stringForType:NSPasteboardTypeString];
+
+    Color *parsedColor = GetColorFromParsedString(string);
+    if (parsedColor) {
+        [_color setRed:[parsedColor red] green:[parsedColor green] blue:[parsedColor blue]];
+
+        sUpdateColorViews(self);
+        sUpdateTextFields(self);
+
+        if (!_isHoldingColor) {
+            [self holdColor:nil];
+        }
+        
+    } else {
+        NSBeep();
+    }
+
 }
 
 

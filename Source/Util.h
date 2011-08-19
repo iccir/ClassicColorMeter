@@ -18,6 +18,7 @@ extern void ColorModeMakeComponentStrings(
     ColorMode mode,
     Color *color,
     BOOL lowercaseHex,
+    BOOL usesPoundPrefix,
     NSString **outLabel1,
     NSString **outLabel2,
     NSString **outLabel3,
@@ -27,6 +28,8 @@ extern void ColorModeMakeComponentStrings(
 extern float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NSString *string);
 
 extern void GetAverageColor(CGImageRef image, CGRect apertureRect, float *outRed, float *outGreen, float *outBlue);
+
+extern Color *GetColorFromParsedString(NSString *string);
 
 extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSString *inTemplate);
 

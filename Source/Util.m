@@ -185,6 +185,90 @@ extern void GetAverageColor(CGImageRef image, CGRect apertureRect, float *outRed
 }
 
 
+Color *GetColorFromParsedString(NSString *stringToParse)
+{
+    __block Color *color = nil;
+    
+    float (^scanHex)(NSString *, float) = ^(NSString *string, float maxValue) {
+        const char *s = [string UTF8String];
+        float result = s ? (strtol(s, NULL, 16) / maxValue) : 0.0;
+        return result;
+    };
+
+    void (^withPattern)(NSString *, void(^)(NSArray *)) = ^(NSString *pattern, void (^callback)(NSArray *result)) {
+        if (color) return;
+
+        NSRegularExpression  *re     = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:NULL];
+        NSTextCheckingResult *result = [re firstMatchInString:stringToParse options:0 range:NSMakeRange(0, [stringToParse length])];
+
+        NSInteger numberOfRanges = [result numberOfRanges];
+        if ([result numberOfRanges] > 1) {
+            NSMutableArray *captureGroups = [NSMutableArray array];
+            
+            NSInteger i;
+            for (i = 1; i < numberOfRanges; i++) {
+                NSRange captureRange = [result rangeAtIndex:i];
+                [captureGroups addObject:[stringToParse substringWithRange:captureRange]];
+            }
+            
+            callback(captureGroups);
+        }
+    };
+
+    withPattern(@"#([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[[Color alloc] init] autorelease];
+            
+            [color setRed:   scanHex([result objectAtIndex:0], 65535.0)];
+            [color setGreen: scanHex([result objectAtIndex:1], 65535.0)];
+            [color setBlue:  scanHex([result objectAtIndex:2], 65535.0)];
+        }
+    });
+    
+    withPattern(@"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[[Color alloc] init] autorelease];
+            
+            [color setRed:   scanHex([result objectAtIndex:0], 255.0)];
+            [color setGreen: scanHex([result objectAtIndex:1], 255.0)];
+            [color setBlue:  scanHex([result objectAtIndex:2], 255.0)];
+        }
+    });
+
+    withPattern(@"rgb\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[[Color alloc] init] autorelease];
+            
+            [color setRed:   ([[result objectAtIndex:0] floatValue] / 255.0)];
+            [color setGreen: ([[result objectAtIndex:1] floatValue] / 255.0)];
+            [color setBlue:  ([[result objectAtIndex:2] floatValue] / 255.0)];
+        }
+    });
+
+    withPattern(@"rgba\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
+        if ([result count] == 4) {
+            color = [[[Color alloc] init] autorelease];
+            
+            [color setRed:   ([[result objectAtIndex:0] floatValue] / 255.0)];
+            [color setGreen: ([[result objectAtIndex:1] floatValue] / 255.0)];
+            [color setBlue:  ([[result objectAtIndex:2] floatValue] / 255.0)];
+        }
+    });
+
+    withPattern(@"([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[[Color alloc] init] autorelease];
+            
+            [color setRed:   scanHex([result objectAtIndex:0], 255.0)];
+            [color setGreen: scanHex([result objectAtIndex:1], 255.0)];
+            [color setBlue:  scanHex([result objectAtIndex:2], 255.0)];
+        }
+    });
+
+    return color;
+}
+
+
 float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NSString *string)
 {
     float result = 0.0;
@@ -242,7 +326,7 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
 }
 
 
-void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseHex, NSString **outValue1, NSString **outValue2, NSString **outValue3, NSString **outClipboard)
+void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseHex, BOOL usesPoundPrefix, NSString **outValue1, NSString **outValue2, NSString **outValue3, NSString **outClipboard)
 {
     NSString *value1    = nil;
     NSString *value2    = nil;
@@ -269,8 +353,12 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
         value2 = [NSString stringWithFormat:format, lroundf(green * 255)];
         value3 = [NSString stringWithFormat:format, lroundf(blue  * 255)];
 
-        if (mode == ColorMode_RGB_HexValue_8) {
-            clipboard = [NSString stringWithFormat:@"#%@%@%@", value1, value2, value3];
+        if (mode == ColorMode_RGB_HexValue_8) { 
+            if (usesPoundPrefix) {
+                clipboard = [NSString stringWithFormat:@"#%@%@%@", value1, value2, value3];
+            } else {
+                clipboard = [NSString stringWithFormat: @"%@%@%@", value1, value2, value3];
+            }
         }
 
     } else if (mode == ColorMode_RGB_Value_16 || mode == ColorMode_RGB_HexValue_16) {
@@ -283,10 +371,6 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
         value1 = [NSString stringWithFormat:format, lroundf(red   * 65535)];
         value2 = [NSString stringWithFormat:format, lroundf(green * 65535)];
         value3 = [NSString stringWithFormat:format, lroundf(blue  * 65535)];
-
-        if (mode == ColorMode_RGB_HexValue_8) {
-            clipboard = [NSString stringWithFormat:@"#%@%@%@", value1, value2, value3];
-        }
 
     } else if (mode >= ColorMode_YPbPr_601 && mode <= ColorMode_YCbCr_709) {
         BOOL is601     = (mode == ColorMode_YPbPr_601 || mode == ColorMode_YCbCr_601);
