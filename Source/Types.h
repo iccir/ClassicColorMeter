@@ -18,14 +18,6 @@ typedef NSInteger ApertureColor;
 
 
 enum {
-    HoldColorSlidersTypeNone     = 0,
-    HoldColorSlidersTypeSimple   = 1,
-    HoldColorSlidersTypeAdvanced = 2
-};
-typedef NSInteger HoldColorSlidersType;
-
-
-enum {
     ColorMode_RGB_Percentage,
 
     ColorMode_RGB_Value_8,
@@ -48,12 +40,4 @@ enum {
 };
 typedef NSInteger ColorMode;
 
-
-enum {
-    HoldColorMode_RGB_Percentage = ColorMode_RGB_Percentage,
-    HoldColorMode_RGB_Value_8    = ColorMode_RGB_Value_8,
-    HoldColorMode_RGB_HexValue_8 = ColorMode_RGB_HexValue_8,
-    HoldColorMode_HSB            = ColorMode_HSB
-};
-typedef NSInteger HoldColorMode;
 

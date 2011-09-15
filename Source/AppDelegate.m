@@ -9,13 +9,15 @@
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-#import "Util.h"
+#import "ColorSliderCell.h"
 #import "EtchingView.h"
 #import "Preferences.h"
 #import "PreferencesController.h"
 #import "PreviewView.h"
 #import "ResultView.h"
-#import "ColorSliderCell.h"
+#import "ShortcutManager.h"
+#import "SnippetsController.h"
+#import "Util.h"
 
 
 enum {
@@ -74,6 +76,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     CALayer       *_rightSnapshot;
 
     PreferencesController *_preferencesController;
+    SnippetsController    *_snippetsController;
 
     NSTimer       *_timer;
     NSPoint        _lastMouseLocation;
@@ -103,7 +106,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (void) _handleScreenColorSpaceDidChange:(NSNotification *)note;
 - (NSEvent *) _handleLocalEvent:(NSEvent *)event;
 
-- (void) _animateSnapshotsIfNeeded;
+- (void) _updateSnapshots:(BOOL)immediate;
+- (void) _animateSnapshots;
 
 @end
 
@@ -246,8 +250,13 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) dealloc
 {
+    [[ShortcutManager sharedInstance] removeListener:self];
+
     [_preferencesController release];
     _preferencesController = nil;
+    
+    [_snippetsController release];
+    _snippetsController = nil;
 
     [_layerContainer release];
     _layerContainer = nil;
@@ -302,6 +311,13 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     } else if (action == @selector(toggleFloatWindow:)) {
         [menuItem setState:[[Preferences sharedInstance] floatWindow]];
+
+    } else if (action == @selector(showSnippets:)) {
+        NSUInteger flags     = [NSEvent modifierFlags];
+        NSUInteger mask      = NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask;
+        BOOL       isVisible = ((flags & mask) == mask);
+         
+        [menuItem setHidden:!isVisible];
     }
 
     return YES;
@@ -327,11 +343,16 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 #pragma mark -
 #pragma mark Glue
 
-static void sUpdateSnapshots(AppDelegate *self)
+static ColorMode sGetCurrentColorMode(AppDelegate *self)
 {
-    [self->_leftSnapshot   setContents:GetSnapshotImageForView(self->oLeftContainer)];
-    [self->_middleSnapshot setContents:GetSnapshotImageForView(self->oMiddleContainer)];
-    [self->_rightSnapshot  setContents:GetSnapshotImageForView(self->oRightContainer)];
+    if (self->_isHoldingColor) {
+        Preferences *preferences = [Preferences sharedInstance];
+        if ([preferences usesDifferentColorSpaceInHoldColor]) {
+            return [preferences holdColorMode];
+        }
+    }
+    
+    return self->_colorMode;
 }
 
 
@@ -346,7 +367,7 @@ static void sUpdateColorViews(AppDelegate *self)
 
 static void sUpdateHoldLabels(AppDelegate *self)
 {
-    ColorMode mode      = self->_colorMode;
+    ColorMode mode      = sGetCurrentColorMode(self);
     BOOL      lowercase = self->_usesLowercaseHex;
     Color    *color     = self->_color;
 
@@ -386,12 +407,27 @@ static void sUpdateHoldLabels(AppDelegate *self)
 }
 
 
+static void sUpdatePopUpAndComponentLabels(AppDelegate *self)
+{
+    ColorMode colorMode = sGetCurrentColorMode(self);
+    
+    [self->oColorModePopUp selectItemWithTag:colorMode];
+
+    NSArray *labels = ColorModeGetComponentLabels(colorMode);
+    if ([labels count] == 3) {
+        [self->oLabel1 setStringValue:[labels objectAtIndex:0]];
+        [self->oLabel2 setStringValue:[labels objectAtIndex:1]];
+        [self->oLabel3 setStringValue:[labels objectAtIndex:2]];
+    }
+}
+
+
 static void sUpdateSliders(AppDelegate *self)
 {
+    ColorMode colorMode = sGetCurrentColorMode(self);
     NSSlider *slider1   = self->oSlider1;
     NSSlider *slider2   = self->oSlider2;
     NSSlider *slider3   = self->oSlider3;
-    ColorMode colorMode = self->_colorMode;
     Color    *color     = self->_color;
 
     BOOL      isRGB     = ColorModeIsRGB(colorMode);
@@ -438,7 +474,7 @@ static void sUpdateSliders(AppDelegate *self)
 
 static void sUpdateTextFields(AppDelegate *self)
 {
-    ColorMode colorMode = self->_colorMode;
+    ColorMode colorMode = sGetCurrentColorMode(self);
 
     NSString *value1 = nil;
     NSString *value2 = nil;
@@ -515,6 +551,10 @@ static void sUpdateTextFields(AppDelegate *self)
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
+    if (_isHoldingColor) {
+        [self _updateSnapshots:YES];
+    }
+
     Preferences *preferences  = [Preferences sharedInstance];
     NSInteger    apertureSize = [preferences apertureSize];
 
@@ -530,7 +570,6 @@ static void sUpdateTextFields(AppDelegate *self)
     [oHoldLabel2 setHidden:!showsHoldLabels];
 
     [oApertureSizeSlider setIntegerValue:apertureSize];
-    [oColorModePopUp selectItemWithTag:[preferences colorMode]];
     [oPreviewView setShowsLocation:[preferences showMouseCoordinates]];
     [oPreviewView setApertureSize:apertureSize];
     [oPreviewView setApertureColor:[preferences apertureColor]];
@@ -538,19 +577,25 @@ static void sUpdateTextFields(AppDelegate *self)
     [oResultView setClickEnabled:[preferences clickInSwatchEnabled]];
     [oResultView setDragEnabled: [preferences dragInSwatchEnabled]];
 
+    NSMutableArray *shortcuts = [NSMutableArray array];
+    if ([preferences showApplicationShortcut]) {
+        [shortcuts addObject:[preferences showApplicationShortcut]];
+    }
+    if ([preferences holdColorShortcut]) {
+        [shortcuts addObject:[preferences holdColorShortcut]];
+    }
+    if ([shortcuts count] || [ShortcutManager hasSharedInstance]) {
+        [[ShortcutManager sharedInstance] addListener:self];
+        [[ShortcutManager sharedInstance] setShortcuts:shortcuts];
+    }
+
     if ([preferences floatWindow]) {
         [oWindow setLevel:NSFloatingWindowLevel];
     } else {
         [oWindow setLevel:NSNormalWindowLevel];
     }
 
-    NSArray *labels = ColorModeGetComponentLabels(_colorMode);
-    if ([labels count] == 3) {
-        [oLabel1 setStringValue:[labels objectAtIndex:0]];
-        [oLabel2 setStringValue:[labels objectAtIndex:1]];
-        [oLabel3 setStringValue:[labels objectAtIndex:2]];
-    }
-
+    sUpdatePopUpAndComponentLabels(self);
     sUpdateSliders(self);
     sUpdateHoldLabels(self);
 
@@ -574,7 +619,7 @@ static void sUpdateTextFields(AppDelegate *self)
     [self _updateScreenshot];
     
     if (_isHoldingColor) {
-        [self _animateSnapshotsIfNeeded];
+        [self _animateSnapshots];
     }
 }
 
@@ -720,7 +765,15 @@ static void sUpdateTextFields(AppDelegate *self)
         result = [_color NSColor];
 
     } else if (actionTag == CopyColorAsText) {
-        ColorModeMakeComponentStrings(_colorMode, _color, _usesLowercaseHex, _usesPoundPrefix, NULL, NULL, NULL, &clipboardText);
+        Preferences *preferences = [Preferences sharedInstance];
+
+        ColorMode mode = _colorMode;
+
+        if (_isHoldingColor && [preferences usesDifferentColorSpaceInHoldColor] && ![preferences usesMainColorSpaceForCopyAsText]) {
+            mode = [preferences holdColorMode];
+        }
+        
+        ColorModeMakeComponentStrings(mode, _color, _usesLowercaseHex, _usesPoundPrefix, NULL, NULL, NULL, &clipboardText);
 
     } else if (actionTag == CopyColorAsImage) {
         NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
@@ -867,7 +920,25 @@ static void sUpdateTextFields(AppDelegate *self)
 #pragma mark -
 #pragma mark Animation
 
-- (void) _animateSnapshotsIfNeeded
+- (void) _updateSnapshots:(BOOL)immediate
+{
+    if (immediate) {
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:0.0];
+        [CATransaction setDisableActions:YES];
+    }
+
+    [self->_leftSnapshot   setContents:GetSnapshotImageForView(self->oLeftContainer)];
+    [self->_middleSnapshot setContents:GetSnapshotImageForView(self->oMiddleContainer)];
+    [self->_rightSnapshot  setContents:GetSnapshotImageForView(self->oRightContainer)];
+    
+    if (immediate) {
+        [CATransaction commit];
+    }
+}
+
+
+- (void) _animateSnapshots
 {
     void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
         [oLeftContainer   setHidden:!yn];
@@ -886,15 +957,14 @@ static void sUpdateTextFields(AppDelegate *self)
         *inOutX = NSMaxX(frame);
     };
     
-    HoldColorSlidersType slidersType = [[Preferences sharedInstance] holdColorSlidersType];
-    BOOL showSliders = _isHoldingColor && (slidersType != HoldColorSlidersTypeNone);
+    BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
     CGFloat xOffset  = showSliders ? -128.0 : 0.0;
 
     NSDisableScreenUpdates();
     {
         setSnapshotsHidden(NO);
 
-        [CATransaction setAnimationDuration:0.3];
+        [CATransaction setAnimationDuration:0.35];
         [CATransaction setCompletionBlock:^{
             NSDisableScreenUpdates();
 
@@ -904,7 +974,7 @@ static void sUpdateTextFields(AppDelegate *self)
             NSEnableScreenUpdates();
         }];
 
-        sUpdateSnapshots(self);
+        [self _updateSnapshots:NO];
 
         layout(oLeftContainer,   _leftSnapshot,   &xOffset);
         layout(oMiddleContainer, _middleSnapshot, &xOffset);
@@ -968,12 +1038,42 @@ static void sUpdateTextFields(AppDelegate *self)
 
 
 #pragma mark -
+#pragma mark Shortcuts
+
+- (BOOL) performShortcut:(Shortcut *)shortcut
+{
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL yn = NO;
+
+    if ([[preferences holdColorShortcut] isEqual:shortcut]) { 
+        NSLog(@"Holding color");
+
+        [self holdColor:self];
+        yn = YES;
+    }
+    
+    if ([[preferences showApplicationShortcut] isEqual:shortcut]) {
+        NSLog(@"Activating!");
+        [NSApp activateIgnoringOtherApps:YES];
+        yn = YES;
+    }
+
+    return yn;
+}
+
+
+#pragma mark -
 #pragma mark IBActions
 
 - (IBAction) changeColorMode:(id)sender
 {
     NSInteger tag = [sender selectedTag];
-    [[Preferences sharedInstance] setColorMode:tag];
+    
+    if ([[Preferences sharedInstance] usesDifferentColorSpaceInHoldColor] && _isHoldingColor) {
+        [[Preferences sharedInstance] setHoldColorMode:tag];
+    } else {
+        [[Preferences sharedInstance] setColorMode:tag];
+    }
 }
 
 
@@ -985,8 +1085,10 @@ static void sUpdateTextFields(AppDelegate *self)
 
 - (IBAction) updateComponent:(id)sender
 {
-    BOOL isRGB = ColorModeIsRGB(_colorMode);
-    BOOL isHSB = ColorModeIsHSB(_colorMode);
+    ColorMode mode = sGetCurrentColorMode(self);
+
+    BOOL isRGB = ColorModeIsRGB(mode);
+    BOOL isHSB = ColorModeIsHSB(mode);
 
     ColorComponent component = ColorComponentNone;
 
@@ -1004,7 +1106,7 @@ static void sUpdateTextFields(AppDelegate *self)
         float floatValue = [sender floatValue];
 
         if ([sender isKindOfClass:[NSTextField class]]) {
-            floatValue = ColorModeParseComponentString(_colorMode, component, [sender stringValue]);            
+            floatValue = ColorModeParseComponentString(mode, component, [sender stringValue]);            
         }
     
         [_color setFloatValue:floatValue forComponent:component];
@@ -1014,6 +1116,16 @@ static void sUpdateTextFields(AppDelegate *self)
     sUpdateSliders(self);
     sUpdateHoldLabels(self);
     sUpdateTextFields(self);
+}
+
+
+- (IBAction) showSnippets:(id)sender
+{
+    if (!_snippetsController) {
+        _snippetsController = [[SnippetsController alloc] init];
+    }
+    
+    [_snippetsController showWindow:self];
 }
 
 
@@ -1129,6 +1241,12 @@ static void sUpdateTextFields(AppDelegate *self)
 
 - (IBAction) holdColor:(id)sender
 {
+    BOOL shouldAnimate = [[Preferences sharedInstance] showsHoldColorSliders];
+    
+    if (shouldAnimate) {
+        [self _updateSnapshots:YES];
+    }
+
     _isHoldingColor = !_isHoldingColor;
 
     [self _updateStatusText];
@@ -1138,11 +1256,13 @@ static void sUpdateTextFields(AppDelegate *self)
         [self _updateScreenshot];
     }
 
+    sUpdatePopUpAndComponentLabels(self);
     sUpdateSliders(self);
+    sUpdateTextFields(self);
     sUpdateHoldLabels(self);
     
-    if ([[Preferences sharedInstance] holdColorSlidersType] != HoldColorSlidersTypeNone) {
-        [self _animateSnapshotsIfNeeded];
+    if (shouldAnimate) {
+        [self _animateSnapshots];
     }
 }
 

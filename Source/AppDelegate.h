@@ -8,15 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ResultView.h"
+#import "ShortcutManager.h"
 
 @class PreviewView;
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, ResultViewDelegate, NSDraggingSource>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, ShortcutListener, ResultViewDelegate, NSDraggingSource>
 
 - (IBAction) changeColorMode:(id)sender;
 - (IBAction) changeApertureSize:(id)sender;
 
 - (IBAction) showPreferences:(id)sender;
+- (IBAction) showSnippets:(id)sender;
 
 // View menu
 - (IBAction) lockPosition:(id)sender;

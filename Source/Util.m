@@ -576,7 +576,7 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
         NSRange range = [result rangeOfString:key];
 
         if (range.location != NSNotFound) {
-            unichar number = [result characterAtIndex:(range.location + 7)];
+            unichar number = [result characterAtIndex:(range.location + 3)];
             
             NSString *keyWithNumber = [NSString stringWithFormat:@"%@%C", key, number];
             NSString *format = [NSString stringWithFormat: @"%%.%Cf", number];
@@ -600,9 +600,9 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
     replaceNumber(@"$GN255", 255, green);
     replaceNumber(@"$BN255", 255, blue);
     
-    replaceFloat(@"$RFLOAT", red);
-    replaceFloat(@"$GFLOAT", green);
-    replaceFloat(@"$BFLOAT", blue);
+    replaceFloat(@"$RF", red);
+    replaceFloat(@"$GF", green);
+    replaceFloat(@"$BF", blue);
 
     [result replaceOccurrencesOfString:@"$$" withString:@"$" options:NSLiteralSearch range:NSMakeRange(0, [result length])];
 

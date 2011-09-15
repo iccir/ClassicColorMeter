@@ -9,6 +9,7 @@
 #import "PreferencesController.h"
 
 #import "Preferences.h"
+#import "ShortcutView.h"
 
 @interface PreferencesController () {
     NSPopUpButton *oApertureColorPopUp;
@@ -23,6 +24,12 @@
     NSButton      *oUseLowercaseHexButton;
     NSButton      *oUsePoundPrefixButton;
     NSButton      *oArrowKeysButton;
+    NSButton      *oShowsHoldColorSlidersButton;
+    NSButton      *oUsesDifferentColorSpaceInHoldColorButton;
+    NSButton      *oUsesMainColorSpaceForCopyAsTextButton;
+    
+    ShortcutView  *oShowApplicationShortcutView;
+    ShortcutView  *oHoldColorShortcutView;
 }
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note;
@@ -45,25 +52,70 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [oApertureColorPopUp    setTarget:nil];  [oApertureColorPopUp    setAction:NULL];
-    [oHoldSlidersPopUp      setTarget:nil];  [oHoldSlidersPopUp      setAction:NULL];
-    [oClickInSwatchButton   setTarget:nil];  [oClickInSwatchButton   setAction:NULL];
-    [oClickInSwatchPopUp    setTarget:nil];  [oClickInSwatchPopUp    setAction:NULL];
-    [oDragInSwatchButton    setTarget:nil];  [oDragInSwatchButton    setAction:NULL];
-    [oDragInSwatchPopUp     setTarget:nil];  [oDragInSwatchPopUp     setAction:NULL];
-    [oUseLowercaseHexButton setTarget:nil];  [oUseLowercaseHexButton setAction:NULL];
-    [oArrowKeysButton       setTarget:nil];  [oArrowKeysButton       setAction:NULL];
-    [oUsePoundPrefixButton  setTarget:nil];  [oUsePoundPrefixButton  setAction:NULL];
+    [oApertureColorPopUp setTarget:nil];
+    [oApertureColorPopUp setAction:NULL];
+    [oApertureColorPopUp release];
+    oApertureColorPopUp = nil;
 
-    [self setApertureColorPopUp:nil];
-    [self setHoldSlidersPopUp:nil];
-    [self setClickInSwatchButton:nil];
-    [self setClickInSwatchPopUp:nil];
-    [self setDragInSwatchButton:nil];
-    [self setDragInSwatchPopUp:nil];
-    [self setUseLowercaseHexButton:nil];
-    [self setArrowKeysButton:nil];
-    [self setUsePoundPrefixButton:nil];
+    [oClickInSwatchButton setTarget:nil];
+    [oClickInSwatchButton setAction:NULL];
+    [oClickInSwatchButton release];
+    oClickInSwatchButton = nil;
+
+    [oClickInSwatchPopUp setTarget:nil];
+    [oClickInSwatchPopUp setAction:NULL];
+    [oClickInSwatchPopUp release];
+    oClickInSwatchPopUp = nil;
+
+    [oDragInSwatchButton setTarget:nil];
+    [oDragInSwatchButton setAction:NULL];
+    [oDragInSwatchButton release];
+    oDragInSwatchButton = nil;
+
+    [oDragInSwatchPopUp setTarget:nil];
+    [oDragInSwatchPopUp setAction:NULL];
+    [oDragInSwatchPopUp release];
+    oDragInSwatchPopUp = nil;
+
+    [oUseLowercaseHexButton setTarget:nil];
+    [oUseLowercaseHexButton setAction:NULL];
+    [oUseLowercaseHexButton release];
+    oUseLowercaseHexButton = nil;
+
+    [oArrowKeysButton setTarget:nil];
+    [oArrowKeysButton setAction:NULL];
+    [oArrowKeysButton release];
+    oArrowKeysButton = nil;
+
+    [oUsePoundPrefixButton setTarget:nil];
+    [oUsePoundPrefixButton setAction:NULL];
+    [oUsePoundPrefixButton release];
+    oUsePoundPrefixButton  = nil;
+
+    [oShowsHoldColorSlidersButton setTarget:nil];
+    [oShowsHoldColorSlidersButton setAction:NULL];
+    [oShowsHoldColorSlidersButton release];
+    oShowsHoldColorSlidersButton = nil;
+
+    [oUsesDifferentColorSpaceInHoldColorButton setTarget:nil];
+    [oUsesDifferentColorSpaceInHoldColorButton setAction:NULL];
+    [oUsesDifferentColorSpaceInHoldColorButton release];
+    oUsesDifferentColorSpaceInHoldColorButton = nil;
+
+    [oUsesMainColorSpaceForCopyAsTextButton setTarget:nil];
+    [oUsesMainColorSpaceForCopyAsTextButton setAction:NULL];
+    [oUsesMainColorSpaceForCopyAsTextButton release];
+    oUsesMainColorSpaceForCopyAsTextButton = nil;
+
+    [oShowApplicationShortcutView setTarget:nil];
+    [oShowApplicationShortcutView setAction:NULL];
+    [oShowApplicationShortcutView release];
+    oShowApplicationShortcutView = nil;
+
+    [oHoldColorShortcutView setTarget:nil];
+    [oHoldColorShortcutView setAction:NULL];
+    [oHoldColorShortcutView release];
+    oHoldColorShortcutView = nil;
 
     [super dealloc];
 }
@@ -86,7 +138,6 @@
     Preferences *preferences = [Preferences sharedInstance];
 
     [oApertureColorPopUp selectItemWithTag:[preferences apertureColor]];
-    [oHoldSlidersPopUp   selectItemWithTag:[preferences holdColorSlidersType]];
 
     BOOL clickInSwatchEnabled = [preferences clickInSwatchEnabled];
     [oClickInSwatchButton setState:clickInSwatchEnabled];
@@ -101,6 +152,17 @@
     [oUseLowercaseHexButton setState:[preferences usesLowercaseHex]];
     [oUsePoundPrefixButton  setState:[preferences usesPoundPrefix]];
     [oArrowKeysButton       setState:[preferences arrowKeysEnabled]];
+
+    [oShowsHoldColorSlidersButton              setState:[preferences showsHoldColorSliders]];
+
+    BOOL usesDifferentColorSpaceInHoldColor = [preferences usesDifferentColorSpaceInHoldColor];
+
+    [oUsesDifferentColorSpaceInHoldColorButton setState:usesDifferentColorSpaceInHoldColor];
+    [oUsesMainColorSpaceForCopyAsTextButton setEnabled:usesDifferentColorSpaceInHoldColor];
+    [oUsesMainColorSpaceForCopyAsTextButton setState:[preferences usesMainColorSpaceForCopyAsText]];
+
+    [oShowApplicationShortcutView setShortcut:[preferences showApplicationShortcut]];
+    [oHoldColorShortcutView setShortcut:[preferences holdColorShortcut]];
 }
 
 
@@ -110,9 +172,6 @@
 
     if (sender == oApertureColorPopUp) {
         [preferences setApertureColor:[sender selectedTag]];
-
-    } else if (sender == oHoldSlidersPopUp) {
-        [preferences setHoldColorSlidersType:[sender selectedTag]];
 
     } else if (sender == oClickInSwatchButton) {
         [preferences setClickInSwatchEnabled:([sender state] == NSOnState)];
@@ -134,12 +193,26 @@
 
     } else if (sender == oArrowKeysButton) {
         [preferences setArrowKeysEnabled:([sender state] == NSOnState)];
+
+    } else if (sender == oShowsHoldColorSlidersButton) {
+        [preferences setShowsHoldColorSliders:([sender state] == NSOnState)];
+
+    } else if (sender == oUsesDifferentColorSpaceInHoldColorButton) {
+        [preferences setUsesDifferentColorSpaceInHoldColor:([sender state] == NSOnState)];
+
+    } else if (sender == oUsesMainColorSpaceForCopyAsTextButton) {
+        [preferences setUsesMainColorSpaceForCopyAsText:([sender state] == NSOnState)];
+
+    } else if (sender == oShowApplicationShortcutView) {
+        [preferences setShowApplicationShortcut:[oShowApplicationShortcutView shortcut]];
+    
+    } else if (sender == oHoldColorShortcutView) {
+        [preferences setHoldColorShortcut:[oHoldColorShortcutView shortcut]];
     }
 }
 
 
 @synthesize apertureColorPopUp    = oApertureColorPopUp,
-            holdSlidersPopUp      = oHoldSlidersPopUp,
 
             clickInSwatchButton   = oClickInSwatchButton,
             clickInSwatchPopUp    = oClickInSwatchPopUp,
@@ -149,6 +222,13 @@
             
             useLowercaseHexButton = oUseLowercaseHexButton,
             usePoundPrefixButton  = oUsePoundPrefixButton,
-            arrowKeysButton       = oArrowKeysButton;
+            arrowKeysButton       = oArrowKeysButton,
+            
+            showsHoldColorSlidersButton              = oShowsHoldColorSlidersButton,
+            usesDifferentColorSpaceInHoldColorButton = oUsesDifferentColorSpaceInHoldColorButton,
+            usesMainColorSpaceForCopyAsTextButton    = oUsesMainColorSpaceForCopyAsTextButton,
+            
+            showApplicationShortcutView  = oShowApplicationShortcutView,
+            holdColorShortcutView        = oHoldColorShortcutView;
 
 @end

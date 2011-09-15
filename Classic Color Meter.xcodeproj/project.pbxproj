@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
+		55234B491420321E00D10B8C /* ShortcutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B481420321E00D10B8C /* ShortcutView.m */; };
+		55234B4D1420323B00D10B8C /* Shortcut.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B4C1420323B00D10B8C /* Shortcut.m */; };
+		55234B501420325A00D10B8C /* ShortcutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B4F1420325A00D10B8C /* ShortcutManager.m */; };
+		55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55234B5514203AB800D10B8C /* Carbon.framework */; };
+		55234B6514217C6900D10B8C /* SnippetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B6414217C6900D10B8C /* SnippetsController.m */; };
+		55234B6814217D5700D10B8C /* Snippets.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55234B6614217D5700D10B8C /* Snippets.xib */; };
 		552B412013D56ADE000EB55C /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 552B411F13D56ADE000EB55C /* icon.icns */; };
 		558444B213D3C9CE006C6F51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A313D3C9CE006C6F51 /* AppDelegate.m */; };
 		558444B413D3C9CE006C6F51 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444A713D3C9CE006C6F51 /* Util.m */; };
@@ -38,6 +44,16 @@
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
 		5518713E13E62E5500272170 /* Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Color.m; path = Source/Color.m; sourceTree = "<group>"; };
+		55234B471420321E00D10B8C /* ShortcutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShortcutView.h; path = Source/ShortcutView.h; sourceTree = "<group>"; };
+		55234B481420321E00D10B8C /* ShortcutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShortcutView.m; path = Source/ShortcutView.m; sourceTree = "<group>"; };
+		55234B4B1420323B00D10B8C /* Shortcut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shortcut.h; path = Source/Shortcut.h; sourceTree = "<group>"; };
+		55234B4C1420323B00D10B8C /* Shortcut.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Shortcut.m; path = Source/Shortcut.m; sourceTree = "<group>"; };
+		55234B4E1420325A00D10B8C /* ShortcutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShortcutManager.h; path = Source/ShortcutManager.h; sourceTree = "<group>"; };
+		55234B4F1420325A00D10B8C /* ShortcutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShortcutManager.m; path = Source/ShortcutManager.m; sourceTree = "<group>"; };
+		55234B5514203AB800D10B8C /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		55234B6314217C6900D10B8C /* SnippetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; name = SnippetsController.h; path = Source/SnippetsController.h; sourceTree = "<group>"; };
+		55234B6414217C6900D10B8C /* SnippetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SnippetsController.m; path = Source/SnippetsController.m; sourceTree = "<group>"; };
+		55234B6714217D5700D10B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Snippets.xib; sourceTree = SOURCE_ROOT; };
 		552B411D13D4FB30000EB55C /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = Source/Types.h; sourceTree = "<group>"; };
 		552B411F13D56ADE000EB55C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = SOURCE_ROOT; };
 		558444A213D3C9CE006C6F51 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Source/AppDelegate.h; sourceTree = "<group>"; };
@@ -82,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */,
 				558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */,
 				55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */,
 				55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */,
@@ -106,14 +123,16 @@
 		5584449F13D3C8BA006C6F51 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				550F240C13E3838F0026A060 /* ColorSliderCell.h */,
+				550F240D13E3838F0026A060 /* ColorSliderCell.m */,
+				558444CD13D3EAAD006C6F51 /* EtchingView.h */,
+				558444CE13D3EAAD006C6F51 /* EtchingView.m */,
 				558444AE13D3C9CE006C6F51 /* PreviewView.h */,
 				558444AF13D3C9CE006C6F51 /* PreviewView.m */,
 				558444B013D3C9CE006C6F51 /* ResultView.h */,
 				558444B113D3C9CE006C6F51 /* ResultView.m */,
-				558444CD13D3EAAD006C6F51 /* EtchingView.h */,
-				558444CE13D3EAAD006C6F51 /* EtchingView.m */,
-				550F240C13E3838F0026A060 /* ColorSliderCell.h */,
-				550F240D13E3838F0026A060 /* ColorSliderCell.m */,
+				55234B471420321E00D10B8C /* ShortcutView.h */,
+				55234B481420321E00D10B8C /* ShortcutView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -121,10 +140,14 @@
 		558444A013D3C8DA006C6F51 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				55234B4E1420325A00D10B8C /* ShortcutManager.h */,
+				55234B4F1420325A00D10B8C /* ShortcutManager.m */,
 				558444A213D3C9CE006C6F51 /* AppDelegate.h */,
 				558444A313D3C9CE006C6F51 /* AppDelegate.m */,
 				55FD8BCC13E2134200446286 /* PreferencesController.h */,
 				55FD8BCD13E2134200446286 /* PreferencesController.m */,
+				55234B6314217C6900D10B8C /* SnippetsController.h */,
+				55234B6414217C6900D10B8C /* SnippetsController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -133,10 +156,12 @@
 			isa = PBXGroup;
 			children = (
 				552B411D13D4FB30000EB55C /* Types.h */,
-				558444A913D3C9CE006C6F51 /* Preferences.h */,
-				558444AA13D3C9CE006C6F51 /* Preferences.m */,
 				5518713D13E62E5500272170 /* Color.h */,
 				5518713E13E62E5500272170 /* Color.m */,
+				558444A913D3C9CE006C6F51 /* Preferences.h */,
+				558444AA13D3C9CE006C6F51 /* Preferences.m */,
+				55234B4B1420323B00D10B8C /* Shortcut.h */,
+				55234B4C1420323B00D10B8C /* Shortcut.m */,
 				558444A613D3C9CE006C6F51 /* Util.h */,
 				558444A713D3C9CE006C6F51 /* Util.m */,
 			);
@@ -165,6 +190,7 @@
 		55E67D8213CFC3000040DFDE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55234B5514203AB800D10B8C /* Carbon.framework */,
 				558444D213D41184006C6F51 /* ApplicationServices.framework */,
 				55E67DC613D38E950040DFDE /* QuartzCore.framework */,
 				55E67D8313CFC3000040DFDE /* Cocoa.framework */,
@@ -198,6 +224,7 @@
 				55E0602713E4B93200E35B3E /* Beta-Info.plist */,
 				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
 				55FD8BCF13E2145800446286 /* Preferences.xib */,
+				55234B6614217D5700D10B8C /* Snippets.xib */,
 			);
 			name = Resources;
 			path = ColorMeter;
@@ -265,6 +292,7 @@
 				55E0603513E4CD7E00E35B3E /* slider_cover_leftcap@2x.png in Resources */,
 				55E0603613E4CD7E00E35B3E /* slider_cover_rightcap.png in Resources */,
 				55E0603713E4CD7E00E35B3E /* slider_cover_rightcap@2x.png in Resources */,
+				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,12 +329,24 @@
 				55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */,
 				550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */,
 				5518713F13E62E5500272170 /* Color.m in Sources */,
+				55234B491420321E00D10B8C /* ShortcutView.m in Sources */,
+				55234B4D1420323B00D10B8C /* Shortcut.m in Sources */,
+				55234B501420325A00D10B8C /* ShortcutManager.m in Sources */,
+				55234B6514217C6900D10B8C /* SnippetsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		55234B6614217D5700D10B8C /* Snippets.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55234B6714217D5700D10B8C /* en */,
+			);
+			name = Snippets.xib;
+			sourceTree = "<group>";
+		};
 		558444C713D3CA3E006C6F51 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
