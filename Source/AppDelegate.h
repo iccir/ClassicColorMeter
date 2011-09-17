@@ -65,6 +65,7 @@
 @property (nonatomic, retain) IBOutlet NSTextField   *label2;
 @property (nonatomic, retain) IBOutlet NSTextField   *label3;
 
+@property (nonatomic, retain) IBOutlet NSTextField    *holdingLabel;
 @property (nonatomic, retain) IBOutlet RecessedButton *profileButton;
 @property (nonatomic, retain) IBOutlet RecessedButton *topHoldLabelButton;
 @property (nonatomic, retain) IBOutlet RecessedButton *bottomHoldLabelButton;

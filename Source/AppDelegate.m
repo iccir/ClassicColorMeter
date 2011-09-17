@@ -63,6 +63,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSTextField   *oValue2;
     NSTextField   *oValue3;
 
+    NSTextField    *oHoldingLabel;
     RecessedButton *oProfileButton;
     RecessedButton *oTopHoldLabelButton;
     RecessedButton *oBottomHoldLabelButton;
@@ -75,6 +76,12 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     CALayer       *_leftSnapshot;
     CALayer       *_middleSnapshot;
     CALayer       *_rightSnapshot;
+    NSImage       *_leftHoldImage;
+    NSImage       *_middleHoldImage;
+    NSImage       *_rightHoldImage;
+    NSImage       *_leftViewImage;
+    NSImage       *_middleViewImage;
+    NSImage       *_rightViewImage;
 
     PreferencesController *_preferencesController;
     SnippetsController    *_snippetsController;
@@ -111,8 +118,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 - (void) _handleScreenColorSpaceDidChange:(NSNotification *)note;
 - (NSEvent *) _handleLocalEvent:(NSEvent *)event;
 
-- (void) _updateSnapshots:(BOOL)immediate;
-- (void) _animateSnapshots;
+- (void) _setupHoldAnimation;
+- (void) _animateSnapshotsIfNeeded;
 
 @end
 
@@ -210,36 +217,12 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     [[oApertureSizeLabel cell] setBackgroundStyle:NSBackgroundStyleRaised];
     [[oStatusText        cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[oHoldingLabel      cell] setBackgroundStyle:NSBackgroundStyleRaised];
     [[oLabel1            cell] setBackgroundStyle:NSBackgroundStyleRaised];
     [[oLabel2            cell] setBackgroundStyle:NSBackgroundStyleRaised];
     [[oLabel3            cell] setBackgroundStyle:NSBackgroundStyleRaised];
 
-    NSView *contentView = [oWindow contentView];
-    
-    _layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
-    [_layerContainer setWantsLayer:YES];
-
-    _leftSnapshot   = [[CALayer alloc] init];
-    _middleSnapshot = [[CALayer alloc] init];
-    _rightSnapshot  = [[CALayer alloc] init];
-
-    [_leftSnapshot   setDelegate:self];
-    [_middleSnapshot setDelegate:self];
-    [_rightSnapshot  setDelegate:self];
-
-    [_leftSnapshot   setAnchorPoint:CGPointMake(0, 0)];
-    [_middleSnapshot setAnchorPoint:CGPointMake(0, 0)];
-    [_rightSnapshot  setAnchorPoint:CGPointMake(0, 0)];
-    
-    [[_layerContainer layer] addSublayer:_leftSnapshot];
-    [[_layerContainer layer] addSublayer:_middleSnapshot];
-    [[_layerContainer layer] addSublayer:_rightSnapshot];
-
-    [_leftSnapshot   setFrame:[oLeftContainer   frame]];
-    [_middleSnapshot setFrame:[oMiddleContainer frame]];
-    [_rightSnapshot  setFrame:[oRightContainer  frame]];
-
-    [contentView addSubview:_layerContainer];
+    [self _setupHoldAnimation];
 
     [self applicationDidChangeScreenParameters:nil];
     [self _updateStatusText];
@@ -254,6 +237,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     [[ShortcutManager sharedInstance] removeListener:self];
 
+    [_layerContainer release];
+    _layerContainer = nil;
+
     if (_colorSyncTransform) CFRelease(_colorSyncTransform);
     _colorSyncTransform = NULL;
 
@@ -262,9 +248,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     
     [_snippetsController release];
     _snippetsController = nil;
-
-    [_layerContainer release];
-    _layerContainer = nil;
 
     [_timer release];
     _timer = nil;
@@ -686,10 +669,6 @@ cleanup:
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
-    if (_isHoldingColor) {
-        [self _updateSnapshots:YES];
-    }
-
     Preferences *preferences  = [Preferences sharedInstance];
     NSInteger    apertureSize = [preferences apertureSize];
 
@@ -756,7 +735,7 @@ cleanup:
     [self _updateScreenshot];
     
     if (_isHoldingColor) {
-        [self _animateSnapshots];
+        [self _animateSnapshotsIfNeeded];
     }
 }
 
@@ -777,10 +756,6 @@ cleanup:
         [status addObject: NSLocalizedString(@"Locked X", @"Status text: locked x")];
     } else if (!isnan(_lockedY)) {
         [status addObject: NSLocalizedString(@"Locked Y", @"Status text: locked y")];
-    }
-
-    if (_isHoldingColor) {
-        [status addObject: NSLocalizedString(@"Holding Color", @"Status text: holding color")];
     }
 
     [oStatusText setStringValue:[status componentsJoinedByString:@", "]];
@@ -1066,25 +1041,41 @@ cleanup:
 #pragma mark -
 #pragma mark Animation
 
-- (void) _updateSnapshots:(BOOL)immediate
+- (void) _setupHoldAnimation
 {
-    if (immediate) {
-        [CATransaction begin];
-        [CATransaction setAnimationDuration:0.0];
-        [CATransaction setDisableActions:YES];
-    }
+    NSView *contentView = [[self window] contentView];
 
-    [self->_leftSnapshot   setContents:GetSnapshotImageForView(self->oLeftContainer)];
-    [self->_middleSnapshot setContents:GetSnapshotImageForView(self->oMiddleContainer)];
-    [self->_rightSnapshot  setContents:GetSnapshotImageForView(self->oRightContainer)];
+    _layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
+    [_layerContainer setWantsLayer:YES];
+
+    _leftSnapshot   = [[CALayer alloc] init];
+    _middleSnapshot = [[CALayer alloc] init];
+    _rightSnapshot  = [[CALayer alloc] init];
+
+    [_leftSnapshot   setDelegate:self];
+    [_middleSnapshot setDelegate:self];
+    [_rightSnapshot  setDelegate:self];
+
+    [_leftSnapshot   setAnchorPoint:CGPointMake(0, 0)];
+    [_middleSnapshot setAnchorPoint:CGPointMake(0, 0)];
+    [_rightSnapshot  setAnchorPoint:CGPointMake(0, 0)];
     
-    if (immediate) {
-        [CATransaction commit];
-    }
+    [[_layerContainer layer] addSublayer:_leftSnapshot];
+    [[_layerContainer layer] addSublayer:_middleSnapshot];
+    [[_layerContainer layer] addSublayer:_rightSnapshot];
+
+    [_leftSnapshot   setFrame:[[self leftContainer]   frame]];
+    [_middleSnapshot setFrame:[[self middleContainer] frame]];
+    [_rightSnapshot  setFrame:[[self rightContainer]  frame]];
+
+    [contentView addSubview:_layerContainer];
 }
 
 
-- (void) _animateSnapshots
+#pragma mark -
+#pragma mark Animation
+
+- (void) _animateSnapshotsIfNeeded
 {
     void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
         [oLeftContainer   setHidden:!yn];
@@ -1110,7 +1101,7 @@ cleanup:
     {
         setSnapshotsHidden(NO);
 
-        [CATransaction setAnimationDuration:0.35];
+        [CATransaction setAnimationDuration:0.3];
         [CATransaction setCompletionBlock:^{
             NSDisableScreenUpdates();
 
@@ -1120,7 +1111,9 @@ cleanup:
             NSEnableScreenUpdates();
         }];
 
-        [self _updateSnapshots:NO];
+        [_leftSnapshot   setContents:GetSnapshotImageForView(oLeftContainer)];
+        [_middleSnapshot setContents:GetSnapshotImageForView(oMiddleContainer)];
+        [_rightSnapshot  setContents:GetSnapshotImageForView(oRightContainer)];
 
         layout(oLeftContainer,   _leftSnapshot,   &xOffset);
         layout(oMiddleContainer, _middleSnapshot, &xOffset);
@@ -1404,15 +1397,11 @@ cleanup:
 
 - (IBAction) holdColor:(id)sender
 {
-    BOOL shouldAnimate = [[Preferences sharedInstance] showsHoldColorSliders];
-    
-    if (shouldAnimate) {
-        [self _updateSnapshots:YES];
-    }
-
     _isHoldingColor = !_isHoldingColor;
 
-    [self _updateStatusText];
+    [oHoldingLabel setHidden:!_isHoldingColor];
+    [oHoldingLabel setStringValue: NSLocalizedString(@"Holding Color", @"Status text: holding color")];
+    [oProfileButton setHidden:_isHoldingColor];
 
     // If coming from UI, we will have a sender.  Sender=nil for pasteTextAsColor:
     if (sender) {
@@ -1424,8 +1413,8 @@ cleanup:
     sUpdateTextFields(self);
     sUpdateHoldLabels(self);
     
-    if (shouldAnimate) {
-        [self _animateSnapshots];
+    if ([[Preferences sharedInstance] showsHoldColorSliders]) {
+        [self _animateSnapshotsIfNeeded];
     }
 }
 
@@ -1491,6 +1480,7 @@ cleanup:
             value1                = oValue1,
             value2                = oValue2,
             value3                = oValue3,
+            holdingLabel          = oHoldingLabel,
             profileButton         = oProfileButton,
             topHoldLabelButton    = oTopHoldLabelButton,
             bottomHoldLabelButton = oBottomHoldLabelButton,
