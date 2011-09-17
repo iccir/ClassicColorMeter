@@ -29,11 +29,10 @@ static id sSharedInstance = nil;
 static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *inUserData)
 {
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    BOOL handled = NO;
 
 	EventHotKeyID hotKeyID = { 0, 0 };
 	if (noErr == GetEventParameter(inEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID)) {
-        handled = [(ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
+        [(ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
     }
 
 	[pool release];

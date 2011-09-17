@@ -187,8 +187,10 @@ extern void GetAverageColor(CGImageRef image, CGRect apertureRect, float *outRed
 
 Color *GetColorFromParsedString(NSString *stringToParse)
 {
+    if (!stringToParse) return nil;
+
     __block Color *color = nil;
-    
+
     float (^scanHex)(NSString *, float) = ^(NSString *string, float maxValue) {
         const char *s = [string UTF8String];
         float result = s ? (strtol(s, NULL, 16) / maxValue) : 0.0;
@@ -292,7 +294,7 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
                 if (c >= 'a' && c <= 'f') {
                     result += (10 + (c - 'a'));
                 } else if (c >= 'A' && c <= 'F') {
-                    result += (c - 'A');
+                    result += (10 + (c - 'A'));
                 } else if (c >= '0' && c <= '9') {
                     result += (c - '0');
                 }
@@ -326,7 +328,19 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
 }
 
 
-void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseHex, BOOL usesPoundPrefix, NSString **outValue1, NSString **outValue2, NSString **outValue3, NSString **outClipboard)
+static void sMakeStrings(
+    ColorMode mode,
+    Color *color,
+    BOOL lowercaseHex,
+    BOOL usesPoundPrefix,
+    NSString **outClipboard,
+    NSString **outValue1,
+    NSString **outValue2,
+    NSString **outValue3,
+    BOOL     *outClipped1,
+    BOOL     *outClipped2,
+    BOOL     *outClipped3 
+)
 {
     NSString *value1    = nil;
     NSString *value2    = nil;
@@ -336,11 +350,30 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
     float red   = [color red];
     float green = [color green];
     float blue  = [color blue];
+    
+    BOOL clipped1 = NO;
+    BOOL clipped2 = NO;
+    BOOL clipped3 = NO;
 
     if (mode == ColorMode_RGB_Percentage) {
-        value1 = [NSString stringWithFormat:@"%0.1lf", red   * 100];
-        value2 = [NSString stringWithFormat:@"%0.1lf", green * 100];
-        value3 = [NSString stringWithFormat:@"%0.1lf", blue  * 100];
+        red   *= 100;
+        green *= 100;
+        blue  *= 100;
+
+        {
+            if      (red   >= 100.0499) { red   = 100.0; clipped1 = YES; }
+            else if (red   <=  -0.0499) { red   =   0.0; clipped1 = YES; }
+
+            if      (green >= 100.0499) { green = 100.0; clipped2 = YES; }
+            else if (green <=  -0.0499) { green =   0.0; clipped2 = YES; }
+
+            if      (blue  >= 100.0499) { blue  = 100.0; clipped3 = YES; }
+            else if (blue  <=  -0.0499) { blue  =   0.0; clipped3 = YES; }
+        }
+
+        value1 = [NSString stringWithFormat:@"%0.1lf", red];
+        value2 = [NSString stringWithFormat:@"%0.1lf", green];
+        value3 = [NSString stringWithFormat:@"%0.1lf", blue];
 
     } else if (mode == ColorMode_RGB_Value_8 || mode == ColorMode_RGB_HexValue_8) {
         NSString *format = @"%ld";
@@ -349,9 +382,24 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
             format = lowercaseHex ? @"%02lx" : @"%02lX";
         }
         
-        value1 = [NSString stringWithFormat:format, lroundf(red   * 255)];
-        value2 = [NSString stringWithFormat:format, lroundf(green * 255)];
-        value3 = [NSString stringWithFormat:format, lroundf(blue  * 255)];
+        long redLong   = lroundf(red   * 255);
+        long greenLong = lroundf(green * 255);
+        long blueLong  = lroundf(blue  * 255);
+        
+        {
+            if      (redLong   > 255) { redLong   = 255; clipped1 = YES; }
+            else if (redLong   < 0)   { redLong   = 0;   clipped1 = YES; }
+
+            if      (greenLong > 255) { greenLong = 255; clipped2 = YES; }
+            else if (greenLong < 0)   { greenLong = 0;   clipped2 = YES; }
+
+            if      (blueLong  > 255) { blueLong  = 255; clipped3 = YES; }
+            else if (blueLong  < 0)   { blueLong  = 0;   clipped3 = YES; }
+        }
+        
+        value1 = [NSString stringWithFormat:format, redLong];
+        value2 = [NSString stringWithFormat:format, greenLong];
+        value3 = [NSString stringWithFormat:format, blueLong];
 
         if (mode == ColorMode_RGB_HexValue_8) { 
             if (usesPoundPrefix) {
@@ -368,9 +416,24 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
             format = lowercaseHex ? @"%04lx" : @"%04lX";
         }
 
-        value1 = [NSString stringWithFormat:format, lroundf(red   * 65535)];
-        value2 = [NSString stringWithFormat:format, lroundf(green * 65535)];
-        value3 = [NSString stringWithFormat:format, lroundf(blue  * 65535)];
+        long redLong   = lroundf(red   * 65535);
+        long greenLong = lroundf(green * 65535);
+        long blueLong  = lroundf(blue  * 65535);
+        
+        {
+            if      (redLong   > 65535) { redLong   = 65535; clipped1 = YES; }
+            else if (redLong   < 0)     { redLong   = 0;     clipped1 = YES; }
+
+            if      (greenLong > 65535) { greenLong = 65535; clipped2 = YES; }
+            else if (greenLong < 0)     { greenLong = 0;     clipped2 = YES; }
+
+            if      (blueLong  > 65535) { blueLong  = 65535; clipped3 = YES; }
+            else if (blueLong  < 0)     { blueLong  = 0;     clipped3 = YES; }
+        }
+
+        value1 = [NSString stringWithFormat:format, redLong];
+        value2 = [NSString stringWithFormat:format, greenLong];
+        value3 = [NSString stringWithFormat:format, blueLong];
 
     } else if (mode >= ColorMode_YPbPr_601 && mode <= ColorMode_YCbCr_709) {
         BOOL is601     = (mode == ColorMode_YPbPr_601 || mode == ColorMode_YCbCr_601);
@@ -431,9 +494,22 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
         value3    = [NSString stringWithFormat:@"%0.03lf", (b * 256.0) - 128.0];
 
     } else if (mode == ColorMode_HSB) {
-        value1 = [NSString stringWithFormat:@"%ld", (long) ([color hue]        * 360)];
-        value2 = [NSString stringWithFormat:@"%ld", (long) ([color saturation] * 100)];
-        value3 = [NSString stringWithFormat:@"%ld", (long) ([color brightness] * 100)];
+        long h = lround([color hue]        * 360);
+        long s = lround([color saturation] * 100);
+        long b = lround([color brightness] * 100);
+    
+        while (h > 360) { h -= 360; }
+        while (h < 0)   { h += 360; }
+
+        if      (s > 100) { s = 100; clipped2 = YES; }
+        else if (s < 0)   { s = 0;   clipped2 = YES; }
+
+        if      (b > 100) { b = 100; clipped3 = YES; }
+        else if (b < 0)   { b = 0;   clipped3 = YES; }
+
+        value1 = [NSString stringWithFormat:@"%ld", h];
+        value2 = [NSString stringWithFormat:@"%ld", s];
+        value3 = [NSString stringWithFormat:@"%ld", b];
     }
     
     if (!clipboard) {
@@ -443,7 +519,47 @@ void ColorModeMakeComponentStrings(ColorMode mode, Color *color, BOOL lowercaseH
     if (outValue1)    { *outValue1    = value1;    }
     if (outValue2)    { *outValue2    = value2;    }
     if (outValue3)    { *outValue3    = value3;    }
+    if (outClipped1)  { *outClipped1  = clipped1;  }
+    if (outClipped2)  { *outClipped2  = clipped2;  }
+    if (outClipped3)  { *outClipped3  = clipped3;  }
     if (outClipboard) { *outClipboard = clipboard; }
+}
+
+
+void ColorModeMakeClipboardString(
+    ColorMode mode,
+    Color *color,
+    BOOL lowercaseHex,
+    BOOL usesPoundPrefix,
+    NSString **outClipboard
+) {
+    sMakeStrings(
+        mode, color, lowercaseHex, usesPoundPrefix,
+        outClipboard,
+        NULL, NULL, NULL,
+        NULL, NULL, NULL
+    );
+}
+
+
+void ColorModeMakeComponentStrings(
+    ColorMode mode,
+    Color *color,
+    BOOL lowercaseHex,
+    BOOL usesPoundPrefix,
+    NSString **outLabel1,
+    NSString **outLabel2,
+    NSString **outLabel3,
+    BOOL *outClipped1,
+    BOOL *outClipped2,
+    BOOL *outClipped3 
+) {
+    sMakeStrings(
+        mode, color, lowercaseHex, usesPoundPrefix,
+        NULL,
+        outLabel1, outLabel2, outLabel3,
+        outClipped1, outClipped2, outClipped3
+    );
 }
 
 
@@ -555,6 +671,9 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
     NSMutableString *result = [[inTemplate mutableCopy] autorelease];
 
     void (^replaceHex)(NSString *, float) = ^(NSString *key, float component) {
+        if (component > 1.0) component = 1.0;
+        if (component < 0.0) component = 0.0;
+
         NSString *hexFormat = lowercaseHex ? @"%02x" : @"%02X";
         NSString *hexValue = [NSString stringWithFormat:hexFormat, (NSInteger)(component * 255.0)];
         [result replaceOccurrencesOfString:key withString:hexValue options:NSLiteralSearch range:NSMakeRange(0, [result length])];
@@ -564,6 +683,9 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
         NSRange range = [result rangeOfString:key];
 
         if (range.location != NSNotFound) {
+            if (component > 1.0) component = 1.0;
+            if (component < 0.0) component = 0.0;
+
             NSString *string = [NSString stringWithFormat: @"%ld", lroundf(multiplier * component)];
             
             if (string) {
@@ -576,6 +698,9 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
         NSRange range = [result rangeOfString:key];
 
         if (range.location != NSNotFound) {
+            if (component > 1.0) component = 1.0;
+            if (component < 0.0) component = 0.0;
+
             unichar number = [result characterAtIndex:(range.location + 3)];
             
             NSString *keyWithNumber = [NSString stringWithFormat:@"%@%C", key, number];
@@ -610,7 +735,6 @@ extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSStrin
 }
 
 
-
 NSImage *GetSnapshotImageForView(NSView *view)
 {
     NSRect   bounds = [view bounds];
@@ -621,5 +745,69 @@ NSImage *GetSnapshotImageForView(NSView *view)
     [image unlockFocus];
 
     return [image autorelease];
+}
+
+
+CGContextRef CreateBitmapContext(CGSize size, BOOL opaque, CGFloat scale)
+{
+    size_t width  = size.width  * scale;
+    size_t height = size.height * scale;
+
+    CGContextRef result = NULL;
+    
+    if (width > 0 && height > 0) {
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+        if (colorSpace) {
+            CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Little;
+            bitmapInfo |= (opaque ? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst);
+
+            result = CGBitmapContextCreate(NULL, width, height, 8, width * 4, colorSpace, bitmapInfo);
+        
+            if (result) {
+                CGContextTranslateCTM(result, 0, height);
+                CGContextScaleCTM(result, scale, -scale);
+            }
+        }
+
+        CGColorSpaceRelease(colorSpace);
+    }
+
+    
+    return result;
+}
+
+
+CGImageRef CreateImageMask(CGSize size, CGFloat scale, void (^callback)(CGContextRef))
+{
+    size_t width  = size.width * scale;
+    size_t height = size.height * scale;
+
+    CGImageRef      cgImage    = NULL;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+
+    if (colorSpace && width > 0 && height > 0) {
+        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+    
+        if (context) {
+            CGContextTranslateCTM(context, 0, height);
+            CGContextScaleCTM(context, scale, -scale);
+
+            NSGraphicsContext *savedContext = [[NSGraphicsContext currentContext] retain];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
+
+            callback(context);
+            
+            [NSGraphicsContext setCurrentContext:savedContext];
+            [savedContext autorelease];
+
+            cgImage = CGBitmapContextCreateImage(context);
+            CFRelease(context);
+        }
+    }
+
+    CGColorSpaceRelease(colorSpace);
+
+    return cgImage;
 }
 

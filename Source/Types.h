@@ -18,6 +18,15 @@ typedef NSInteger ApertureColor;
 
 
 enum {
+    ColorProfileUseNativeValues     = 0,
+    ColorProfileConvertToSRGB       = 1,
+    ColorProfileConvertToGenericRGB = 2,
+    ColorProfileConvertToAdobeRGB   = 3
+};
+typedef NSInteger ColorProfileType;
+
+
+enum {
     ColorMode_RGB_Percentage,
 
     ColorMode_RGB_Value_8,

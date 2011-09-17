@@ -20,6 +20,7 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic, assign) ColorMode colorMode;
 @property (nonatomic, assign) ColorMode holdColorMode;
+@property (nonatomic, assign) ColorProfileType colorProfileType;
 
 @property (nonatomic, assign) NSInteger zoomLevel;
 @property (nonatomic, assign) NSInteger apertureSize;

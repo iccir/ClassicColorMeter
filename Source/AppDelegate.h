@@ -11,6 +11,7 @@
 #import "ShortcutManager.h"
 
 @class PreviewView;
+@class RecessedButton;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, ShortcutListener, ResultViewDelegate, NSDraggingSource>
 
@@ -19,6 +20,10 @@
 
 - (IBAction) showPreferences:(id)sender;
 - (IBAction) showSnippets:(id)sender;
+
+- (IBAction) changeColorConversionValue:(id)sender;
+- (IBAction) writeTopLabelValueToPasteboard:(id)sender;
+- (IBAction) writeBottomLabelValueToPasteboard:(id)sender;
 
 // View menu
 - (IBAction) lockPosition:(id)sender;
@@ -54,15 +59,15 @@
 @property (nonatomic, retain) IBOutlet ResultView    *resultView;
 
 @property (nonatomic, retain) IBOutlet NSTextField   *apertureSizeLabel;
-@property (nonatomic, retain) IBOutlet NSTextField   *profileField;
 @property (nonatomic, retain) IBOutlet NSTextField   *statusText;
 
 @property (nonatomic, retain) IBOutlet NSTextField   *label1;
 @property (nonatomic, retain) IBOutlet NSTextField   *label2;
 @property (nonatomic, retain) IBOutlet NSTextField   *label3;
 
-@property (nonatomic, retain) IBOutlet NSTextField   *holdLabel1;
-@property (nonatomic, retain) IBOutlet NSTextField   *holdLabel2;
+@property (nonatomic, retain) IBOutlet RecessedButton *profileButton;
+@property (nonatomic, retain) IBOutlet RecessedButton *topHoldLabelButton;
+@property (nonatomic, retain) IBOutlet RecessedButton *bottomHoldLabelButton;
 
 @property (nonatomic, retain) IBOutlet NSTextField   *value1;
 @property (nonatomic, retain) IBOutlet NSTextField   *value2;

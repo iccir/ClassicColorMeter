@@ -26,6 +26,7 @@
 		558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558444C913D3CA3E006C6F51 /* MainMenu.xib */; };
 		558444CF13D3EAAD006C6F51 /* EtchingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444CE13D3EAAD006C6F51 /* EtchingView.m */; };
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
+		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E0602B13E4BB5800E35B3E /* beta.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602A13E4BB5800E35B3E /* beta.icns */; };
 		55E0603213E4CD7E00E35B3E /* slider_cover_center.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */; };
 		55E0603313E4CD7E00E35B3E /* slider_cover_center@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602D13E4CD7E00E35B3E /* slider_cover_center@2x.png */; };
@@ -51,7 +52,7 @@
 		55234B4E1420325A00D10B8C /* ShortcutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShortcutManager.h; path = Source/ShortcutManager.h; sourceTree = "<group>"; };
 		55234B4F1420325A00D10B8C /* ShortcutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShortcutManager.m; path = Source/ShortcutManager.m; sourceTree = "<group>"; };
 		55234B5514203AB800D10B8C /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		55234B6314217C6900D10B8C /* SnippetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; name = SnippetsController.h; path = Source/SnippetsController.h; sourceTree = "<group>"; };
+		55234B6314217C6900D10B8C /* SnippetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SnippetsController.h; path = Source/SnippetsController.h; sourceTree = "<group>"; };
 		55234B6414217C6900D10B8C /* SnippetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SnippetsController.m; path = Source/SnippetsController.m; sourceTree = "<group>"; };
 		55234B6714217D5700D10B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Snippets.xib; sourceTree = SOURCE_ROOT; };
 		552B411D13D4FB30000EB55C /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = Source/Types.h; sourceTree = "<group>"; };
@@ -74,6 +75,8 @@
 		558444CD13D3EAAD006C6F51 /* EtchingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EtchingView.h; path = Source/EtchingView.h; sourceTree = "<group>"; };
 		558444CE13D3EAAD006C6F51 /* EtchingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EtchingView.m; path = Source/EtchingView.m; sourceTree = "<group>"; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		55D569621422B01000F7B77B /* RecessedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecessedButton.h; path = Source/RecessedButton.h; sourceTree = "<group>"; };
+		55D569631422B01000F7B77B /* RecessedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecessedButton.m; path = Source/RecessedButton.m; sourceTree = "<group>"; };
 		55E0602713E4B93200E35B3E /* Beta-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Beta-Info.plist"; path = "Resources/Beta-Info.plist"; sourceTree = SOURCE_ROOT; };
 		55E0602A13E4BB5800E35B3E /* beta.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = beta.icns; path = Resources/beta.icns; sourceTree = SOURCE_ROOT; };
 		55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = slider_cover_center.png; path = Resources/slider_cover_center.png; sourceTree = SOURCE_ROOT; };
@@ -133,6 +136,8 @@
 				558444B113D3C9CE006C6F51 /* ResultView.m */,
 				55234B471420321E00D10B8C /* ShortcutView.h */,
 				55234B481420321E00D10B8C /* ShortcutView.m */,
+				55D569621422B01000F7B77B /* RecessedButton.h */,
+				55D569631422B01000F7B77B /* RecessedButton.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				55234B4D1420323B00D10B8C /* Shortcut.m in Sources */,
 				55234B501420325A00D10B8C /* ShortcutManager.m in Sources */,
 				55234B6514217C6900D10B8C /* SnippetsController.m in Sources */,
+				55D569641422B01100F7B77B /* RecessedButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

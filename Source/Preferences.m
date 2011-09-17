@@ -14,6 +14,7 @@ NSString * const PreferencesDidChangeNotification = @"PreferencesDidChange";
 
 static NSString * const sColorModeKey               = @"ColorMode";
 static NSString * const sHoldColorModeKey           = @"HoldColorMode";
+static NSString * const sColorProfileTypeKey        = @"ColorProfileType";
 static NSString * const sZoomLevelKey               = @"ZoomLevel";
 static NSString * const sApertureSizeKey            = @"ApertureSize";
 static NSString * const sApertureColorKey           = @"ApertureColor";
@@ -52,8 +53,9 @@ static NSString * const sDefaultRGBAColorSnippetTemplate = @"rgba($RN255, $GN255
 
 
 @interface Preferences () {
-    ColorMode _colorMode;
-    ColorMode _holdColorMode;
+    ColorMode        _colorMode;
+    ColorMode        _holdColorMode;
+    ColorProfileType _colorProfileType;
 
     NSInteger _zoomLevel;
     NSInteger _apertureSize;
@@ -111,6 +113,7 @@ static void sRegisterDefaults(void)
 
     i( sColorModeKey,         0 );
     i( sHoldColorModeKey,     ColorMode_HSB );
+    i( sColorProfileTypeKey,  0 );
     i( sZoomLevelKey,         8 );
     i( sApertureSizeKey,      0 );
     i( sApertureColorKey,     3 );
@@ -166,7 +169,7 @@ static void sRegisterDefaults(void)
         
         [self addObserver:self forKeyPath:@"colorMode"                options:0 context:NULL];
         [self addObserver:self forKeyPath:@"holdColorMode"            options:0 context:NULL];
-
+        [self addObserver:self forKeyPath:@"colorProfileType"         options:0 context:NULL];
         [self addObserver:self forKeyPath:@"zoomLevel"                options:0 context:NULL];
         [self addObserver:self forKeyPath:@"apertureSize"             options:0 context:NULL];
         [self addObserver:self forKeyPath:@"apertureColor"            options:0 context:NULL];
@@ -178,6 +181,9 @@ static void sRegisterDefaults(void)
         [self addObserver:self forKeyPath:@"hexColorSnippetTemplate"  options:0 context:NULL];
         [self addObserver:self forKeyPath:@"rgbColorSnippetTemplate"  options:0 context:NULL];
         [self addObserver:self forKeyPath:@"rgbaColorSnippetTemplate" options:0 context:NULL];
+
+        [self addObserver:self forKeyPath:@"showApplicationShortcut"  options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"holdColorShortcut"        options:0 context:NULL];
 
         [self addObserver:self forKeyPath:@"updatesContinuously"      options:0 context:NULL];
         [self addObserver:self forKeyPath:@"floatWindow"              options:0 context:NULL];
@@ -192,9 +198,6 @@ static void sRegisterDefaults(void)
 
         [self addObserver:self forKeyPath:@"usesDifferentColorSpaceInHoldColor" options:0 context:NULL];
         [self addObserver:self forKeyPath:@"usesMainColorSpaceForCopyAsText"    options:0 context:NULL];
-
-        [self addObserver:self forKeyPath:@"showApplicationShortcut"            options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"holdColorShortcut"                  options:0 context:NULL];
     }
 
     return self;
@@ -259,6 +262,7 @@ static void sRegisterDefaults(void)
 
     loadInteger(  &_colorMode,                sColorModeKey               );
     loadInteger(  &_holdColorMode,            sHoldColorModeKey           );
+    loadInteger(  &_colorProfileType,         sColorProfileTypeKey        );
     loadInteger(  &_zoomLevel,                sZoomLevelKey               );
     loadInteger(  &_apertureSize,             sApertureSizeKey            );
     loadInteger(  &_apertureColor,            sApertureColorKey           );
@@ -316,6 +320,7 @@ static void sRegisterDefaults(void)
 
     saveInteger( _colorMode,                sColorModeKey               );
     saveInteger( _holdColorMode,            sHoldColorModeKey           );
+    saveInteger( _colorProfileType,         sColorProfileTypeKey        );
 
     saveInteger( _zoomLevel,                sZoomLevelKey               );
     saveInteger( _apertureSize,             sApertureSizeKey            );
@@ -370,7 +375,8 @@ static void sRegisterDefaults(void)
     
 
 @synthesize colorMode           = _colorMode,
-            holdColorMode       = _holdColorMode;
+            holdColorMode       = _holdColorMode,
+            colorProfileType    = _colorProfileType;
             
 @synthesize zoomLevel           = _zoomLevel,
             apertureSize        = _apertureSize,
