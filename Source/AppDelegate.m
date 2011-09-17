@@ -366,6 +366,13 @@ static void sUpdateHoldLabels(AppDelegate *self)
     long r = lroundf([color red]   * 255);
     long g = lroundf([color green] * 255);
     long b = lroundf([color blue]  * 255);
+
+    if      (r > 255) r = 255;
+    else if (r <   0) r = 0;
+    if      (g > 255) g = 255;
+    else if (g <   0) g = 0;
+    if      (b > 255) b = 255;
+    else if (b <   0) b = 0;
     
     NSString *hexFormat = nil;
     if (self->_usesPoundPrefix) {
@@ -381,6 +388,13 @@ static void sUpdateHoldLabels(AppDelegate *self)
         long s = lroundf([color saturation] * 100);
         long b = lroundf([color brightness] * 100);
 
+        while   (h > 360) h -= 360;
+        while   (h < 360) h += 360;
+        if      (s > 100) s = 100;
+        else if (s < 0)   s = 0;
+        if      (b > 100) b = 100;
+        else if (b < 0)   b = 0;
+
         NSString *hsbString = [NSString stringWithFormat:@"%ld%C, %ld%%, %ld%%", h, 0x00b0, s, b];
 
         [self->oTopHoldLabelButton setTitle:hsbString];
@@ -390,6 +404,13 @@ static void sUpdateHoldLabels(AppDelegate *self)
         long r100 = lroundf([color red]   * 100);
         long g100 = lroundf([color green] * 100);
         long b100 = lroundf([color blue]  * 100);
+
+        if      (r100 > 100) r100 = 100;
+        else if (r100 <   0) r100 = 0;
+        if      (g100 > 100) g100 = 100;
+        else if (g100 <   0) g100 = 0;
+        if      (b100 > 100) b100 = 100;
+        else if (b100 <   0) b100 = 0;
 
         NSString *decimalString = [NSString stringWithFormat:@"%ld%%, %ld%%, %ld%%", r100, g100, b100];
 

@@ -299,7 +299,7 @@ static void sRegisterDefaults(void)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults]; 
 
     void (^saveInteger)(NSInteger, NSString *) = ^(NSInteger i, NSString *key) {
-        [defaults setInteger:i forKey:sColorModeKey];
+        [defaults setInteger:i forKey:key];
     };
 
     void (^saveObject)(NSObject *, NSString *) = ^(NSObject *o, NSString *key) {
