@@ -10,8 +10,8 @@
 #import <AppKit/AppKit.h>
 
 @interface ColorSliderCell () {
-    ColorComponent _component;
-    Color *_color;
+    ColorComponent m_component;
+    Color *m_color;
 }
 
 @end
@@ -22,7 +22,7 @@
 
 - (void) dealloc
 {
-    [_color release];
+    [m_color release];
     [super dealloc];
 }
 
@@ -35,12 +35,12 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
     CGRect   rect     = inRect;
     CGFloat  maxX     = NSMaxX(inRect);
 
-    ColorComponent component = self->_component;
+    ColorComponent component = self->m_component;
 
     rect.size.width = 1.0;
     
     if (component != ColorComponentNone) {
-        Color *color = [self->_color copy];
+        Color *color = [self->m_color copy];
     
         while (rect.origin.x <= maxX) {
             float percent = (rect.origin.x - inRect.origin.x) / inRect.size.width;
@@ -112,13 +112,13 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
 
 - (void) setComponent:(ColorComponent)component
 {
-    if (component != _component) {
-        _component = component;
+    if (component != m_component) {
+        m_component = component;
         [[self controlView] setNeedsDisplay:YES];
     }
 }
 
-@synthesize component = _component,
-            color     = _color;
+@synthesize component = m_component,
+            color     = m_color;
 
 @end

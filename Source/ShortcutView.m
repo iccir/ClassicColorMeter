@@ -11,6 +11,27 @@
 #import "ShortcutManager.h"
 #import "Shortcut.h"
 
+
+@interface ShortcutView () {
+    BOOL m_isFirstResponder;
+}
+
+@end
+
+
+@interface _ShortcutCell : NSActionCell {
+    Shortcut *m_shortcut;
+    BOOL m_mouseDownInClearIcon;
+}
+
+- (NSRect) rectOfClearIconForFrame:(NSRect)frame;
+
+@property (nonatomic, retain) Shortcut *shortcut;
+@property (nonatomic, assign, getter=isMouseDownInClearIcon) BOOL mouseDownInClearIcon;
+
+@end
+
+
 static NSGradient *sMakeGradient(CGFloat gray1, CGFloat gray2, CGFloat location1, CGFloat location2)
 {
     NSColor *color1 = [NSColor colorWithDeviceWhite:gray1 alpha:1.0];
@@ -73,50 +94,31 @@ static NSImage *sGetClearIcon()
 }
 
 
-@interface ShortcutCell : NSActionCell {
-    Shortcut *_shortcut;
-    BOOL _mouseDownInClearIcon;
-}
-
-- (NSRect) rectOfClearIconForFrame:(NSRect)frame;
-
-@property (nonatomic, retain) Shortcut *shortcut;
-@property (nonatomic, assign, getter=isMouseDownInClearIcon) BOOL mouseDownInClearIcon;
-
-@end
-
-@interface ShortcutView () {
-    BOOL      _isFirstResponder;
-}
-
-@end
-
-
 @implementation ShortcutView
 
 + (void) initialize
 {
     if (self == [ShortcutView class]) {
-        [self setCellClass:[ShortcutCell class]];
+        [self setCellClass:[_ShortcutCell class]];
     }
 }
 
 
 + (Class) cellClass
 {
-    return [ShortcutCell class];
+    return [_ShortcutCell class];
 }
 
 
 #pragma mark -
 #pragma mark Private Methods
 
-- (ShortcutCell *) _shortcutCell
+- (_ShortcutCell *) _shortcutCell
 {
     NSCell *cell = [self cell];
     
-    if ([cell isKindOfClass:[ShortcutCell class]]) {
-        return (ShortcutCell *)cell;
+    if ([cell isKindOfClass:[_ShortcutCell class]]) {
+        return (_ShortcutCell *)cell;
     }
     
     return nil;
@@ -270,12 +272,12 @@ static NSImage *sGetClearIcon()
 @end
 
 
-@implementation ShortcutCell
+@implementation _ShortcutCell
 
 - (void) dealloc
 {
-    [_shortcut release];
-    _shortcut = nil;
+    [m_shortcut release];
+    m_shortcut = nil;
 
     [super dealloc];
 }
@@ -309,12 +311,12 @@ static NSImage *sGetClearIcon()
 
     // Draw circle X
     //
-    if (_shortcut) {
+    if (m_shortcut) {
         CGRect clearImageRect = [self rectOfClearIconForFrame:cellFrame];
         maxX = NSMaxX(clearImageRect);
         
         NSImage *image = sGetClearIcon();
-        if (_mouseDownInClearIcon) {
+        if (m_mouseDownInClearIcon) {
             image = sGetPressedClearIcon();
         }
 
@@ -335,8 +337,8 @@ static NSImage *sGetClearIcon()
 
         [style setAlignment:NSCenterTextAlignment];
 
-        if (_shortcut) {
-            stringToDraw = [_shortcut displayString];
+        if (m_shortcut) {
+            stringToDraw = [m_shortcut displayString];
             stringRect = NSInsetRect(stringRect, 3, 2);
 
         } else {
@@ -407,7 +409,7 @@ static NSImage *sGetClearIcon()
 }
 
 
-@synthesize shortcut = _shortcut;
-@synthesize mouseDownInClearIcon = _mouseDownInClearIcon;
+@synthesize shortcut = m_shortcut;
+@synthesize mouseDownInClearIcon = m_mouseDownInClearIcon;
 
 @end

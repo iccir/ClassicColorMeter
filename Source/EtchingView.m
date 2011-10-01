@@ -9,10 +9,10 @@
 #import "EtchingView.h"
 
 @interface EtchingView () {
-    CGFloat _activeDarkOpacity;
-    CGFloat _activeLightOpacity;
-    CGFloat _inactiveLightOpacity;
-    CGFloat _inactiveDarkOpacity;
+    CGFloat m_activeDarkOpacity;
+    CGFloat m_activeLightOpacity;
+    CGFloat m_inactiveLightOpacity;
+    CGFloat m_inactiveDarkOpacity;
 }
 
 @end
@@ -35,10 +35,10 @@
     NSRect topRect = bottomRect;
     topRect.origin.y += topRect.size.height;
 
-    CGContextSetGrayFillColor(context, 1.0, (active ? _activeLightOpacity : _inactiveLightOpacity));
+    CGContextSetGrayFillColor(context, 1.0, (active ? m_activeLightOpacity : m_inactiveLightOpacity));
     CGContextFillRect(context, bottomRect);
 
-    CGContextSetGrayFillColor(context, 0.0, (active ? _activeDarkOpacity : _inactiveDarkOpacity));
+    CGContextSetGrayFillColor(context, 0.0, (active ? m_activeDarkOpacity : m_inactiveDarkOpacity));
     CGContextFillRect(context, topRect);
     
     CGContextRestoreGState(context);
@@ -47,8 +47,8 @@
 
 - (void) setActiveLightOpacity:(CGFloat)lightOpacity
 {
-    if (_activeLightOpacity != lightOpacity) {
-        _activeLightOpacity = lightOpacity;
+    if (m_activeLightOpacity != lightOpacity) {
+        m_activeLightOpacity = lightOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -56,8 +56,8 @@
 
 - (void) setActiveDarkOpacity:(CGFloat)darkOpacity
 {
-    if (_activeDarkOpacity != darkOpacity) {
-        _activeDarkOpacity = darkOpacity;
+    if (m_activeDarkOpacity != darkOpacity) {
+        m_activeDarkOpacity = darkOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -65,8 +65,8 @@
 
 - (void) setInactiveLightOpacity:(CGFloat)lightOpacity
 {
-    if (_inactiveLightOpacity != lightOpacity) {
-        _inactiveLightOpacity = lightOpacity;
+    if (m_inactiveLightOpacity != lightOpacity) {
+        m_inactiveLightOpacity = lightOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -74,15 +74,15 @@
 
 - (void) setInactiveDarkOpacity:(CGFloat)darkOpacity
 {
-    if (_inactiveDarkOpacity != darkOpacity) {
-        _inactiveDarkOpacity = darkOpacity;
+    if (m_inactiveDarkOpacity != darkOpacity) {
+        m_inactiveDarkOpacity = darkOpacity;
         [self setNeedsDisplay:YES];
     }
 }
 
-@synthesize activeDarkOpacity    = _activeDarkOpacity,
-            activeLightOpacity   = _activeLightOpacity,
-            inactiveDarkOpacity  = _inactiveDarkOpacity,
-            inactiveLightOpacity = _inactiveLightOpacity;
+@synthesize activeDarkOpacity    = m_activeDarkOpacity,
+            activeLightOpacity   = m_activeLightOpacity,
+            inactiveDarkOpacity  = m_inactiveDarkOpacity,
+            inactiveLightOpacity = m_inactiveLightOpacity;
 
 @end

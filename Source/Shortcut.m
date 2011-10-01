@@ -10,8 +10,8 @@
 #import <Carbon/Carbon.h>
 
 @interface Shortcut () {
-    NSUInteger     _modifierFlags;
-    unsigned short _keyCode;
+    NSUInteger     m_modifierFlags;
+    unsigned short m_keyCode;
 }
 
 @end
@@ -219,8 +219,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 - (id) initWithKeyCode:(unsigned short)keyCode modifierFlags:(NSUInteger)modifierFlags
 {
     if ((self = [super init])) {
-        _keyCode       = keyCode;
-        _modifierFlags = modifierFlags;
+        m_keyCode       = keyCode;
+        m_modifierFlags = modifierFlags;
     }
 
     return self;
@@ -258,8 +258,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
     if ([anotherObject isKindOfClass:[Shortcut class]]) {
         Shortcut *anotherShortcut = (Shortcut *)anotherObject;
 
-        return anotherShortcut->_modifierFlags == _modifierFlags &&
-               anotherShortcut->_keyCode       == _keyCode;
+        return anotherShortcut->m_modifierFlags == m_modifierFlags &&
+               anotherShortcut->m_keyCode       == m_keyCode;
     }
 
     return NO;
@@ -279,12 +279,12 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 {
     NSUInteger shortcutID = 0;
 
-    if (_modifierFlags & NSControlKeyMask  )  shortcutID |= 0x10000;
-    if (_modifierFlags & NSCommandKeyMask  )  shortcutID |= 0x20000;
-    if (_modifierFlags & NSShiftKeyMask    )  shortcutID |= 0x40000;
-    if (_modifierFlags & NSAlternateKeyMask)  shortcutID |= 0x80000;
+    if (m_modifierFlags & NSControlKeyMask  )  shortcutID |= 0x10000;
+    if (m_modifierFlags & NSCommandKeyMask  )  shortcutID |= 0x20000;
+    if (m_modifierFlags & NSShiftKeyMask    )  shortcutID |= 0x40000;
+    if (m_modifierFlags & NSAlternateKeyMask)  shortcutID |= 0x80000;
 
-    shortcutID |= _keyCode;
+    shortcutID |= m_keyCode;
     
     return shortcutID;
 }
@@ -292,20 +292,20 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 - (NSString *) preferencesString
 {
-    return sGetPreferencesString(_modifierFlags, _keyCode);
+    return sGetPreferencesString(m_modifierFlags, m_keyCode);
 }
 
 
 - (NSString *) displayString
 {
-    NSString *modifierString = [Shortcut stringForModifierFlags:_modifierFlags];
-    NSString *keyCodeString  = [Shortcut stringForKeyCode:_keyCode];
+    NSString *modifierString = [Shortcut stringForModifierFlags:m_modifierFlags];
+    NSString *keyCodeString  = [Shortcut stringForKeyCode:m_keyCode];
 
     return [NSString stringWithFormat:@"%@%@", modifierString, keyCodeString];
 }
 
 
-@synthesize modifierFlags = _modifierFlags,
-            keyCode       = _keyCode;
+@synthesize modifierFlags = m_modifierFlags,
+            keyCode       = m_keyCode;
 
 @end

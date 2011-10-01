@@ -9,6 +9,13 @@
 #import "RecessedButton.h"
 #import "Util.h"
 
+@interface RecessedButtonCell () {
+    NSRect m_arrowRect;
+}
+
+@end
+
+
 static NSBezierPath *sGetArrowPath(CGRect rect)
 {
     NSBezierPath *path = [NSBezierPath bezierPath];
@@ -22,11 +29,6 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
     return path;
 }
 
-@interface RecessedButtonCell () {
-    NSRect _arrowRect;
-}
-
-@end
 
 @implementation RecessedButtonCell
 
@@ -34,16 +36,16 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
 {
     [super drawBezelWithFrame:frame inView:controlView];
 
-    _arrowRect = frame;
-    _arrowRect.size     = NSMakeSize(7, 5);
-    _arrowRect.origin.x = NSMaxX(frame) - 14.0;
-    _arrowRect.origin.y = floor(NSMidY(frame) - (_arrowRect.size.height / 2.0));
+    m_arrowRect = frame;
+    m_arrowRect.size     = NSMakeSize(7, 5);
+    m_arrowRect.origin.x = NSMaxX(frame) - 14.0;
+    m_arrowRect.origin.y = floor(NSMidY(frame) - (m_arrowRect.size.height / 2.0));
 }
 
 - (NSRect) drawTitle:(NSAttributedString*)title withFrame:(NSRect)frame inView:(NSView*)controlView
 {
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
-    BOOL drawArrow = (_arrowRect.size.width > 0);
+    BOOL drawArrow = (m_arrowRect.size.width > 0);
     
     if (drawArrow) {
         CGContextSaveGState(context);
@@ -81,7 +83,7 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
         [shadow setShadowBlurRadius:1.0];
         [shadow set];
 
-        NSBezierPath *path = sGetArrowPath(_arrowRect);
+        NSBezierPath *path = sGetArrowPath(m_arrowRect);
         [[NSColor whiteColor] set];
         [path fill];
         
@@ -89,7 +91,7 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
         
         CGContextRestoreGState(context);    
         
-        _arrowRect = CGRectZero;
+        m_arrowRect = CGRectZero;
     }
     
     return rect;

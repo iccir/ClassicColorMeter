@@ -40,77 +40,77 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 @class PreviewView;
 
 @interface AppDelegate () {
-    NSWindow      *oWindow;
+    NSWindow       *o_window;
 
-    NSView        *oLeftContainer;
-    NSView        *oMiddleContainer;
-    NSView        *oRightContainer;
+    NSView         *o_leftContainer;
+    NSView         *o_middleContainer;
+    NSView         *o_rightContainer;
 
-    PreviewView   *oPreviewView;
-    NSPopUpButton *oColorModePopUp;
-    NSView        *oContainer;
-    ResultView    *oResultView;
-    NSSlider      *oApertureSizeSlider;
+    PreviewView    *o_previewView;
+    NSPopUpButton  *o_colorModePopUp;
+    NSView         *o_container;
+    ResultView     *o_resultView;
+    NSSlider       *o_apertureSizeSlider;
 
-    NSTextField   *oApertureSizeLabel;
-    NSTextField   *oStatusText;
+    NSTextField    *o_apertureSizeLabel;
+    NSTextField    *o_statusText;
 
-    NSTextField   *oLabel1;
-    NSTextField   *oLabel2;
-    NSTextField   *oLabel3;
+    NSTextField    *o_label1;
+    NSTextField    *o_label2;
+    NSTextField    *o_label3;
 
-    NSTextField   *oValue1;
-    NSTextField   *oValue2;
-    NSTextField   *oValue3;
+    NSTextField    *o_value1;
+    NSTextField    *o_value2;
+    NSTextField    *o_value3;
 
-    NSTextField    *oHoldingLabel;
-    RecessedButton *oProfileButton;
-    RecessedButton *oTopHoldLabelButton;
-    RecessedButton *oBottomHoldLabelButton;
+    NSTextField    *o_holdingLabel;
+    RecessedButton *o_profileButton;
+    RecessedButton *o_topHoldLabelButton;
+    RecessedButton *o_bottomHoldLabelButton;
 
-    NSSlider      *oSlider1;
-    NSSlider      *oSlider2;
-    NSSlider      *oSlider3;
+    NSSlider       *o_slider1;
+    NSSlider       *o_slider2;
+    NSSlider       *o_slider3;
 
-    NSView        *_layerContainer;
-    CALayer       *_leftSnapshot;
-    CALayer       *_middleSnapshot;
-    CALayer       *_rightSnapshot;
-    NSImage       *_leftHoldImage;
-    NSImage       *_middleHoldImage;
-    NSImage       *_rightHoldImage;
-    NSImage       *_leftViewImage;
-    NSImage       *_middleViewImage;
-    NSImage       *_rightViewImage;
+    NSView         *m_layerContainer;
+    CALayer        *m_leftSnapshot;
+    CALayer        *m_middleSnapshot;
+    CALayer        *m_rightSnapshot;
+    NSImage        *m_leftHoldImage;
+    NSImage        *m_middleHoldImage;
+    NSImage        *m_rightHoldImage;
+    NSImage        *m_leftViewImage;
+    NSImage        *m_middleViewImage;
+    NSImage        *m_rightViewImage;
 
-    PreferencesController *_preferencesController;
-    SnippetsController    *_snippetsController;
+    PreferencesController *m_preferencesController;
+    SnippetsController    *m_snippetsController;
 
-    NSTimer          *_timer;
-    NSPoint           _lastMouseLocation;
-    NSTimeInterval    _lastUpdateTimeInterval;
-    CGDirectDisplayID _lastDisplayID;
-    CGFloat           _screenZeroHeight;
+    NSTimer          *m_timer;
+    NSPoint           m_lastMouseLocation;
+    NSTimeInterval    m_lastUpdateTimeInterval;
+    CGDirectDisplayID m_lastDisplayID;
+    CGFloat           m_screenZeroHeight;
 
-    ColorSyncTransformRef _colorSyncTransform;
+    ColorSyncTransformRef m_colorSyncTransform;
 
-    CGFloat        _lockedX;
-    CGFloat        _lockedY;
+    CGFloat        m_lockedX;
+    CGFloat        m_lockedY;
     
-    CGRect         _screenBounds;
-    CGRect         _apertureRect;
+    CGRect         m_screenBounds;
+    CGRect         m_apertureRect;
     
-    BOOL           _isHoldingColor;
-    Color         *_color;
+    BOOL           m_isHoldingColor;
+    Color         *m_color;
     
     // Cached prefs
-    ColorMode        _colorMode;
-    ColorProfileType _colorProfileType;
-    NSInteger        _zoomLevel;
-    NSInteger        _updatesContinuously;
-    NSInteger        _showMouseCoordinates;
-    BOOL             _usesLowercaseHex;
-    BOOL             _usesPoundPrefix;
+    ColorMode        m_colorMode;
+    ColorProfileType m_colorProfileType;
+    NSInteger        m_zoomLevel;
+    NSInteger        m_updatesContinuously;
+    NSInteger        m_showMouseCoordinates;
+    BOOL             m_usesLowercaseHex;
+    BOOL             m_usesPoundPrefix;
 }
 
 - (void) _updateStatusText;
@@ -128,23 +128,23 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    _color = [[Color alloc] init];
+    m_color = [[Color alloc] init];
 
-    [(ColorSliderCell *)[oSlider1 cell] setColor:_color];
-    [(ColorSliderCell *)[oSlider2 cell] setColor:_color];
-    [(ColorSliderCell *)[oSlider3 cell] setColor:_color];
-    [oResultView setColor:_color];
+    [(ColorSliderCell *)[o_slider1 cell] setColor:m_color];
+    [(ColorSliderCell *)[o_slider2 cell] setColor:m_color];
+    [(ColorSliderCell *)[o_slider3 cell] setColor:m_color];
+    [o_resultView setColor:m_color];
     
-    [oResultView setDelegate:self];
+    [o_resultView setDelegate:self];
 
-    _lockedX                = NAN;
-    _lockedY                = NAN;
-    _lastMouseLocation      = NSMakePoint(NAN, NAN);
-    _lastUpdateTimeInterval = NAN;
-    _zoomLevel              = 1.0;
+    m_lockedX                = NAN;
+    m_lockedY                = NAN;
+    m_lastMouseLocation      = NSMakePoint(NAN, NAN);
+    m_lastUpdateTimeInterval = NAN;
+    m_zoomLevel              = 1.0;
 
-    _timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+    m_timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:m_timer forMode:NSRunLoopCommonModes];
 
     void (^addEtching)(NSView *, CGFloat, CGFloat, CGFloat, CGFloat) = ^(NSView *host, CGFloat aD, CGFloat aL, CGFloat iD, CGFloat iL) {
         NSRect frame = [host frame];
@@ -163,13 +163,13 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [etching release];
     };
     
-    addEtching(oValue1,      0.10, 0.33, 0.0, 0.1);
-    addEtching(oValue2,      0.12, 0.33, 0.0, 0.1);
-    addEtching(oValue3,      0.15, 0.33, 0.0, 0.1);
-    addEtching(oResultView,  0.0,  0.33, 0.0, 0.1);
-    addEtching(oPreviewView, 0.0,  0.33, 0.0, 0.1);
+    addEtching(o_value1,      0.10, 0.33, 0.0, 0.1);
+    addEtching(o_value2,      0.12, 0.33, 0.0, 0.1);
+    addEtching(o_value3,      0.15, 0.33, 0.0, 0.1);
+    addEtching(o_resultView,  0.0,  0.33, 0.0, 0.1);
+    addEtching(o_previewView, 0.0,  0.33, 0.0, 0.1);
     
-    NSMenu *menu = [oColorModePopUp menu];
+    NSMenu *menu = [o_colorModePopUp menu];
     void (^addMenu)(ColorMode) = ^(ColorMode mode) {
         NSString   *title = ColorModeGetName(mode);
         NSMenuItem *item  = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
@@ -206,21 +206,21 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)      name:PreferencesDidChangeNotification        object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScreenColorSpaceDidChange:) name:NSScreenColorSpaceDidChangeNotification object:nil];
     
-    NSRect frame = [oWindow frame];
+    NSRect frame = [o_window frame];
     frame.size.width = 350.0;
-    [oWindow setFrame:frame display:NO animate:NO];
+    [o_window setFrame:frame display:NO animate:NO];
 
-    [oWindow setContentBorderThickness:0.0 forEdge:NSMinYEdge];
-    [oWindow setContentBorderThickness:172.0 forEdge:NSMaxYEdge];
-    [oWindow setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [oWindow setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+    [o_window setContentBorderThickness:0.0 forEdge:NSMinYEdge];
+    [o_window setContentBorderThickness:172.0 forEdge:NSMaxYEdge];
+    [o_window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+    [o_window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
 
-    [[oApertureSizeLabel cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[oStatusText        cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[oHoldingLabel      cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[oLabel1            cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[oLabel2            cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[oLabel3            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_apertureSizeLabel cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_statusText        cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_holdingLabel      cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_label1            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_label2            cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[o_label3            cell] setBackgroundStyle:NSBackgroundStyleRaised];
 
     [self _setupHoldAnimation];
 
@@ -229,7 +229,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     [self _handlePreferencesDidChange:nil];
     [self _handleScreenColorSpaceDidChange:nil];
     
-    [oWindow makeKeyAndOrderFront:self];
+    [o_window makeKeyAndOrderFront:self];
 }
 
 
@@ -237,20 +237,20 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     [[ShortcutManager sharedInstance] removeListener:self];
 
-    [_layerContainer release];
-    _layerContainer = nil;
+    [m_layerContainer release];
+    m_layerContainer = nil;
 
-    if (_colorSyncTransform) CFRelease(_colorSyncTransform);
-    _colorSyncTransform = NULL;
+    if (m_colorSyncTransform) CFRelease(m_colorSyncTransform);
+    m_colorSyncTransform = NULL;
 
-    [_preferencesController release];
-    _preferencesController = nil;
+    [m_preferencesController release];
+    m_preferencesController = nil;
     
-    [_snippetsController release];
-    _snippetsController = nil;
+    [m_snippetsController release];
+    m_snippetsController = nil;
 
-    [_timer release];
-    _timer = nil;
+    [m_timer release];
+    m_timer = nil;
 
     [super dealloc];
 }
@@ -258,8 +258,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) applicationWillTerminate:(NSNotification *)notification
 {
-    [_timer invalidate];
-    _timer = nil;
+    [m_timer invalidate];
+    m_timer = nil;
 }
 
 
@@ -268,7 +268,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     NSArray  *screensArray = [NSScreen screens];
     NSScreen *screenZero   = [screensArray count] ? [screensArray objectAtIndex:0] : nil;
 
-    _screenZeroHeight = screenZero ? [screenZero frame].size.height : 0.0;
+    m_screenZeroHeight = screenZero ? [screenZero frame].size.height : 0.0;
 }
 
 
@@ -277,25 +277,25 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     SEL action = [menuItem action];
 
     if (action == @selector(lockPosition:)) {
-        [menuItem setState:!isnan(_lockedX) && !isnan(_lockedY)];
+        [menuItem setState:!isnan(m_lockedX) && !isnan(m_lockedY)];
     
     } else if (action == @selector(lockX:)) {
-        [menuItem setState:!isnan(_lockedX)];
+        [menuItem setState:!isnan(m_lockedX)];
 
     } else if (action == @selector(lockY:)) {
-        [menuItem setState:!isnan(_lockedY)];
+        [menuItem setState:!isnan(m_lockedY)];
         
     } else if (action == @selector(updateMagnification:)) {
-        [menuItem setState:([menuItem tag] == _zoomLevel)];
+        [menuItem setState:([menuItem tag] == m_zoomLevel)];
 
     } else if (action == @selector(toggleContinuous:)) {
-        [menuItem setState:_updatesContinuously];
+        [menuItem setState:m_updatesContinuously];
 
     } else if (action == @selector(toggleMouseLocation:)) {
-        [menuItem setState:_showMouseCoordinates];
+        [menuItem setState:m_showMouseCoordinates];
 
     } else if (action == @selector(holdColor:)) {
-        [menuItem setState:_isHoldingColor];
+        [menuItem setState:m_isHoldingColor];
 
     } else if (action == @selector(toggleFloatWindow:)) {
         [menuItem setState:[[Preferences sharedInstance] floatWindow]];
@@ -308,7 +308,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [menuItem setHidden:!isVisible];
 
     } else if (action == @selector(changeColorConversionValue:)) {
-        BOOL state = ([menuItem tag] == _colorProfileType);
+        BOOL state = ([menuItem tag] == m_colorProfileType);
         [menuItem setState:state];
     }
 
@@ -318,15 +318,15 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) cancel:(id)sender
 {
-    if ([oWindow firstResponder] != oWindow) {
-        [oWindow makeFirstResponder:oWindow];
+    if ([o_window firstResponder] != o_window) {
+        [o_window makeFirstResponder:o_window];
     }
 }
 
 
 - (void) windowWillClose:(NSNotification *)note
 {
-    if ([note object] == oWindow) {
+    if ([note object] == o_window) {
         [NSApp terminate:self];
     }
 }
@@ -337,31 +337,31 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 static ColorMode sGetCurrentColorMode(AppDelegate *self)
 {
-    if (self->_isHoldingColor) {
+    if (self->m_isHoldingColor) {
         Preferences *preferences = [Preferences sharedInstance];
         if ([preferences usesDifferentColorSpaceInHoldColor]) {
             return [preferences holdColorMode];
         }
     }
     
-    return self->_colorMode;
+    return self->m_colorMode;
 }
 
 
 static void sUpdateColorViews(AppDelegate *self)
 {
-    [self->oResultView setNeedsDisplay:YES];
-    [self->oSlider1 setNeedsDisplay:YES];
-    [self->oSlider2 setNeedsDisplay:YES];
-    [self->oSlider3 setNeedsDisplay:YES];
+    [self->o_resultView setNeedsDisplay:YES];
+    [self->o_slider1 setNeedsDisplay:YES];
+    [self->o_slider2 setNeedsDisplay:YES];
+    [self->o_slider3 setNeedsDisplay:YES];
 }
 
 
 static void sUpdateHoldLabels(AppDelegate *self)
 {
     ColorMode mode      = sGetCurrentColorMode(self);
-    BOOL      lowercase = self->_usesLowercaseHex;
-    Color    *color     = self->_color;
+    BOOL      lowercase = self->m_usesLowercaseHex;
+    Color    *color     = self->m_color;
 
     long r = lroundf([color red]   * 255);
     long g = lroundf([color green] * 255);
@@ -375,7 +375,7 @@ static void sUpdateHoldLabels(AppDelegate *self)
     else if (b <   0) b = 0;
     
     NSString *hexFormat = nil;
-    if (self->_usesPoundPrefix) {
+    if (self->m_usesPoundPrefix) {
         hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
     } else {
         hexFormat = lowercase ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
@@ -397,8 +397,8 @@ static void sUpdateHoldLabels(AppDelegate *self)
 
         NSString *hsbString = [NSString stringWithFormat:@"%ld%C, %ld%%, %ld%%", h, 0x00b0, s, b];
 
-        [self->oTopHoldLabelButton setTitle:hsbString];
-        [self->oBottomHoldLabelButton setTitle:hexString];
+        [self->o_topHoldLabelButton setTitle:hsbString];
+        [self->o_bottomHoldLabelButton setTitle:hexString];
 
     } else if (ColorModeIsHSB(mode)) {
         long r100 = lroundf([color red]   * 100);
@@ -414,8 +414,8 @@ static void sUpdateHoldLabels(AppDelegate *self)
 
         NSString *decimalString = [NSString stringWithFormat:@"%ld%%, %ld%%, %ld%%", r100, g100, b100];
 
-        [self->oTopHoldLabelButton setTitle:decimalString];
-        [self->oBottomHoldLabelButton setTitle:hexString];
+        [self->o_topHoldLabelButton setTitle:decimalString];
+        [self->o_bottomHoldLabelButton setTitle:hexString];
     }
 }
 
@@ -424,13 +424,13 @@ static void sUpdatePopUpAndComponentLabels(AppDelegate *self)
 {
     ColorMode colorMode = sGetCurrentColorMode(self);
     
-    [self->oColorModePopUp selectItemWithTag:colorMode];
+    [self->o_colorModePopUp selectItemWithTag:colorMode];
 
     NSArray *labels = ColorModeGetComponentLabels(colorMode);
     if ([labels count] == 3) {
-        [self->oLabel1 setStringValue:[labels objectAtIndex:0]];
-        [self->oLabel2 setStringValue:[labels objectAtIndex:1]];
-        [self->oLabel3 setStringValue:[labels objectAtIndex:2]];
+        [self->o_label1 setStringValue:[labels objectAtIndex:0]];
+        [self->o_label2 setStringValue:[labels objectAtIndex:1]];
+        [self->o_label3 setStringValue:[labels objectAtIndex:2]];
     }
 }
 
@@ -438,10 +438,10 @@ static void sUpdatePopUpAndComponentLabels(AppDelegate *self)
 static void sUpdateSliders(AppDelegate *self)
 {
     ColorMode colorMode = sGetCurrentColorMode(self);
-    NSSlider *slider1   = self->oSlider1;
-    NSSlider *slider2   = self->oSlider2;
-    NSSlider *slider3   = self->oSlider3;
-    Color    *color     = self->_color;
+    NSSlider *slider1   = self->o_slider1;
+    NSSlider *slider2   = self->o_slider2;
+    NSSlider *slider3   = self->o_slider3;
+    Color    *color     = self->m_color;
 
     BOOL      isRGB     = ColorModeIsRGB(colorMode);
     BOOL      isHSB     = ColorModeIsHSB(colorMode);
@@ -487,18 +487,18 @@ static void sUpdateSliders(AppDelegate *self)
 
 static void sUpdateTextFields(AppDelegate *self)
 {
-    Color    *color     = self->_color;
+    Color    *color     = self->m_color;
     ColorMode colorMode = sGetCurrentColorMode(self);
 
     NSString *value1 = nil;
     NSString *value2 = nil;
     NSString *value3 = nil;
     BOOL clipped1, clipped2, clipped3;
-    ColorModeMakeComponentStrings(colorMode, color, self->_usesLowercaseHex, self->_usesPoundPrefix, &value1, &value2, &value3, &clipped1, &clipped2, &clipped3);
+    ColorModeMakeComponentStrings(colorMode, color, self->m_usesLowercaseHex, self->m_usesPoundPrefix, &value1, &value2, &value3, &clipped1, &clipped2, &clipped3);
 
-    if (value1) [self->oValue1 setStringValue:value1];
-    if (value2) [self->oValue2 setStringValue:value2];
-    if (value3) [self->oValue3 setStringValue:value3];
+    if (value1) [self->o_value1 setStringValue:value1];
+    if (value2) [self->o_value2 setStringValue:value2];
+    if (value3) [self->o_value3 setStringValue:value3];
     
     static NSColor *sRedColor = nil;
     static NSColor *sBlackColor = nil;
@@ -508,29 +508,29 @@ static void sUpdateTextFields(AppDelegate *self)
         sBlackColor = [[NSColor blackColor] retain];
     }
 
-    BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode)) && self->_isHoldingColor;
+    BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode)) && self->m_isHoldingColor;
 
-    [self->oValue1 setTextColor:((clipped1 && !isEditable) ? sRedColor : sBlackColor)];
-    [self->oValue2 setTextColor:((clipped2 && !isEditable) ? sRedColor : sBlackColor)];
-    [self->oValue3 setTextColor:((clipped3 && !isEditable) ? sRedColor : sBlackColor)];
+    [self->o_value1 setTextColor:((clipped1 && !isEditable) ? sRedColor : sBlackColor)];
+    [self->o_value2 setTextColor:((clipped2 && !isEditable) ? sRedColor : sBlackColor)];
+    [self->o_value3 setTextColor:((clipped3 && !isEditable) ? sRedColor : sBlackColor)];
 
-    [self->oValue1 setEditable:isEditable];
-    [self->oValue2 setEditable:isEditable];
-    [self->oValue3 setEditable:isEditable];
+    [self->o_value1 setEditable:isEditable];
+    [self->o_value2 setEditable:isEditable];
+    [self->o_value3 setEditable:isEditable];
 }
 
 
 static void sUpdateColorSync(AppDelegate *self)
 {
-    if (self->_colorSyncTransform) {
-        CFRelease(self->_colorSyncTransform);
-        self->_colorSyncTransform = NULL;
+    if (self->m_colorSyncTransform) {
+        CFRelease(self->m_colorSyncTransform);
+        self->m_colorSyncTransform = NULL;
     }
 
     ColorMode mode = sGetCurrentColorMode(self);
-    ColorProfileType type = self->_colorProfileType;
+    ColorProfileType type = self->m_colorProfileType;
 
-    ColorSyncProfileRef fromProfile   = ColorSyncProfileCreateWithDisplayID(self->_lastDisplayID);
+    ColorSyncProfileRef fromProfile   = ColorSyncProfileCreateWithDisplayID(self->m_lastDisplayID);
     CFStringRef         toProfileName = NULL;
     ColorSyncProfileRef toProfile     = NULL;
 
@@ -563,7 +563,7 @@ static void sUpdateColorSync(AppDelegate *self)
             
         NSArray *profileSequence = [[NSArray alloc] initWithObjects:fromDictionary, toDictionary, nil];
         
-        self->_colorSyncTransform = ColorSyncTransformCreate((CFArrayRef)profileSequence, NULL);
+        self->m_colorSyncTransform = ColorSyncTransformCreate((CFArrayRef)profileSequence, NULL);
 
         [profileSequence release];
         [toDictionary    release];
@@ -596,7 +596,7 @@ static void sUpdateColorSync(AppDelegate *self)
         NSString *joiner       = [NSString stringWithFormat:@" %C ", 0x279D];
         NSString *joinedString = [profiles componentsJoinedByString:joiner];
         
-        [self->oProfileButton setTitle:joinedString];
+        [self->o_profileButton setTitle:joinedString];
     }
 
 cleanup:
@@ -610,38 +610,38 @@ cleanup:
 
 - (void) _updateScreenshot
 {
-    CGPoint locationToUse = _lastMouseLocation;
+    CGPoint locationToUse = m_lastMouseLocation;
     
-    if (!isnan(_lockedX)) locationToUse.x = _lockedX;
-    if (!isnan(_lockedY)) locationToUse.y = _lockedY;
+    if (!isnan(m_lockedX)) locationToUse.x = m_lockedX;
+    if (!isnan(m_lockedY)) locationToUse.y = m_lockedY;
 
-    CGPoint convertedPoint = CGPointMake(locationToUse.x, _screenZeroHeight - locationToUse.y);
+    CGPoint convertedPoint = CGPointMake(locationToUse.x, m_screenZeroHeight - locationToUse.y);
 
-    CGRect screenBounds = _screenBounds;
+    CGRect screenBounds = m_screenBounds;
     screenBounds.origin.x += convertedPoint.x;
     screenBounds.origin.y += convertedPoint.y;
     CGImageRef screenShot = CGWindowListCreateImage(screenBounds, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
     
-    CGDirectDisplayID displayID = _lastDisplayID;
+    CGDirectDisplayID displayID = m_lastDisplayID;
     uint32_t matchingDisplayCount;
     CGGetDisplaysWithPoint(convertedPoint, 1, &displayID, &matchingDisplayCount);
 
-    if (_lastDisplayID != displayID) {
-        _lastDisplayID = displayID;
+    if (m_lastDisplayID != displayID) {
+        m_lastDisplayID = displayID;
         sUpdateColorSync(self);
     }
     
-    if (!_isHoldingColor) {
+    if (!m_isHoldingColor) {
         float r, g, b;
-        GetAverageColor(screenShot, _apertureRect, &r, &g, &b);
+        GetAverageColor(screenShot, m_apertureRect, &r, &g, &b);
         
-        if (_colorSyncTransform) {
+        if (m_colorSyncTransform) {
             float src[3];
             float dst[3];
             
             src[0] = r;  src[1] = g;  src[2] = b;
             
-            if (ColorSyncTransformConvert(_colorSyncTransform,
+            if (ColorSyncTransformConvert(m_colorSyncTransform,
                 1, 1,
                 &dst, kColorSync32BitFloat, 0, 12,
                 &src, kColorSync32BitFloat, 0, 12,
@@ -651,22 +651,22 @@ cleanup:
             }
         }
 
-        [_color setRed:r green:g blue:b];
+        [m_color setRed:r green:g blue:b];
 
         sUpdateColorViews(self);
         sUpdateTextFields(self);
     }
 
     if (screenShot) {
-        [oPreviewView setImage:screenShot];
+        [o_previewView setImage:screenShot];
         CFRelease(screenShot);
     }
     
-    if (_showMouseCoordinates) {
-        [oPreviewView setMouseLocation:convertedPoint];
+    if (m_showMouseCoordinates) {
+        [o_previewView setMouseLocation:convertedPoint];
     }
     
-    [oPreviewView setZoomLevel:_zoomLevel];
+    [o_previewView setZoomLevel:m_zoomLevel];
 }
 
 
@@ -674,16 +674,16 @@ cleanup:
 {
     NSPoint mouseLocation = [NSEvent mouseLocation];
     NSTimeInterval now    = [NSDate timeIntervalSinceReferenceDate];
-    BOOL didMouseMove     = (_lastMouseLocation.x != mouseLocation.x) || (_lastMouseLocation.y != mouseLocation.y);
-    BOOL needsUpdateTick  = (now - _lastUpdateTimeInterval) > 0.5;
+    BOOL didMouseMove     = (m_lastMouseLocation.x != mouseLocation.x) || (m_lastMouseLocation.y != mouseLocation.y);
+    BOOL needsUpdateTick  = (now - m_lastUpdateTimeInterval) > 0.5;
 
     if (didMouseMove) {
-        _lastMouseLocation = mouseLocation;
+        m_lastMouseLocation = mouseLocation;
     }
     
-    if (_updatesContinuously || didMouseMove || needsUpdateTick) {
+    if (m_updatesContinuously || didMouseMove || needsUpdateTick) {
         [self _updateScreenshot];
-        _lastUpdateTimeInterval = now;
+        m_lastUpdateTimeInterval = now;
     }
 }
 
@@ -693,25 +693,25 @@ cleanup:
     Preferences *preferences  = [Preferences sharedInstance];
     NSInteger    apertureSize = [preferences apertureSize];
 
-    _colorProfileType     = [preferences colorProfileType];
-    _usesLowercaseHex     = [preferences usesLowercaseHex];
-    _usesPoundPrefix      = [preferences usesPoundPrefix];
-    _colorMode            = [preferences colorMode];
-    _zoomLevel            = [preferences zoomLevel];
-    _updatesContinuously  = [preferences updatesContinuously];
-    _showMouseCoordinates = [preferences showMouseCoordinates];
+    m_colorProfileType     = [preferences colorProfileType];
+    m_usesLowercaseHex     = [preferences usesLowercaseHex];
+    m_usesPoundPrefix      = [preferences usesPoundPrefix];
+    m_colorMode            = [preferences colorMode];
+    m_zoomLevel            = [preferences zoomLevel];
+    m_updatesContinuously  = [preferences updatesContinuously];
+    m_showMouseCoordinates = [preferences showMouseCoordinates];
 
     BOOL showsHoldLabels = [preferences showsHoldLabels];
-    [oTopHoldLabelButton setHidden:!showsHoldLabels];
-    [oBottomHoldLabelButton setHidden:!showsHoldLabels];
+    [o_topHoldLabelButton setHidden:!showsHoldLabels];
+    [o_bottomHoldLabelButton setHidden:!showsHoldLabels];
 
-    [oApertureSizeSlider setIntegerValue:apertureSize];
-    [oPreviewView setShowsLocation:[preferences showMouseCoordinates]];
-    [oPreviewView setApertureSize:apertureSize];
-    [oPreviewView setApertureColor:[preferences apertureColor]];
+    [o_apertureSizeSlider setIntegerValue:apertureSize];
+    [o_previewView setShowsLocation:[preferences showMouseCoordinates]];
+    [o_previewView setApertureSize:apertureSize];
+    [o_previewView setApertureColor:[preferences apertureColor]];
 
-    [oResultView setClickEnabled:[preferences clickInSwatchEnabled]];
-    [oResultView setDragEnabled: [preferences dragInSwatchEnabled]];
+    [o_resultView setClickEnabled:[preferences clickInSwatchEnabled]];
+    [o_resultView setDragEnabled: [preferences dragInSwatchEnabled]];
 
     NSMutableArray *shortcuts = [NSMutableArray array];
     if ([preferences showApplicationShortcut]) {
@@ -726,9 +726,9 @@ cleanup:
     }
 
     if ([preferences floatWindow]) {
-        [oWindow setLevel:NSFloatingWindowLevel];
+        [o_window setLevel:NSFloatingWindowLevel];
     } else {
-        [oWindow setLevel:NSNormalWindowLevel];
+        [o_window setLevel:NSNormalWindowLevel];
     }
 
     sUpdateColorSync(self);
@@ -736,26 +736,26 @@ cleanup:
     sUpdateSliders(self);
     sUpdateHoldLabels(self);
 
-    if (_zoomLevel < 1) {
-        _zoomLevel = 1;
+    if (m_zoomLevel < 1) {
+        m_zoomLevel = 1;
     }
     
     {
-        CGFloat pixelsToCapture = 120.0 / _zoomLevel;
+        CGFloat pixelsToCapture = 120.0 / m_zoomLevel;
         CGFloat captureOffset   = floor(pixelsToCapture / 2.0);
 
-        CGFloat pixelsToAverage = ((apertureSize * 2) + 1) * (8.0 / _zoomLevel);
+        CGFloat pixelsToAverage = ((apertureSize * 2) + 1) * (8.0 / m_zoomLevel);
         CGFloat averageOffset   = floor((pixelsToCapture - pixelsToAverage) / 2.0);
 
-        _screenBounds = CGRectMake(-captureOffset, -captureOffset, pixelsToCapture, pixelsToCapture);
-        _apertureRect = CGRectMake( averageOffset,  averageOffset, pixelsToAverage, pixelsToAverage);
+        m_screenBounds = CGRectMake(-captureOffset, -captureOffset, pixelsToCapture, pixelsToCapture);
+        m_apertureRect = CGRectMake( averageOffset,  averageOffset, pixelsToAverage, pixelsToAverage);
     }
 
     sUpdateTextFields(self);
     
     [self _updateScreenshot];
     
-    if (_isHoldingColor) {
+    if (m_isHoldingColor) {
         [self _animateSnapshotsIfNeeded];
     }
 }
@@ -771,15 +771,15 @@ cleanup:
 {
     NSMutableArray *status = [[NSMutableArray alloc] init];
 
-    if (!isnan(_lockedX) && !isnan(_lockedY)) {
+    if (!isnan(m_lockedX) && !isnan(m_lockedY)) {
         [status addObject: NSLocalizedString(@"Locked Position", @"Status text: locked position")];
-    } else if (!isnan(_lockedX)) {
+    } else if (!isnan(m_lockedX)) {
         [status addObject: NSLocalizedString(@"Locked X", @"Status text: locked x")];
-    } else if (!isnan(_lockedY)) {
+    } else if (!isnan(m_lockedY)) {
         [status addObject: NSLocalizedString(@"Locked Y", @"Status text: locked y")];
     }
 
-    [oStatusText setStringValue:[status componentsJoinedByString:@", "]];
+    [o_statusText setStringValue:[status componentsJoinedByString:@", "]];
 
     [status release];
 }
@@ -787,11 +787,11 @@ cleanup:
 
 - (NSImage *) _imageFromPreviewView
 {
-    NSSize   size  = [oPreviewView bounds].size;
+    NSSize   size  = [o_previewView bounds].size;
     NSImage *image = [[NSImage alloc] initWithSize:size];
     
     [image lockFocus];
-    [oPreviewView drawRect:[oPreviewView bounds]];
+    [o_previewView drawRect:[o_previewView bounds]];
     [image unlockFocus];
     
     return [image autorelease];
@@ -800,7 +800,7 @@ cleanup:
 
 - (NSEvent *) _handleLocalEvent:(NSEvent *)event
 {
-    if (![oWindow isKeyWindow]) {
+    if (![o_window isKeyWindow]) {
         return event;
     }
 
@@ -811,7 +811,7 @@ cleanup:
         NSUInteger modifierMask  = (NSCommandKeyMask | NSAlternateKeyMask | NSControlKeyMask);
 
         if ((modifierFlags & modifierMask) == 0) {
-            id        firstResponder = [oWindow firstResponder];
+            id        firstResponder = [o_window firstResponder];
             NSString *characters     = [event charactersIgnoringModifiers];
             unichar   c              = [characters length] ? [characters characterAtIndex:0] : 0; 
             BOOL      isShift        = (modifierFlags & NSShiftKeyMask) > 0;
@@ -835,8 +835,8 @@ cleanup:
             }
 
             if (isArrowKey && [[Preferences sharedInstance] arrowKeysEnabled]) {
-                if (firstResponder != oWindow) {
-                    [oWindow makeFirstResponder:oWindow];
+                if (firstResponder != o_window) {
+                    [o_window makeFirstResponder:o_window];
                 }
 
                 CGFloat xDelta = 0.0;
@@ -858,7 +858,7 @@ cleanup:
                 }
 
                 CGPoint location = [NSEvent mouseLocation];
-                CGPoint convertedPoint = CGPointMake(location.x + xDelta, _screenZeroHeight - (location.y + yDelta));
+                CGPoint convertedPoint = CGPointMake(location.x + xDelta, m_screenZeroHeight - (location.y + yDelta));
 
                 CGWarpMouseCursorPosition(convertedPoint);
 
@@ -891,25 +891,25 @@ cleanup:
     NSString *clipboardText = nil;
 
     if (actionTag == CopyColorAsColor) {
-        result = [_color NSColor];
+        result = [m_color NSColor];
 
     } else if (actionTag == CopyColorAsText) {
         Preferences *preferences = [Preferences sharedInstance];
 
-        ColorMode mode = _colorMode;
+        ColorMode mode = m_colorMode;
 
-        if (_isHoldingColor && [preferences usesDifferentColorSpaceInHoldColor] && ![preferences usesMainColorSpaceForCopyAsText]) {
+        if (m_isHoldingColor && [preferences usesDifferentColorSpaceInHoldColor] && ![preferences usesMainColorSpaceForCopyAsText]) {
             mode = [preferences holdColorMode];
         }
         
-        ColorModeMakeClipboardString(mode, _color, _usesLowercaseHex, _usesPoundPrefix, &clipboardText);
+        ColorModeMakeClipboardString(mode, m_color, m_usesLowercaseHex, m_usesPoundPrefix, &clipboardText);
 
     } else if (actionTag == CopyColorAsImage) {
         NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
         NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
         
         [image lockFocus];
-        [[_color NSColor] set];
+        [[m_color NSColor] set];
         NSRectFill(bounds);
         [image unlockFocus];
 
@@ -932,9 +932,9 @@ cleanup:
     }
 
     if (template) {
-        clipboardText = GetCodeSnippetForColor(_color, _usesLowercaseHex, template);
+        clipboardText = GetCodeSnippetForColor(m_color, m_usesLowercaseHex, template);
         
-        if (!_usesPoundPrefix && [clipboardText hasPrefix:@"#"]) {
+        if (!m_usesPoundPrefix && [clipboardText hasPrefix:@"#"]) {
             clipboardText = [clipboardText substringFromIndex:1]; 
         }
     }
@@ -1020,7 +1020,7 @@ cleanup:
 {
     id<NSPasteboardWriting> pboardWriter = [self _pasteboardWriterForColorAction:colorAction];
 
-    Color *colorCopy = [_color copy];
+    Color *colorCopy = [m_color copy];
 
     NSDraggingItem *draggingItem = [[NSDraggingItem alloc] initWithPasteboardWriter:pboardWriter];
 
@@ -1066,30 +1066,30 @@ cleanup:
 {
     NSView *contentView = [[self window] contentView];
 
-    _layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
-    [_layerContainer setWantsLayer:YES];
+    m_layerContainer = [[NSView alloc] initWithFrame:[contentView bounds]];
+    [m_layerContainer setWantsLayer:YES];
 
-    _leftSnapshot   = [[CALayer alloc] init];
-    _middleSnapshot = [[CALayer alloc] init];
-    _rightSnapshot  = [[CALayer alloc] init];
+    m_leftSnapshot   = [[CALayer alloc] init];
+    m_middleSnapshot = [[CALayer alloc] init];
+    m_rightSnapshot  = [[CALayer alloc] init];
 
-    [_leftSnapshot   setDelegate:self];
-    [_middleSnapshot setDelegate:self];
-    [_rightSnapshot  setDelegate:self];
+    [m_leftSnapshot   setDelegate:self];
+    [m_middleSnapshot setDelegate:self];
+    [m_rightSnapshot  setDelegate:self];
 
-    [_leftSnapshot   setAnchorPoint:CGPointMake(0, 0)];
-    [_middleSnapshot setAnchorPoint:CGPointMake(0, 0)];
-    [_rightSnapshot  setAnchorPoint:CGPointMake(0, 0)];
+    [m_leftSnapshot   setAnchorPoint:CGPointMake(0, 0)];
+    [m_middleSnapshot setAnchorPoint:CGPointMake(0, 0)];
+    [m_rightSnapshot  setAnchorPoint:CGPointMake(0, 0)];
     
-    [[_layerContainer layer] addSublayer:_leftSnapshot];
-    [[_layerContainer layer] addSublayer:_middleSnapshot];
-    [[_layerContainer layer] addSublayer:_rightSnapshot];
+    [[m_layerContainer layer] addSublayer:m_leftSnapshot];
+    [[m_layerContainer layer] addSublayer:m_middleSnapshot];
+    [[m_layerContainer layer] addSublayer:m_rightSnapshot];
 
-    [_leftSnapshot   setFrame:[[self leftContainer]   frame]];
-    [_middleSnapshot setFrame:[[self middleContainer] frame]];
-    [_rightSnapshot  setFrame:[[self rightContainer]  frame]];
+    [m_leftSnapshot   setFrame:[[self leftContainer]   frame]];
+    [m_middleSnapshot setFrame:[[self middleContainer] frame]];
+    [m_rightSnapshot  setFrame:[[self rightContainer]  frame]];
 
-    [contentView addSubview:_layerContainer];
+    [contentView addSubview:m_layerContainer];
 }
 
 
@@ -1099,10 +1099,10 @@ cleanup:
 - (void) _animateSnapshotsIfNeeded
 {
     void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
-        [oLeftContainer   setHidden:!yn];
-        [oMiddleContainer setHidden:!yn];
-        [oRightContainer  setHidden:!yn];
-        [_layerContainer  setHidden: yn];
+        [o_leftContainer   setHidden:!yn];
+        [o_middleContainer setHidden:!yn];
+        [o_rightContainer  setHidden:!yn];
+        [m_layerContainer  setHidden: yn];
     };
     
     void (^layout)(NSView *, CALayer *, CGFloat *) = ^(NSView *view, CALayer *layer, CGFloat *inOutX) {
@@ -1115,7 +1115,7 @@ cleanup:
         *inOutX = NSMaxX(frame);
     };
     
-    BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
+    BOOL showSliders = m_isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
     CGFloat xOffset  = showSliders ? -128.0 : 0.0;
 
     NSDisableScreenUpdates();
@@ -1127,23 +1127,23 @@ cleanup:
             NSDisableScreenUpdates();
 
             setSnapshotsHidden(YES);
-            [oWindow displayIfNeeded];
+            [o_window displayIfNeeded];
 
             NSEnableScreenUpdates();
         }];
 
-        [_leftSnapshot   setContents:GetSnapshotImageForView(oLeftContainer)];
-        [_middleSnapshot setContents:GetSnapshotImageForView(oMiddleContainer)];
-        [_rightSnapshot  setContents:GetSnapshotImageForView(oRightContainer)];
+        [m_leftSnapshot   setContents:GetSnapshotImageForView(o_leftContainer)];
+        [m_middleSnapshot setContents:GetSnapshotImageForView(o_middleContainer)];
+        [m_rightSnapshot  setContents:GetSnapshotImageForView(o_rightContainer)];
 
-        layout(oLeftContainer,   _leftSnapshot,   &xOffset);
-        layout(oMiddleContainer, _middleSnapshot, &xOffset);
-        layout(oRightContainer,  _rightSnapshot,  &xOffset);
+        layout(o_leftContainer,   m_leftSnapshot,   &xOffset);
+        layout(o_middleContainer, m_middleSnapshot, &xOffset);
+        layout(o_rightContainer,  m_rightSnapshot,  &xOffset);
 
-        [_leftSnapshot  setOpacity:showSliders ? 0.0 : 1.0];
-        [_rightSnapshot setOpacity:showSliders ? 1.0 : 0.0];
+        [m_leftSnapshot  setOpacity:showSliders ? 0.0 : 1.0];
+        [m_rightSnapshot setOpacity:showSliders ? 1.0 : 0.0];
 
-        [oWindow displayIfNeeded];
+        [o_window displayIfNeeded];
     }
     NSEnableScreenUpdates();
 }
@@ -1151,7 +1151,7 @@ cleanup:
 
 - (id<CAAction>) actionForLayer:(CALayer *)layer forKey:(NSString *)event
 {
-    if (_isHoldingColor && [event isEqualToString:@"contents"]) {
+    if (m_isHoldingColor && [event isEqualToString:@"contents"]) {
         return (id<CAAction>)[NSNull null];
     }
     
@@ -1174,7 +1174,7 @@ cleanup:
         [pboard clearContents];
         [pboard writeObjects:[NSArray arrayWithObject:pboardWriter]];
         
-        [oResultView doPopOutAnimation];
+        [o_resultView doPopOutAnimation];
     }
 }
 
@@ -1187,12 +1187,12 @@ cleanup:
         NSInteger action   = [preferences dragInSwatchAction];
         NSPoint   location = [event locationInWindow];
 
-        location = [oResultView convertPoint:location fromView:nil];
+        location = [o_resultView convertPoint:location fromView:nil];
 
         NSDraggingItem *item  = [self _draggingItemForColorAction:action cursorOffset:location];
         NSArray        *items = [NSArray arrayWithObject:item];
 
-        [oResultView beginDraggingSessionWithItems:items event:event source:self];
+        [o_resultView beginDraggingSessionWithItems:items event:event source:self];
     }
 }
 
@@ -1212,7 +1212,7 @@ cleanup:
     
     if ([[preferences showApplicationShortcut] isEqual:shortcut]) {
         [NSApp activateIgnoringOtherApps:YES];
-        [oWindow makeKeyAndOrderFront:self];
+        [o_window makeKeyAndOrderFront:self];
         yn = YES;
     }
 
@@ -1227,7 +1227,7 @@ cleanup:
 {
     NSInteger tag = [sender selectedTag];
     
-    if ([[Preferences sharedInstance] usesDifferentColorSpaceInHoldColor] && _isHoldingColor) {
+    if ([[Preferences sharedInstance] usesDifferentColorSpaceInHoldColor] && m_isHoldingColor) {
         [[Preferences sharedInstance] setHoldColorMode:tag];
     } else {
         [[Preferences sharedInstance] setColorMode:tag];
@@ -1251,11 +1251,11 @@ cleanup:
     ColorComponent component = ColorComponentNone;
 
     if (isRGB || isHSB) {
-        if (sender == oSlider1 || sender == oValue1) {
+        if (sender == o_slider1 || sender == o_value1) {
             component = isRGB ? ColorComponentRed :ColorComponentHue;
-        } else if (sender == oSlider2 || sender == oValue2) {
+        } else if (sender == o_slider2 || sender == o_value2) {
             component = isRGB ? ColorComponentGreen : ColorComponentSaturation;
-        } else if (sender == oSlider3 || sender == oValue3) {
+        } else if (sender == o_slider3 || sender == o_value3) {
             component = isRGB ? ColorComponentBlue  : ColorComponentBrightness;
         }
     }
@@ -1267,7 +1267,7 @@ cleanup:
             floatValue = ColorModeParseComponentString(mode, component, [sender stringValue]);            
         }
     
-        [_color setFloatValue:floatValue forComponent:component];
+        [m_color setFloatValue:floatValue forComponent:component];
     }
 
     sUpdateColorViews(self);
@@ -1279,21 +1279,21 @@ cleanup:
 
 - (IBAction) showSnippets:(id)sender
 {
-    if (!_snippetsController) {
-        _snippetsController = [[SnippetsController alloc] init];
+    if (!m_snippetsController) {
+        m_snippetsController = [[SnippetsController alloc] init];
     }
     
-    [_snippetsController showWindow:self];
+    [m_snippetsController showWindow:self];
 }
 
 
 - (IBAction) showPreferences:(id)sender
 {
-    if (!_preferencesController) {
-        _preferencesController = [[PreferencesController alloc] init];
+    if (!m_preferencesController) {
+        m_preferencesController = [[PreferencesController alloc] init];
     }
     
-    [_preferencesController showWindow:self];
+    [m_preferencesController showWindow:self];
 }
 
 
@@ -1306,26 +1306,26 @@ cleanup:
 
 - (IBAction) writeTopLabelValueToPasteboard:(id)sender
 {
-    [self _writeString:[oTopHoldLabelButton title] toPasteboard:[NSPasteboard generalPasteboard]];
+    [self _writeString:[o_topHoldLabelButton title] toPasteboard:[NSPasteboard generalPasteboard]];
 }
 
 
 - (IBAction) writeBottomLabelValueToPasteboard:(id)sender
 {
-    [self _writeString:[oBottomHoldLabelButton title] toPasteboard:[NSPasteboard generalPasteboard]];
+    [self _writeString:[o_bottomHoldLabelButton title] toPasteboard:[NSPasteboard generalPasteboard]];
 }
 
 
 - (IBAction) lockPosition:(id)sender
 {
-    if (isnan(_lockedX) || isnan(_lockedY)) {
+    if (isnan(m_lockedX) || isnan(m_lockedY)) {
         CGPoint mouseLocation = [NSEvent mouseLocation];
-        _lockedX = mouseLocation.x;
-        _lockedY = mouseLocation.y;
+        m_lockedX = mouseLocation.x;
+        m_lockedY = mouseLocation.y;
 
     } else {
-        _lockedX = NAN;
-        _lockedY = NAN;
+        m_lockedX = NAN;
+        m_lockedY = NAN;
     }
     
     [self _updateStatusText];
@@ -1335,10 +1335,10 @@ cleanup:
 
 - (IBAction) lockX:(id)sender
 {
-    if (isnan(_lockedX)) {
-        _lockedX = [NSEvent mouseLocation].x;
+    if (isnan(m_lockedX)) {
+        m_lockedX = [NSEvent mouseLocation].x;
     } else {
-        _lockedX = NAN;
+        m_lockedX = NAN;
     }
 
     [self _updateStatusText];
@@ -1348,10 +1348,10 @@ cleanup:
 
 - (IBAction) lockY:(id)sender
 {
-    if (isnan(_lockedY)) {
-        _lockedY = [NSEvent mouseLocation].y;
+    if (isnan(m_lockedY)) {
+        m_lockedY = [NSEvent mouseLocation].y;
     } else {
-        _lockedY = NAN;
+        m_lockedY = NAN;
     }
 
     [self _updateStatusText];
@@ -1363,7 +1363,7 @@ cleanup:
 {
     NSInteger tag = [sender tag];
     [[Preferences sharedInstance] setZoomLevel:[sender tag]];
-    _zoomLevel = tag;
+    m_zoomLevel = tag;
 
     [self _updateScreenshot];
 }
@@ -1408,7 +1408,7 @@ cleanup:
     
     [savePanel setAllowedFileTypes:[NSArray arrayWithObject:(id)kUTTypeTIFF]];
     
-    [savePanel beginSheetModalForWindow:oWindow completionHandler:^(NSInteger result) {
+    [savePanel beginSheetModalForWindow:o_window completionHandler:^(NSInteger result) {
         if (result == NSFileHandlingPanelOKButton) {
             [[image TIFFRepresentation] writeToURL:[savePanel URL] atomically:YES];
         }
@@ -1418,11 +1418,11 @@ cleanup:
 
 - (IBAction) holdColor:(id)sender
 {
-    _isHoldingColor = !_isHoldingColor;
+    m_isHoldingColor = !m_isHoldingColor;
 
-    [oHoldingLabel setHidden:!_isHoldingColor];
-    [oHoldingLabel setStringValue: NSLocalizedString(@"Holding Color", @"Status text: holding color")];
-    [oProfileButton setHidden:_isHoldingColor];
+    [o_holdingLabel setHidden:!m_isHoldingColor];
+    [o_holdingLabel setStringValue: NSLocalizedString(@"Holding Color", @"Status text: holding color")];
+    [o_profileButton setHidden:m_isHoldingColor];
 
     // If coming from UI, we will have a sender.  Sender=nil for pasteTextAsColor:
     if (sender) {
@@ -1447,12 +1447,12 @@ cleanup:
 
     Color *parsedColor = GetColorFromParsedString(string);
     if (parsedColor) {
-        [_color setRed:[parsedColor red] green:[parsedColor green] blue:[parsedColor blue]];
+        [m_color setRed:[parsedColor red] green:[parsedColor green] blue:[parsedColor blue]];
 
         sUpdateColorViews(self);
         sUpdateTextFields(self);
 
-        if (!_isHoldingColor) {
+        if (!m_isHoldingColor) {
             [self holdColor:nil];
         }
         
@@ -1485,28 +1485,28 @@ cleanup:
 #pragma mark -
 #pragma mark Accessors
 
-@synthesize window                = oWindow,
-            leftContainer         = oLeftContainer,
-            middleContainer       = oMiddleContainer,
-            rightContainer        = oRightContainer,
-            colorModePopUp        = oColorModePopUp,
-            previewView           = oPreviewView,
-            resultView            = oResultView,
-            apertureSizeLabel     = oApertureSizeLabel,
-            statusText            = oStatusText,
-            apertureSizeSlider    = oApertureSizeSlider,
-            label1                = oLabel1,
-            label2                = oLabel2,
-            label3                = oLabel3,
-            value1                = oValue1,
-            value2                = oValue2,
-            value3                = oValue3,
-            holdingLabel          = oHoldingLabel,
-            profileButton         = oProfileButton,
-            topHoldLabelButton    = oTopHoldLabelButton,
-            bottomHoldLabelButton = oBottomHoldLabelButton,
-            slider1               = oSlider1,
-            slider2               = oSlider2,
-            slider3               = oSlider3;
+@synthesize window                = o_window,
+            leftContainer         = o_leftContainer,
+            middleContainer       = o_middleContainer,
+            rightContainer        = o_rightContainer,
+            colorModePopUp        = o_colorModePopUp,
+            previewView           = o_previewView,
+            resultView            = o_resultView,
+            apertureSizeLabel     = o_apertureSizeLabel,
+            statusText            = o_statusText,
+            apertureSizeSlider    = o_apertureSizeSlider,
+            label1                = o_label1,
+            label2                = o_label2,
+            label3                = o_label3,
+            value1                = o_value1,
+            value2                = o_value2,
+            value3                = o_value3,
+            holdingLabel          = o_holdingLabel,
+            profileButton         = o_profileButton,
+            topHoldLabelButton    = o_topHoldLabelButton,
+            bottomHoldLabelButton = o_bottomHoldLabelButton,
+            slider1               = o_slider1,
+            slider2               = o_slider2,
+            slider3               = o_slider3;
 
 @end

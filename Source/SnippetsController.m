@@ -11,11 +11,11 @@
 
 
 @interface SnippetsController () {
-    NSTextField *oNSColorSnippetField;
-    NSTextField *oUIColorSnippetField;
-    NSTextField *oHTMLSnippetField;
-    NSTextField *oRGBSnippetField;
-    NSTextField *oRGBASnippetField;
+    NSTextField *o_nsColorSnippetField;
+    NSTextField *o_uiColorSnippetField;
+    NSTextField *o_htmlSnippetField;
+    NSTextField *o_rgbSnippetField;
+    NSTextField *o_rgbASnippetField;
 }
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note;
@@ -39,30 +39,30 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [oNSColorSnippetField setTarget:nil];
-    [oNSColorSnippetField setAction:NULL];
-    [oNSColorSnippetField release];
-    oNSColorSnippetField = nil;
+    [o_nsColorSnippetField setTarget:nil];
+    [o_nsColorSnippetField setAction:NULL];
+    [o_nsColorSnippetField release];
+    o_nsColorSnippetField = nil;
 
-    [oUIColorSnippetField setTarget:nil];
-    [oUIColorSnippetField setAction:NULL];
-    [oUIColorSnippetField release];
-    oUIColorSnippetField = nil;
+    [o_uiColorSnippetField setTarget:nil];
+    [o_uiColorSnippetField setAction:NULL];
+    [o_uiColorSnippetField release];
+    o_uiColorSnippetField = nil;
 
-    [oHTMLSnippetField setTarget:nil];
-    [oHTMLSnippetField setAction:NULL];
-    [oHTMLSnippetField release];
-    oHTMLSnippetField = nil;
+    [o_htmlSnippetField setTarget:nil];
+    [o_htmlSnippetField setAction:NULL];
+    [o_htmlSnippetField release];
+    o_htmlSnippetField = nil;
 
-    [oRGBSnippetField setTarget:nil];
-    [oRGBSnippetField setAction:NULL];
-    [oRGBSnippetField release];
-    oRGBSnippetField = nil;
+    [o_rgbSnippetField setTarget:nil];
+    [o_rgbSnippetField setAction:NULL];
+    [o_rgbSnippetField release];
+    o_rgbSnippetField = nil;
 
-    [oRGBASnippetField setTarget:nil];
-    [oRGBASnippetField setAction:NULL];
-    [oRGBASnippetField release];
-    oRGBASnippetField = nil;
+    [o_rgbASnippetField setTarget:nil];
+    [o_rgbASnippetField setAction:NULL];
+    [o_rgbASnippetField release];
+    o_rgbASnippetField = nil;
 
     [super dealloc];
 }
@@ -90,11 +90,11 @@
         [field setStringValue:string];
     };
 
-    update( oNSColorSnippetField, [preferences nsColorSnippetTemplate]   );
-    update( oUIColorSnippetField, [preferences uiColorSnippetTemplate]   );
-    update( oHTMLSnippetField,    [preferences hexColorSnippetTemplate]  );
-    update( oRGBSnippetField,     [preferences rgbColorSnippetTemplate]  );
-    update( oRGBASnippetField,    [preferences rgbaColorSnippetTemplate] );
+    update( o_nsColorSnippetField, [preferences nsColorSnippetTemplate]   );
+    update( o_uiColorSnippetField, [preferences uiColorSnippetTemplate]   );
+    update( o_htmlSnippetField,    [preferences hexColorSnippetTemplate]  );
+    update( o_rgbSnippetField,     [preferences rgbColorSnippetTemplate]  );
+    update( o_rgbASnippetField,    [preferences rgbaColorSnippetTemplate] );
 }
 
 
@@ -102,19 +102,19 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    if (sender == oNSColorSnippetField) {
+    if (sender == o_nsColorSnippetField) {
         [preferences setNsColorSnippetTemplate:[sender stringValue]];
         
-    } else if (sender == oUIColorSnippetField) {
+    } else if (sender == o_uiColorSnippetField) {
         [preferences setUiColorSnippetTemplate:[sender stringValue]];
     
-    } else if (sender == oHTMLSnippetField) {
+    } else if (sender == o_htmlSnippetField) {
         [preferences setHexColorSnippetTemplate:[sender stringValue]];
 
-    } else if (sender == oRGBSnippetField) {
+    } else if (sender == o_rgbSnippetField) {
         [preferences setRgbColorSnippetTemplate:[sender stringValue]];
 
-    } else if (sender == oRGBASnippetField) {
+    } else if (sender == o_rgbASnippetField) {
         [preferences setRgbaColorSnippetTemplate:[sender stringValue]];
     }
 }
@@ -161,10 +161,10 @@
 }
 
 
-@synthesize nsColorSnippetField = oNSColorSnippetField,
-            uiColorSnippetField = oUIColorSnippetField,
-            htmlSnippetField    = oHTMLSnippetField,
-            rgbSnippetField     = oRGBSnippetField,
-            rgbaSnippetField    = oRGBASnippetField;
+@synthesize nsColorSnippetField = o_nsColorSnippetField,
+            uiColorSnippetField = o_uiColorSnippetField,
+            htmlSnippetField    = o_htmlSnippetField,
+            rgbSnippetField     = o_rgbSnippetField,
+            rgbaSnippetField    = o_rgbASnippetField;
 
 @end

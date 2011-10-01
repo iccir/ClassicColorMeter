@@ -13,12 +13,12 @@
 static CGFloat sDistanceForDrag = 10.0;
 
 @interface ResultView () {
-    id<ResultViewDelegate> _delegate;
-    Color *_color;
-    CGPoint _mouseDownLocation;
-    BOOL _isInDrag;
-    BOOL _clickEnabled;
-    BOOL _dragEnabled;
+    id<ResultViewDelegate> m_delegate;
+    Color  *m_color;
+    CGPoint m_mouseDownLocation;
+    BOOL    m_isInDrag;
+    BOOL    m_clickEnabled;
+    BOOL    m_dragEnabled;
 }
 
 @end
@@ -28,7 +28,7 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (void) dealloc
 {
-    [_color release];
+    [m_color release];
     [super dealloc];
 }
 
@@ -41,14 +41,14 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    _isInDrag = NO;
+    m_isInDrag = NO;
 
-    _mouseDownLocation = [theEvent locationInWindow];
+    m_mouseDownLocation = [theEvent locationInWindow];
 
     // If we don't need to track drags, do this now
     //
-    if (!_dragEnabled) {
-        [_delegate resultViewClicked:self];
+    if (!m_dragEnabled) {
+        [m_delegate resultViewClicked:self];
     }
 }
 
@@ -57,23 +57,23 @@ static CGFloat sDistanceForDrag = 10.0;
 {
     // If tracking drags, we don't call the delegate on mouseDown, so do it now
     //
-    if (_dragEnabled && !_isInDrag) {
-        [_delegate resultViewClicked:self];
+    if (m_dragEnabled && !m_isInDrag) {
+        [m_delegate resultViewClicked:self];
     }
 }
 
 
 - (void) mouseDragged:(NSEvent *)theEvent
 {
-    if (_dragEnabled && !_isInDrag) {
+    if (m_dragEnabled && !m_isInDrag) {
         NSPoint location = [theEvent locationInWindow];
-        float   deltaX   = location.x - _mouseDownLocation.x;
-        float   deltaY   = location.y - _mouseDownLocation.y;
+        float   deltaX   = location.x - m_mouseDownLocation.x;
+        float   deltaY   = location.y - m_mouseDownLocation.y;
         float   distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 
         if (distance > sDistanceForDrag) {
-            _isInDrag = YES;
-            [_delegate resultView:self dragInitiatedWithEvent:theEvent];
+            m_isInDrag = YES;
+            [m_delegate resultView:self dragInitiatedWithEvent:theEvent];
         }
     }
 }
@@ -141,7 +141,7 @@ static CGFloat sDistanceForDrag = 10.0;
 
     NSRect bounds = [self bounds];
 
-    CGContextSetRGBFillColor(context, [_color red], [_color green], [_color blue], 1.0);
+    CGContextSetRGBFillColor(context, [m_color red], [m_color green], [m_color blue], 1.0);
     CGContextFillRect(context, bounds);
     
     CGContextSetGrayStrokeColor(context, 0.0, 0.5);
@@ -153,17 +153,17 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (void) setColor:(Color *)color
 {
-    if (_color != color) {
-        [_color release];
-        _color = [color retain];
+    if (m_color != color) {
+        [m_color release];
+        m_color = [color retain];
         [self setNeedsDisplay:YES];
     }
 }
 
 
-@synthesize color        = _color,
-            delegate     = _delegate,
-            clickEnabled = _clickEnabled,
-            dragEnabled  = _dragEnabled;
+@synthesize color        = m_color,
+            delegate     = m_delegate,
+            clickEnabled = m_clickEnabled,
+            dragEnabled  = m_dragEnabled;
 
 @end
