@@ -201,6 +201,7 @@ static NSImage *sGetClearIcon()
 
         if ([self shortcut]) {
             [self setShortcut:nil];
+            [self sendAction:[self action] to:[self target]];
             
             if ([[self window] firstResponder] == self) {
                 [[self window] makeFirstResponder:nil];
@@ -231,7 +232,8 @@ static NSImage *sGetClearIcon()
 
         } else if (c == NSDeleteCharacter || c == NSBackspaceCharacter) {
             [self setShortcut:nil];
-            
+            [self sendAction:[self action] to:[self target]];
+
         } else {
             return [super performKeyEquivalent:theEvent];
         }
@@ -242,7 +244,6 @@ static NSImage *sGetClearIcon()
 	} else {
         Shortcut *shortcut = [Shortcut shortcutWithWithKeyCode:[theEvent keyCode] modifierFlags:modifierFlags];
         [self setShortcut:shortcut];
-    
         [self sendAction:[self action] to:[self target]];
     }
 
@@ -259,10 +260,12 @@ static NSImage *sGetClearIcon()
     [self setNeedsDisplay:YES];
 }
 
+
 - (Shortcut *) shortcut
 {
     return [[self _shortcutCell] shortcut];
 }
+
 
 @end
 
