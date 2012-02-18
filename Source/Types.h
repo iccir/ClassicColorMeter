@@ -45,7 +45,8 @@ enum {
     ColorMode_CIE_Lab,
     ColorMode_Tristimulus,
     
-    ColorMode_HSB
+    ColorMode_HSB,
+    ColorMode_HSL
 };
 typedef NSInteger ColorMode;
 

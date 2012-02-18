@@ -10,8 +10,7 @@
 #import "ResultView.h"
 #import "ShortcutManager.h"
 
-@class PreviewView;
-@class RecessedButton;
+@class PreviewView, RecessedButton;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, ShortcutListener, ResultViewDelegate, NSDraggingSource>
 

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern BOOL      ColorModeIsRGB(ColorMode mode);
-extern BOOL      ColorModeIsHSB(ColorMode mode);
+extern BOOL      ColorModeIsHue(ColorMode mode);
 extern BOOL      ColorModeIsXYZ(ColorMode mode);
 extern NSString *ColorModeGetName(ColorMode mode);
 extern NSArray  *ColorModeGetComponentLabels(ColorMode mode);

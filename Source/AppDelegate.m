@@ -120,7 +120,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) _setupHoldAnimation;
 - (void) _animateSnapshotsIfNeeded;
-
 @end
 
 
@@ -188,6 +187,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     addMenu( ColorMode_RGB_HexValue_16 );
     [menu addItem:[NSMenuItem separatorItem]];
     addMenu( ColorMode_HSB   );
+    addMenu( ColorMode_HSL   );
     [menu addItem:[NSMenuItem separatorItem]];
     addMenu( ColorMode_YPbPr_601   );
     addMenu( ColorMode_YPbPr_709   );
@@ -384,9 +384,12 @@ static void sUpdateHoldLabels(AppDelegate *self)
     NSString *hexString = [NSString stringWithFormat:hexFormat, r, g, b];
     
     if (ColorModeIsRGB(mode)) {
-        long h = lroundf([color hue]        * 360);
-        long s = lroundf([color saturation] * 100);
-        long b = lroundf([color brightness] * 100);
+        float f1, f2, f3;
+        [color getHue:&f1 saturation:&f2 brightness:&f3];
+    
+        long h = lroundf(f1 * 360);
+        long s = lroundf(f2 * 100);
+        long b = lroundf(f3 * 100);
 
         while   (h > 360) h -= 360;
         while   (h < 360) h += 360;
@@ -400,7 +403,7 @@ static void sUpdateHoldLabels(AppDelegate *self)
         [self->o_topHoldLabelButton setTitle:hsbString];
         [self->o_bottomHoldLabelButton setTitle:hexString];
 
-    } else if (ColorModeIsHSB(mode)) {
+    } else if (ColorModeIsHue(mode)) {
         long r100 = lroundf([color red]   * 100);
         long g100 = lroundf([color green] * 100);
         long b100 = lroundf([color blue]  * 100);
@@ -444,14 +447,14 @@ static void sUpdateSliders(AppDelegate *self)
     Color    *color     = self->m_color;
 
     BOOL      isRGB     = ColorModeIsRGB(colorMode);
-    BOOL      isHSB     = ColorModeIsHSB(colorMode);
-
-    BOOL      isEnabled = NO;
+    BOOL      isHue     = ColorModeIsHue(colorMode);
+    BOOL      isEnabled = isRGB || isHue;
 
     ColorComponent component1 = ColorComponentNone;
     ColorComponent component2 = ColorComponentNone;
     ColorComponent component3 = ColorComponentNone;
 
+    
     if (isRGB) {
         isEnabled = YES;
 
@@ -459,12 +462,19 @@ static void sUpdateSliders(AppDelegate *self)
         component2 = ColorComponentGreen;
         component3 = ColorComponentBlue;
 
-    } else if (isHSB) {
+    } else if (colorMode == ColorMode_HSB) {
         isEnabled = YES;
 
         component1 = ColorComponentHue;
-        component2 = ColorComponentSaturation;
+        component2 = ColorComponentSaturationHSB;
         component3 = ColorComponentBrightness;
+
+    } else if (colorMode == ColorMode_HSL) {
+        isEnabled = YES;
+
+        component1 = ColorComponentHue;
+        component2 = ColorComponentSaturationHSL;
+        component3 = ColorComponentLightness;
     }
     
     ColorSliderCell *cell1 = (ColorSliderCell *)[slider1 cell];
@@ -508,7 +518,7 @@ static void sUpdateTextFields(AppDelegate *self)
         sBlackColor = [[NSColor blackColor] retain];
     }
 
-    BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHSB(colorMode)) && self->m_isHoldingColor;
+    BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHue(colorMode)) && self->m_isHoldingColor;
 
     [self->o_value1 setTextColor:((clipped1 && !isEditable) ? sRedColor : sBlackColor)];
     [self->o_value2 setTextColor:((clipped2 && !isEditable) ? sRedColor : sBlackColor)];
@@ -1246,17 +1256,31 @@ cleanup:
     ColorMode mode = sGetCurrentColorMode(self);
 
     BOOL isRGB = ColorModeIsRGB(mode);
-    BOOL isHSB = ColorModeIsHSB(mode);
+    BOOL isHue = ColorModeIsHue(mode);
 
     ColorComponent component = ColorComponentNone;
 
-    if (isRGB || isHSB) {
+    if (isRGB || isHue) {
         if (sender == o_slider1 || sender == o_value1) {
             component = isRGB ? ColorComponentRed :ColorComponentHue;
+
         } else if (sender == o_slider2 || sender == o_value2) {
-            component = isRGB ? ColorComponentGreen : ColorComponentSaturation;
+            if (isRGB) {
+                component = ColorComponentGreen;
+            } else if (mode == ColorMode_HSB) {
+                component = ColorComponentSaturationHSB;
+            } else if (mode == ColorMode_HSL) {
+                component = ColorComponentSaturationHSL;
+            }
+
         } else if (sender == o_slider3 || sender == o_value3) {
-            component = isRGB ? ColorComponentBlue  : ColorComponentBrightness;
+            if (isRGB) {
+                component = ColorComponentBlue;
+            } else if (mode == ColorMode_HSB) {
+                component = ColorComponentBrightness;
+            } else if (mode == ColorMode_HSL) {
+                component = ColorComponentLightness;
+            }
         }
     }
     

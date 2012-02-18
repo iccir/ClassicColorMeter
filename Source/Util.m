@@ -20,9 +20,9 @@ BOOL ColorModeIsRGB(ColorMode mode)
 }
 
 
-BOOL ColorModeIsHSB(ColorMode mode)
+BOOL ColorModeIsHue(ColorMode mode)
 {
-    return (mode == ColorMode_HSB);
+    return (mode == ColorMode_HSB) || (mode == ColorMode_HSL);
 }
 
 
@@ -312,7 +312,7 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
         result /= 65535.0;
     } else if (mode == ColorMode_RGB_Value_8 || mode == ColorMode_RGB_HexValue_8) {
         result /= 255.0;
-    } else if (mode == ColorMode_HSB && component == ColorComponentHue) {
+    } else if (ColorModeIsHue(mode) && component == ColorComponentHue) {
         result /= 360.0;
     } else {
         result /= 100.0;
@@ -493,23 +493,30 @@ static void sMakeStrings(
         value2    = [NSString stringWithFormat:@"%0.03lf", (a * 256.0) - 128.0];
         value3    = [NSString stringWithFormat:@"%0.03lf", (b * 256.0) - 128.0];
 
-    } else if (mode == ColorMode_HSB) {
-        long h = lround([color hue]        * 360);
-        long s = lround([color saturation] * 100);
-        long b = lround([color brightness] * 100);
-    
+    } else if ((mode == ColorMode_HSB) || (mode == ColorMode_HSL)) {
+        float f1, f2, f3;
+        if (mode == ColorMode_HSB) {
+            [color getHue:&f1 saturation:&f2 brightness:&f3];
+        } else {
+            [color getHue:&f1 saturation:&f2 lightness:&f3];
+        }
+        
+        long h  = lround(f1 * 360);
+        long s  = lround(f2 * 100);
+        long bl = lround(f3 * 100);
+
         while (h > 360) { h -= 360; }
         while (h < 0)   { h += 360; }
 
         if      (s > 100) { s = 100; clipped2 = YES; }
         else if (s < 0)   { s = 0;   clipped2 = YES; }
 
-        if      (b > 100) { b = 100; clipped3 = YES; }
-        else if (b < 0)   { b = 0;   clipped3 = YES; }
+        if      (bl > 100) { bl = 100; clipped3 = YES; }
+        else if (bl < 0)   { bl = 0;   clipped3 = YES; }
 
         value1 = [NSString stringWithFormat:@"%ld", h];
         value2 = [NSString stringWithFormat:@"%ld", s];
-        value3 = [NSString stringWithFormat:@"%ld", b];
+        value3 = [NSString stringWithFormat:@"%ld", bl];
     }
     
     if (!clipboard) {
@@ -606,6 +613,9 @@ NSString *ColorModeGetName(ColorMode mode)
 
     } else if (mode == ColorMode_HSB) {
         return NSLocalizedString(@"HSB", @"HSB");
+
+    } else if (mode == ColorMode_HSL) {
+        return NSLocalizedString(@"HSL", @"HSL");
     }
 
     return @"";
@@ -660,6 +670,11 @@ NSArray *ColorModeGetComponentLabels(ColorMode mode)
         
     case ColorMode_HSB:
         f( @"H", @"S", @"B" );
+        break;
+
+    case ColorMode_HSL:
+        f( @"H", @"S", @"L" );
+        break;
     }
 
     return result;
