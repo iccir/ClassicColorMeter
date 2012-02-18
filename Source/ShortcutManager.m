@@ -17,7 +17,6 @@ static id sSharedInstance = nil;
     NSHashTable         *m_listeners;
     NSMutableDictionary *m_shortcutIDToRefMap;
     NSMutableDictionary *m_shortcutIDToShortcutMap;  
-    NSArray             *m_shortcuts;
 }
 
 - (BOOL) _handleHotKeyID:(NSUInteger)hotKeyID;
@@ -28,20 +27,22 @@ static id sSharedInstance = nil;
 
 static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *inUserData)
 {
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
+		EventHotKeyID hotKeyID = { 0, 0 };
 
-	EventHotKeyID hotKeyID = { 0, 0 };
-	if (noErr == GetEventParameter(inEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID)) {
-        [(ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
+		if (noErr == GetEventParameter(inEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID)) {
+        	[(__bridge ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
+    	}
     }
-
-	[pool release];
 
     return noErr;
 }
 
 
 @implementation ShortcutManager
+
+@synthesize shortcuts = m_shortcuts;
+
 
 + (BOOL) hasSharedInstance
 {
@@ -57,7 +58,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
         sSharedInstance = [[self alloc] init];
 
 		EventTypeSpec eventSpec = { kEventClassKeyboard, kEventHotKeyPressed };
-		InstallApplicationEventHandler(&sHandleEvent, 1, &eventSpec, sSharedInstance, NULL);
+		InstallApplicationEventHandler(&sHandleEvent, 1, &eventSpec, (__bridge void *)sSharedInstance, NULL);
     });
 
     return sSharedInstance;
@@ -70,7 +71,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 - (id) init
 {
     if ((self = [super init])) {
-        m_listeners               = [[NSHashTable hashTableWithWeakObjects] retain];
+        m_listeners               = [NSHashTable hashTableWithWeakObjects];
         m_shortcutIDToRefMap      = [[NSMutableDictionary alloc] init];
         m_shortcutIDToShortcutMap = [[NSMutableDictionary alloc] init];
     }
@@ -84,20 +85,6 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
     for (Shortcut *shortcut in m_shortcuts) {
         [self _unregisterShortcut:shortcut];
     }
-
-    [m_listeners release];
-    m_listeners = nil;
-
-    [m_shortcutIDToRefMap release];
-    m_shortcutIDToRefMap = nil;
-
-    [m_shortcutIDToShortcutMap release];
-    m_shortcutIDToShortcutMap = nil;
-
-    [m_shortcuts release];
-    m_shortcuts = nil;
-
-    [super dealloc];
 }
 
 
@@ -116,8 +103,6 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
             yn = yn || [listener performShortcut:shortcut];
         }
     }
-
-    [keyIDAsNumber release];
 
     return yn;
 }
@@ -139,7 +124,6 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
     NSNumber *shortcutIDAsNumber = [[NSNumber alloc] initWithUnsignedInteger:shortcutID];
     [self _unregisterShortcutIDAsNumber:shortcutIDAsNumber];
-    [shortcutIDAsNumber release];
 }
 
 
@@ -166,7 +150,6 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
         [m_shortcutIDToShortcutMap setObject:shortcut forKey:shortcutIDAsNumber];
     }
 
-    [shortcutIDAsNumber release];
 }
 
 
@@ -205,13 +188,8 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
             }
         }
         
-        [m_shortcuts release];
         m_shortcuts = [shortcuts copy];
     }
 }
-
-
-@synthesize shortcuts = m_shortcuts;
-
 
 @end

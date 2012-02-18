@@ -8,22 +8,21 @@
 
 #import "Color.h"
 
-@interface Color () {
-    float m_red;
-    float m_green;
-    float m_blue;
-
-    float m_hue;
-    float m_saturationHSL;
-    float m_saturationHSB;
-    float m_brightness;
-    float m_lightness;
-}
-
+@interface Color ()
 @end
 
 
 @implementation Color
+
+@synthesize red           = m_red,
+            green         = m_green,
+            blue          = m_blue,
+            hue           = m_hue,
+            saturationHSB = m_saturationHSB,
+            brightness    = m_brightness,
+            saturationHSL = m_saturationHSL,
+            lightness     = m_lightness;
+
 
 static void sDidChangeHSB(Color *self)
 {
@@ -192,7 +191,18 @@ static void sDidChangeRGB(Color *self)
 
 - (id) copyWithZone:(NSZone *)zone
 {
-    return NSCopyObject(self, 0, zone);
+    Color *result = [[Color alloc] init];
+    
+    result->m_red           = m_red;
+    result->m_green         = m_green;
+    result->m_blue          = m_blue;
+    result->m_hue           = m_hue;
+    result->m_saturationHSL = m_saturationHSL;
+    result->m_saturationHSB = m_saturationHSB;
+    result->m_brightness    = m_brightness;
+    result->m_lightness     = m_lightness;
+
+    return result;
 }
 
 
@@ -401,14 +411,5 @@ static void sDidChangeRGB(Color *self)
         sDidChangeHSL(self);
     }
 }
-
-@synthesize red           = m_red,
-            green         = m_green,
-            blue          = m_blue,
-            hue           = m_hue,
-            saturationHSB = m_saturationHSB,
-            brightness    = m_brightness,
-            saturationHSL = m_saturationHSL,
-            lightness     = m_lightness;
 
 @end

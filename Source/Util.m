@@ -40,23 +40,23 @@ static void sConvertColor(Color *inColor, CFStringRef profileName, float *outFlo
     ColorSyncProfileRef toProfile   = ColorSyncProfileCreateWithName(profileName);
     
     NSDictionary *from = [[NSDictionary alloc] initWithObjectsAndKeys:
-        (id)fromProfile,                         (id)kColorSyncProfile,
-        (id)kColorSyncRenderingIntentPerceptual, (id)kColorSyncRenderingIntent,
-        (id)kColorSyncTransformDeviceToPCS,      (id)kColorSyncTransformTag,
+        (__bridge id)fromProfile,                         (__bridge id)kColorSyncProfile,
+        (__bridge id)kColorSyncRenderingIntentPerceptual, (__bridge id)kColorSyncRenderingIntent,
+        (__bridge id)kColorSyncTransformDeviceToPCS,      (__bridge id)kColorSyncTransformTag,
         nil];
 
     NSDictionary *to = [[NSDictionary alloc] initWithObjectsAndKeys:
-        (id)toProfile,                           (id)kColorSyncProfile,
-        (id)kColorSyncRenderingIntentPerceptual, (id)kColorSyncRenderingIntent,
-        (id)kColorSyncTransformPCSToDevice,      (id)kColorSyncTransformTag,
+        (__bridge id)toProfile,                           (__bridge id)kColorSyncProfile,
+        (__bridge id)kColorSyncRenderingIntentPerceptual, (__bridge id)kColorSyncRenderingIntent,
+        (__bridge id)kColorSyncTransformPCSToDevice,      (__bridge id)kColorSyncTransformTag,
         nil];
         
     NSArray      *profiles = [[NSArray alloc] initWithObjects:from, to, nil];
     NSDictionary *options  = [[NSDictionary alloc] initWithObjectsAndKeys:
-        (id)kColorSyncBestQuality, (id)kColorSyncConvertQuality,
+        (__bridge id)kColorSyncBestQuality, (__bridge id)kColorSyncConvertQuality,
         nil]; 
 
-    ColorSyncTransformRef transform = ColorSyncTransformCreate((CFArrayRef)profiles, (CFDictionaryRef)options);
+    ColorSyncTransformRef transform = ColorSyncTransformCreate((__bridge CFArrayRef)profiles, (__bridge CFDictionaryRef)options);
     
     if (transform) {
         float input[3]  = { [inColor red], [inColor green], [inColor blue] };
@@ -70,11 +70,6 @@ static void sConvertColor(Color *inColor, CFStringRef profileName, float *outFlo
     
         CFRelease(transform);
     }
-
-    [profiles release];
-    [options  release];
-    [to       release];
-    [from     release];
 
     if (fromProfile) CFRelease(fromProfile);
     if (toProfile)   CFRelease(toProfile);
@@ -219,7 +214,7 @@ Color *GetColorFromParsedString(NSString *stringToParse)
 
     withPattern(@"#([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})", ^(NSArray *result) {
         if ([result count] == 3) {
-            color = [[[Color alloc] init] autorelease];
+            color = [[Color alloc] init];
             
             [color setRed:   scanHex([result objectAtIndex:0], 65535.0)];
             [color setGreen: scanHex([result objectAtIndex:1], 65535.0)];
@@ -229,7 +224,7 @@ Color *GetColorFromParsedString(NSString *stringToParse)
     
     withPattern(@"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
         if ([result count] == 3) {
-            color = [[[Color alloc] init] autorelease];
+            color = [[Color alloc] init];
             
             [color setRed:   scanHex([result objectAtIndex:0], 255.0)];
             [color setGreen: scanHex([result objectAtIndex:1], 255.0)];
@@ -239,7 +234,7 @@ Color *GetColorFromParsedString(NSString *stringToParse)
 
     withPattern(@"rgb\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
         if ([result count] == 3) {
-            color = [[[Color alloc] init] autorelease];
+            color = [[Color alloc] init];
             
             [color setRed:   ([[result objectAtIndex:0] floatValue] / 255.0)];
             [color setGreen: ([[result objectAtIndex:1] floatValue] / 255.0)];
@@ -249,7 +244,7 @@ Color *GetColorFromParsedString(NSString *stringToParse)
 
     withPattern(@"rgba\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
         if ([result count] == 4) {
-            color = [[[Color alloc] init] autorelease];
+            color = [[Color alloc] init];
             
             [color setRed:   ([[result objectAtIndex:0] floatValue] / 255.0)];
             [color setGreen: ([[result objectAtIndex:1] floatValue] / 255.0)];
@@ -259,7 +254,7 @@ Color *GetColorFromParsedString(NSString *stringToParse)
 
     withPattern(@"([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
         if ([result count] == 3) {
-            color = [[[Color alloc] init] autorelease];
+            color = [[Color alloc] init];
             
             [color setRed:   scanHex([result objectAtIndex:0], 255.0)];
             [color setGreen: scanHex([result objectAtIndex:1], 255.0)];
@@ -276,11 +271,11 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
     float result = 0.0;
 
     if (mode == ColorMode_RGB_HexValue_8 || mode == ColorMode_RGB_HexValue_16) {
-        CFIndex  length = CFStringGetLength((CFStringRef)string);
+        CFIndex  length = CFStringGetLength((__bridge CFStringRef)string);
         unichar *buffer = length ? malloc(sizeof(unichar) * length) : NULL;
         if (!buffer) return result;
 
-        CFStringGetCharacters((CFStringRef)string, CFRangeMake(0, length), buffer);
+        CFStringGetCharacters((__bridge CFStringRef)string, CFRangeMake(0, length), buffer);
         
         for (CFIndex i = 0; i < length; i++) {
             unichar c = buffer[i];
@@ -683,7 +678,7 @@ NSArray *ColorModeGetComponentLabels(ColorMode mode)
 
 extern NSString *GetCodeSnippetForColor(Color *color, BOOL lowercaseHex, NSString *inTemplate)
 {
-    NSMutableString *result = [[inTemplate mutableCopy] autorelease];
+    NSMutableString *result = [inTemplate mutableCopy];
 
     void (^replaceHex)(NSString *, float) = ^(NSString *key, float component) {
         if (component > 1.0) component = 1.0;
@@ -759,7 +754,7 @@ NSImage *GetSnapshotImageForView(NSView *view)
     [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
     [image unlockFocus];
 
-    return [image autorelease];
+    return image;
 }
 
 
@@ -808,13 +803,12 @@ CGImageRef CreateImageMask(CGSize size, CGFloat scale, void (^callback)(CGContex
             CGContextTranslateCTM(context, 0, height);
             CGContextScaleCTM(context, scale, -scale);
 
-            NSGraphicsContext *savedContext = [[NSGraphicsContext currentContext] retain];
+            NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
             [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
 
             callback(context);
             
             [NSGraphicsContext setCurrentContext:savedContext];
-            [savedContext autorelease];
 
             cgImage = CGBitmapContextCreateImage(context);
             CFRelease(context);

@@ -13,12 +13,8 @@
 static CGFloat sDistanceForDrag = 10.0;
 
 @interface ResultView () {
-    id<ResultViewDelegate> m_delegate;
-    Color  *m_color;
     CGPoint m_mouseDownLocation;
     BOOL    m_isInDrag;
-    BOOL    m_clickEnabled;
-    BOOL    m_dragEnabled;
 }
 
 @end
@@ -26,11 +22,10 @@ static CGFloat sDistanceForDrag = 10.0;
 
 @implementation ResultView
 
-- (void) dealloc
-{
-    [m_color release];
-    [super dealloc];
-}
+@synthesize color        = m_color,
+            delegate     = m_delegate,
+            clickEnabled = m_clickEnabled,
+            dragEnabled  = m_dragEnabled;
 
 
 - (BOOL) isOpaque
@@ -130,7 +125,6 @@ static CGFloat sDistanceForDrag = 10.0;
 
     [CATransaction commit];
 
-    [fakeWindow release];
 }
 
 
@@ -154,16 +148,10 @@ static CGFloat sDistanceForDrag = 10.0;
 - (void) setColor:(Color *)color
 {
     if (m_color != color) {
-        [m_color release];
-        m_color = [color retain];
+        m_color = color;
         [self setNeedsDisplay:YES];
     }
 }
 
-
-@synthesize color        = m_color,
-            delegate     = m_delegate,
-            clickEnabled = m_clickEnabled,
-            dragEnabled  = m_dragEnabled;
 
 @end

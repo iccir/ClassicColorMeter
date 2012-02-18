@@ -28,14 +28,14 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, assign) NSInteger clickInSwatchAction;
 @property (nonatomic, assign) NSInteger dragInSwatchAction;
 
-@property (nonatomic, retain) NSString *nsColorSnippetTemplate;
-@property (nonatomic, retain) NSString *uiColorSnippetTemplate;
-@property (nonatomic, retain) NSString *hexColorSnippetTemplate;
-@property (nonatomic, retain) NSString *rgbColorSnippetTemplate;
-@property (nonatomic, retain) NSString *rgbaColorSnippetTemplate;
+@property (nonatomic, strong) NSString *nsColorSnippetTemplate;
+@property (nonatomic, strong) NSString *uiColorSnippetTemplate;
+@property (nonatomic, strong) NSString *hexColorSnippetTemplate;
+@property (nonatomic, strong) NSString *rgbColorSnippetTemplate;
+@property (nonatomic, strong) NSString *rgbaColorSnippetTemplate;
 
-@property (nonatomic, retain) Shortcut *showApplicationShortcut;
-@property (nonatomic, retain) Shortcut *holdColorShortcut;
+@property (nonatomic, strong) Shortcut *showApplicationShortcut;
+@property (nonatomic, strong) Shortcut *holdColorShortcut;
 
 @property (nonatomic, assign) BOOL updatesContinuously;
 @property (nonatomic, assign) BOOL floatWindow;

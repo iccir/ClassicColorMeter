@@ -9,16 +9,12 @@
 #import "Shortcut.h"
 #import <Carbon/Carbon.h>
 
-@interface Shortcut () {
-    NSUInteger     m_modifierFlags;
-    unsigned short m_keyCode;
-}
-
+@interface Shortcut ()
 @end
 
 
 static NSString *sNumericPadMarker    = @"<<<PAD>>>";
-static NSString **sKeyCodeToStringMap = nil;
+static NSString * __strong *sKeyCodeToStringMap = nil;
 
 static NSString *sGetPreferencesString(NSUInteger modifierFlags, unsigned short keyCode)
 {
@@ -76,6 +72,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 @implementation Shortcut
 
+@synthesize modifierFlags = m_modifierFlags,
+            keyCode       = m_keyCode;
 
 #pragma mark -
 #pragma mark Class Methods
@@ -84,7 +82,7 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sKeyCodeToStringMap = calloc(sizeof(void *), 128);
+        sKeyCodeToStringMap = (NSString * __strong *) calloc(sizeof(void *), 128);
 
         sKeyCodeToStringMap[36]  = @"\u21A9";
         sKeyCodeToStringMap[48]  = @"\u21E5";
@@ -144,13 +142,13 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 + (Shortcut *) shortcutWithPreferencesString:(NSString *)string
 {
-    return [[[self alloc] initWithPreferencesString:string] autorelease];
+    return [[self alloc] initWithPreferencesString:string];
 }
 
 
 + (Shortcut *) shortcutWithWithKeyCode:(unsigned short)keycode modifierFlags:(NSUInteger)modifierFlags
 {
-    return [[[self alloc] initWithKeyCode:keycode modifierFlags:modifierFlags] autorelease];
+    return [[self alloc] initWithKeyCode:keycode modifierFlags:modifierFlags];
 }
 
 
@@ -240,14 +238,13 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 - (id) init
 {
-    [self release];
     return nil;
 }
 
 
 - (id) copyWithZone:(NSZone *)zone
 {
-    return [self retain];
+    return self;
 }
 
 
@@ -303,9 +300,5 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
     return [NSString stringWithFormat:@"%@%@", modifierString, keyCodeString];
 }
-
-
-@synthesize modifierFlags = m_modifierFlags,
-            keyCode       = m_keyCode;
 
 @end

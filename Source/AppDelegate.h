@@ -45,36 +45,36 @@
 
 - (IBAction) sendFeedback:(id)sender;
 
-@property (nonatomic, retain) IBOutlet NSWindow      *window;
+@property (nonatomic, strong) IBOutlet NSWindow      *window;
 
-@property (nonatomic, retain) IBOutlet NSView        *leftContainer;
-@property (nonatomic, retain) IBOutlet NSView        *middleContainer;
-@property (nonatomic, retain) IBOutlet NSView        *rightContainer;
+@property (nonatomic, strong) IBOutlet NSView        *leftContainer;
+@property (nonatomic, strong) IBOutlet NSView        *middleContainer;
+@property (nonatomic, strong) IBOutlet NSView        *rightContainer;
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *colorModePopUp;
-@property (nonatomic, retain) IBOutlet NSSlider      *apertureSizeSlider;
-@property (nonatomic, retain) IBOutlet PreviewView   *previewView;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *colorModePopUp;
+@property (nonatomic, strong) IBOutlet NSSlider      *apertureSizeSlider;
+@property (nonatomic, strong) IBOutlet PreviewView   *previewView;
 
-@property (nonatomic, retain) IBOutlet ResultView    *resultView;
+@property (nonatomic, strong) IBOutlet ResultView    *resultView;
 
-@property (nonatomic, retain) IBOutlet NSTextField   *apertureSizeLabel;
-@property (nonatomic, retain) IBOutlet NSTextField   *statusText;
+@property (nonatomic, strong) IBOutlet NSTextField   *apertureSizeLabel;
+@property (nonatomic, strong) IBOutlet NSTextField   *statusText;
 
-@property (nonatomic, retain) IBOutlet NSTextField   *label1;
-@property (nonatomic, retain) IBOutlet NSTextField   *label2;
-@property (nonatomic, retain) IBOutlet NSTextField   *label3;
+@property (nonatomic, strong) IBOutlet NSTextField   *label1;
+@property (nonatomic, strong) IBOutlet NSTextField   *label2;
+@property (nonatomic, strong) IBOutlet NSTextField   *label3;
 
-@property (nonatomic, retain) IBOutlet NSTextField    *holdingLabel;
-@property (nonatomic, retain) IBOutlet RecessedButton *profileButton;
-@property (nonatomic, retain) IBOutlet RecessedButton *topHoldLabelButton;
-@property (nonatomic, retain) IBOutlet RecessedButton *bottomHoldLabelButton;
+@property (nonatomic, strong) IBOutlet NSTextField    *holdingLabel;
+@property (nonatomic, strong) IBOutlet RecessedButton *profileButton;
+@property (nonatomic, strong) IBOutlet RecessedButton *topHoldLabelButton;
+@property (nonatomic, strong) IBOutlet RecessedButton *bottomHoldLabelButton;
 
-@property (nonatomic, retain) IBOutlet NSTextField   *value1;
-@property (nonatomic, retain) IBOutlet NSTextField   *value2;
-@property (nonatomic, retain) IBOutlet NSTextField   *value3;
+@property (nonatomic, strong) IBOutlet NSTextField   *value1;
+@property (nonatomic, strong) IBOutlet NSTextField   *value2;
+@property (nonatomic, strong) IBOutlet NSTextField   *value3;
 
-@property (nonatomic, retain) IBOutlet NSSlider      *slider1;
-@property (nonatomic, retain) IBOutlet NSSlider      *slider2;
-@property (nonatomic, retain) IBOutlet NSSlider      *slider3;
+@property (nonatomic, strong) IBOutlet NSSlider      *slider1;
+@property (nonatomic, strong) IBOutlet NSSlider      *slider2;
+@property (nonatomic, strong) IBOutlet NSSlider      *slider3;
 
 @end

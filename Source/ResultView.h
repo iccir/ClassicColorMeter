@@ -15,8 +15,8 @@
 
 - (void) doPopOutAnimation;
 
-@property (nonatomic, retain) Color *color;
-@property (nonatomic, assign) id<ResultViewDelegate> delegate;
+@property (nonatomic, strong) Color *color;
+@property (nonatomic, weak) id<ResultViewDelegate> delegate;
 @property (nonatomic, assign, getter=isClickEnabled) BOOL clickEnabled;
 @property (nonatomic, assign, getter=isDragEnabled)  BOOL dragEnabled;
 

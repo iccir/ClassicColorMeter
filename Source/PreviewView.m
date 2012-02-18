@@ -8,27 +8,26 @@
 
 #import "PreviewView.h"
 
-@interface PreviewView () {
-    NSDictionary *m_attributes;
-    CGImageRef    m_image;
-
-    NSInteger     m_zoomLevel;
-    ApertureColor m_apertureColor;
-    NSInteger     m_apertureSize;
-    NSPoint       m_mouseLocation;
-    BOOL          m_showsLocation;
-}
-
+@interface PreviewView ()
+@property (nonatomic, strong) NSDictionary *attributes;
 @end
+
 
 @implementation PreviewView
 
+@synthesize attributes    = m_attributes,
+            zoomLevel     = m_zoomLevel,
+            apertureSize  = m_apertureSize,
+            apertureColor = m_apertureColor,
+            image         = m_image,
+            mouseLocation = m_mouseLocation,
+            showsLocation = m_showsLocation;
+
+
 - (void) dealloc
 {
-    [m_attributes release];
     CGImageRelease(m_image);
-
-    [super dealloc];
+	m_image = NULL;
 }
 
 
@@ -79,8 +78,6 @@
         textRect.origin.x = (bounds.size.width - textRect.size.width) - 2.0;
         textRect.origin.y = 4.0;
         [locationString drawWithRect:textRect options:0 attributes:m_attributes];
-        
-        [locationString release];
     }
 
     // Draw aperture
@@ -173,10 +170,4 @@
     [self setNeedsDisplay:YES];
 }
 
-@synthesize zoomLevel     = m_zoomLevel,
-            apertureSize  = m_apertureSize,
-            apertureColor = m_apertureColor,
-            image         = m_image,
-            mouseLocation = m_mouseLocation,
-            showsLocation = m_showsLocation;
 @end

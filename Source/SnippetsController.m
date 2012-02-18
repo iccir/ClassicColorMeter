@@ -10,20 +10,19 @@
 #import "Preferences.h"
 
 
-@interface SnippetsController () {
-    NSTextField *o_nsColorSnippetField;
-    NSTextField *o_uiColorSnippetField;
-    NSTextField *o_htmlSnippetField;
-    NSTextField *o_rgbSnippetField;
-    NSTextField *o_rgbASnippetField;
-}
-
+@interface SnippetsController ()
 - (void) _handlePreferencesDidChange:(NSNotification *)note;
-
 @end
 
 
 @implementation SnippetsController
+
+@synthesize nsColorSnippetField = o_nsColorSnippetField,
+            uiColorSnippetField = o_uiColorSnippetField,
+            htmlSnippetField    = o_htmlSnippetField,
+            rgbSnippetField     = o_rgbSnippetField,
+            rgbaSnippetField    = o_rgbASnippetField;
+
 
 - (id) initWithWindow:(NSWindow *)window
 {
@@ -41,30 +40,18 @@
 
     [o_nsColorSnippetField setTarget:nil];
     [o_nsColorSnippetField setAction:NULL];
-    [o_nsColorSnippetField release];
-    o_nsColorSnippetField = nil;
 
     [o_uiColorSnippetField setTarget:nil];
     [o_uiColorSnippetField setAction:NULL];
-    [o_uiColorSnippetField release];
-    o_uiColorSnippetField = nil;
 
     [o_htmlSnippetField setTarget:nil];
     [o_htmlSnippetField setAction:NULL];
-    [o_htmlSnippetField release];
-    o_htmlSnippetField = nil;
 
     [o_rgbSnippetField setTarget:nil];
     [o_rgbSnippetField setAction:NULL];
-    [o_rgbSnippetField release];
-    o_rgbSnippetField = nil;
 
     [o_rgbASnippetField setTarget:nil];
     [o_rgbASnippetField setAction:NULL];
-    [o_rgbASnippetField release];
-    o_rgbASnippetField = nil;
-
-    [super dealloc];
 }
 
 
@@ -160,11 +147,5 @@
     [self _flush];
 }
 
-
-@synthesize nsColorSnippetField = o_nsColorSnippetField,
-            uiColorSnippetField = o_uiColorSnippetField,
-            htmlSnippetField    = o_htmlSnippetField,
-            rgbSnippetField     = o_rgbSnippetField,
-            rgbaSnippetField    = o_rgbASnippetField;
 
 @end

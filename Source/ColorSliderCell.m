@@ -9,22 +9,15 @@
 #import "ColorSliderCell.h"
 #import <AppKit/AppKit.h>
 
-@interface ColorSliderCell () {
-    ColorComponent m_component;
-    Color *m_color;
-}
-
+@interface ColorSliderCell ()
 @end
 
 
 
 @implementation ColorSliderCell
 
-- (void) dealloc
-{
-    [m_color release];
-    [super dealloc];
-}
+@synthesize component = m_component,
+            color     = m_color;
 
 
 #pragma mark -
@@ -51,8 +44,6 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
             CGContextFillRect(context, rect);
             rect.origin.x += 1.0;
         }
-
-        [color release];
     }
 }
 
@@ -117,8 +108,5 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
         [[self controlView] setNeedsDisplay:YES];
     }
 }
-
-@synthesize component = m_component,
-            color     = m_color;
 
 @end

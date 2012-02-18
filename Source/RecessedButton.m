@@ -64,7 +64,6 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
                 nil];
                 
             [g drawInRect:bounds angle:0];
-            [g release];
         });
         
         CGContextClipToMask(context, frame, cgImage);        
@@ -86,8 +85,6 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
         NSBezierPath *path = sGetArrowPath(m_arrowRect);
         [[NSColor whiteColor] set];
         [path fill];
-        
-        [shadow release];
         
         CGContextRestoreGState(context);    
         

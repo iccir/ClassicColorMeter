@@ -12,21 +12,15 @@
 #import "Shortcut.h"
 
 
-@interface ShortcutView () {
-    BOOL m_isFirstResponder;
-}
-
+@interface ShortcutView ()
 @end
 
 
-@interface _ShortcutCell : NSActionCell {
-    Shortcut *m_shortcut;
-    BOOL m_mouseDownInClearIcon;
-}
+@interface _ShortcutCell : NSActionCell
 
 - (NSRect) rectOfClearIconForFrame:(NSRect)frame;
 
-@property (nonatomic, retain) Shortcut *shortcut;
+@property (nonatomic, strong) Shortcut *shortcut;
 @property (nonatomic, assign, getter=isMouseDownInClearIcon) BOOL mouseDownInClearIcon;
 
 @end
@@ -37,7 +31,7 @@ static NSGradient *sMakeGradient(CGFloat gray1, CGFloat gray2, CGFloat location1
     NSColor *color1 = [NSColor colorWithDeviceWhite:gray1 alpha:1.0];
     NSColor *color2 = [NSColor colorWithDeviceWhite:gray2 alpha:1.0];
 
-    return [[[NSGradient alloc] initWithColorsAndLocations:color1, location1, color2, location2, nil] autorelease];
+    return [[NSGradient alloc] initWithColorsAndLocations:color1, location1, color2, location2, nil];
 }
 
 
@@ -274,13 +268,8 @@ static NSImage *sGetClearIcon()
 
 @implementation _ShortcutCell
 
-- (void) dealloc
-{
-    [m_shortcut release];
-    m_shortcut = nil;
-
-    [super dealloc];
-}
+@synthesize shortcut = m_shortcut,
+            mouseDownInClearIcon = m_mouseDownInClearIcon;
 
 
 - (BOOL) acceptsFirstResponder
@@ -360,9 +349,6 @@ static NSImage *sGetClearIcon()
             nil];
 
         [stringToDraw drawInRect:stringRect withAttributes:attributes];
-
-        [attributes release];
-        [style release];
     }
 
 
@@ -408,8 +394,5 @@ static NSImage *sGetClearIcon()
     return result;
 }
 
-
-@synthesize shortcut = m_shortcut;
-@synthesize mouseDownInClearIcon = m_mouseDownInClearIcon;
 
 @end

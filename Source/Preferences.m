@@ -52,47 +52,6 @@ static NSString * const sDefaultRGBColorSnippetTemplate  = @"rgb($RN255, $GN255,
 static NSString * const sDefaultRGBAColorSnippetTemplate = @"rgba($RN255, $GN255, $BN255, 1.0)";
 
 
-@interface Preferences () {
-    ColorMode        m_colorMode;
-    ColorMode        m_holdColorMode;
-    ColorProfileType m_colorProfileType;
-
-    NSInteger m_zoomLevel;
-    NSInteger m_apertureSize;
-    NSInteger m_apertureColor;
-    NSInteger m_clickInSwatchAction;
-    NSInteger m_dragInSwatchAction;
-
-    NSString *m_nsColorSnippetTemplate;
-    NSString *m_uiColorSnippetTemplate;
-    NSString *m_hexColorSnippetTemplate;
-    NSString *m_rgbColorSnippetTemplate;
-    NSString *m_rgbaColorSnippetTemplate;
-    
-    Shortcut *m_showApplicationShortcut;
-    Shortcut *m_holdColorShortcut;
-    
-    BOOL m_updatesContinuously;
-    BOOL m_floatWindow;
-    BOOL m_showMouseCoordinates;
-    BOOL m_clickInSwatchEnabled;
-    BOOL m_dragInSwatchEnabled;
-    BOOL m_arrowKeysEnabled;
-    BOOL m_showsHoldColorSliders;
-    BOOL m_usesLowercaseHex;
-    BOOL m_showsHoldLabels;
-    BOOL m_usesPoundPrefix;
-    
-    BOOL m_usesDifferentColorSpaceInHoldColor;
-    BOOL m_usesMainColorSpaceForCopyAsText;
-}
-
-- (void) _load;
-- (void) _save;
-
-@end
-
-
 static void sRegisterDefaults(void)
 {
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
@@ -144,7 +103,50 @@ static void sRegisterDefaults(void)
 }
 
 
+@interface Preferences ()
+
+- (void) _load;
+- (void) _save;
+
+@end
+
+
 @implementation Preferences
+
+@synthesize colorMode           = m_colorMode,
+            holdColorMode       = m_holdColorMode,
+            colorProfileType    = m_colorProfileType;
+            
+@synthesize zoomLevel           = m_zoomLevel,
+            apertureSize        = m_apertureSize,
+            apertureColor       = m_apertureColor,
+            clickInSwatchAction = m_clickInSwatchAction,
+            dragInSwatchAction  = m_dragInSwatchAction;
+
+@synthesize nsColorSnippetTemplate   = m_nsColorSnippetTemplate,
+            uiColorSnippetTemplate   = m_uiColorSnippetTemplate,
+            hexColorSnippetTemplate  = m_hexColorSnippetTemplate,
+            rgbColorSnippetTemplate  = m_rgbColorSnippetTemplate,
+            rgbaColorSnippetTemplate = m_rgbaColorSnippetTemplate;
+
+@synthesize showApplicationShortcut  = m_showApplicationShortcut,
+            holdColorShortcut        = m_holdColorShortcut;
+
+
+@synthesize updatesContinuously   = m_updatesContinuously,
+            floatWindow           = m_floatWindow,
+            showMouseCoordinates  = m_showMouseCoordinates,
+            clickInSwatchEnabled  = m_clickInSwatchEnabled,
+            dragInSwatchEnabled   = m_dragInSwatchEnabled,
+            arrowKeysEnabled      = m_arrowKeysEnabled,
+            usesLowercaseHex      = m_usesLowercaseHex,
+            showsHoldLabels       = m_showsHoldLabels,
+            showsHoldColorSliders = m_showsHoldColorSliders,
+            usesPoundPrefix       = m_usesPoundPrefix;
+
+@synthesize usesDifferentColorSpaceInHoldColor = m_usesDifferentColorSpaceInHoldColor,
+            usesMainColorSpaceForCopyAsText    = m_usesMainColorSpaceForCopyAsText;
+
 
 + (id) sharedInstance
 {
@@ -204,44 +206,24 @@ static void sRegisterDefaults(void)
 }
 
 
-- (void) dealloc
-{
-    [m_nsColorSnippetTemplate   release];  m_nsColorSnippetTemplate   = nil;
-    [m_uiColorSnippetTemplate   release];  m_uiColorSnippetTemplate   = nil;
-    [m_hexColorSnippetTemplate  release];  m_hexColorSnippetTemplate  = nil;
-    [m_rgbColorSnippetTemplate  release];  m_rgbColorSnippetTemplate  = nil;
-    [m_rgbaColorSnippetTemplate release];  m_rgbaColorSnippetTemplate = nil;
-
-    [m_showApplicationShortcut  release];  m_showApplicationShortcut  = nil;
-    [m_holdColorShortcut        release];  m_holdColorShortcut        = nil;
-
-    [super dealloc];
-}
-
-
 - (void) _load
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    void (^loadInteger)(NSInteger *, NSString *) = ^(NSInteger *iPtr, NSString *key) {
-        NSInteger i = [defaults integerForKey:key];
-        if (iPtr) *iPtr = i;
+    NSInteger (^loadInteger)(NSString *) = ^(NSString *key) {
+        return [defaults integerForKey:key];
     };
 
-    void (^loadObjectOfClass)(NSObject **, Class, NSString *) = ^(NSObject **oPtr, Class cls, NSString *key) {
+    id (^loadObjectOfClass)(Class, NSString *) = ^(Class cls, NSString *key) {
         NSObject *o = [defaults objectForKey:key];
-        
-        if (oPtr && [o isKindOfClass:cls]) {
-            [*oPtr release];
-            *oPtr = [o retain];
-        }
+        return [o isKindOfClass:cls] ? o : nil;
     };
 
-    void (^loadString)(NSString **, NSString *) = ^(NSString **sPtr, NSString *key) {
-        loadObjectOfClass(sPtr, [NSString class], key);
+    NSString *(^loadString)(NSString *) = ^(NSString *key) {
+        return loadObjectOfClass([NSString class], key);
     };
 
-    void (^loadShortcut)(Shortcut **, NSString *) = ^(Shortcut **sPtr, NSString *key) {
+    Shortcut *(^loadShortcut)(NSString *) = ^(NSString *key) {
         NSString *preferencesString = [defaults objectForKey:key];
         Shortcut *shortcut          = nil;
 
@@ -249,48 +231,44 @@ static void sRegisterDefaults(void)
             shortcut = [Shortcut shortcutWithPreferencesString:preferencesString];
         }
         
-        if (sPtr) {
-            [*sPtr release];
-            *sPtr = [shortcut retain];
-        }
+        return shortcut;
     };
 
-    void (^loadBoolean)(BOOL *, NSString *) = ^(BOOL *bPtr, NSString *key) {
-        BOOL yn = [defaults boolForKey:key];
-        if (bPtr) *bPtr = yn;
+    BOOL (^loadBoolean)(NSString *) = ^(NSString *key) {
+        return [defaults boolForKey:key];
     };
 
-    loadInteger(  &m_colorMode,                sColorModeKey               );
-    loadInteger(  &m_holdColorMode,            sHoldColorModeKey           );
-    loadInteger(  &m_colorProfileType,         sColorProfileTypeKey        );
-    loadInteger(  &m_zoomLevel,                sZoomLevelKey               );
-    loadInteger(  &m_apertureSize,             sApertureSizeKey            );
-    loadInteger(  &m_apertureColor,            sApertureColorKey           );
-    loadInteger(  &m_clickInSwatchAction,      sSwatchClickActionKey       );
-    loadInteger(  &m_dragInSwatchAction,       sSwatchDragActionKey        );
+    m_colorMode           = loadInteger( sColorModeKey         );
+    m_holdColorMode       = loadInteger( sHoldColorModeKey     );
+    m_colorProfileType    = loadInteger( sColorProfileTypeKey  );
+    m_zoomLevel           = loadInteger( sZoomLevelKey         );
+    m_apertureSize        = loadInteger( sApertureSizeKey      );
+    m_apertureColor       = loadInteger( sApertureColorKey     );
+    m_clickInSwatchAction = loadInteger( sSwatchClickActionKey );
+    m_dragInSwatchAction  = loadInteger( sSwatchDragActionKey  );
 
-    loadString(   &m_nsColorSnippetTemplate,   sCodeSnippetTemplateNSKey   );
-    loadString(   &m_uiColorSnippetTemplate,   sCodeSnippetTemplateUIKey   );
-    loadString(   &m_hexColorSnippetTemplate,  sCodeSnippetTemplateHexKey  );
-    loadString(   &m_rgbColorSnippetTemplate,  sCodeSnippetTemplateRGBKey  );
-    loadString(   &m_rgbaColorSnippetTemplate, sCodeSnippetTemplateRGBAKey );
+    m_nsColorSnippetTemplate   = loadString( sCodeSnippetTemplateNSKey   );
+    m_uiColorSnippetTemplate   = loadString( sCodeSnippetTemplateUIKey   );
+    m_hexColorSnippetTemplate  = loadString( sCodeSnippetTemplateHexKey  );
+    m_rgbColorSnippetTemplate  = loadString( sCodeSnippetTemplateRGBKey  );
+    m_rgbaColorSnippetTemplate = loadString( sCodeSnippetTemplateRGBAKey );
 
-    loadShortcut( &m_showApplicationShortcut,  sShowApplicationShortcutKey );
-    loadShortcut( &m_holdColorShortcut,        sHoldColorShortcutKey       );
+    m_showApplicationShortcut  = loadShortcut( sShowApplicationShortcutKey );
+    m_holdColorShortcut        = loadShortcut( sHoldColorShortcutKey       );
 
-    loadBoolean(  &m_updatesContinuously,      sUpdatesContinuouslyKey     );
-    loadBoolean(  &m_floatWindow,              sFloatWindowKey             );
-    loadBoolean(  &m_showMouseCoordinates,     sShowMouseCoordinatesKey    );
-    loadBoolean(  &m_clickInSwatchEnabled,     sSwatchClickEnabledKey      );
-    loadBoolean(  &m_dragInSwatchEnabled,      sSwatchDragEnabledKey       );
-    loadBoolean(  &m_arrowKeysEnabled,         sArrowKeysEnabledKey        );
-    loadBoolean(  &m_showsHoldLabels,          sShowsHoldLabelsKey         );
-    loadBoolean(  &m_usesLowercaseHex,         sUsesLowercaseHexKey        );
-    loadBoolean(  &m_usesPoundPrefix,          sUsesPoundPrefixKey         );
-    loadBoolean(  &m_showsHoldColorSliders,    sShowsHoldColorSlidersKey   );
+    m_updatesContinuously   = loadBoolean( sUpdatesContinuouslyKey   );
+    m_floatWindow           = loadBoolean( sFloatWindowKey           );
+    m_showMouseCoordinates  = loadBoolean( sShowMouseCoordinatesKey  );
+    m_clickInSwatchEnabled  = loadBoolean( sSwatchClickEnabledKey    );
+    m_dragInSwatchEnabled   = loadBoolean( sSwatchDragEnabledKey     );
+    m_arrowKeysEnabled      = loadBoolean( sArrowKeysEnabledKey      );
+    m_showsHoldLabels       = loadBoolean( sShowsHoldLabelsKey       );
+    m_usesLowercaseHex      = loadBoolean( sUsesLowercaseHexKey      );
+    m_usesPoundPrefix       = loadBoolean( sUsesPoundPrefixKey       );
+    m_showsHoldColorSliders = loadBoolean( sShowsHoldColorSlidersKey );
                   
-    loadBoolean(  &m_usesDifferentColorSpaceInHoldColor, sUsesDifferentColorSpaceInHoldColor );
-    loadBoolean(  &m_usesMainColorSpaceForCopyAsText,    sUsesMainColorSpaceForCopyAsText    );
+    m_usesDifferentColorSpaceInHoldColor = loadBoolean( sUsesDifferentColorSpaceInHoldColor );
+    m_usesMainColorSpaceForCopyAsText    = loadBoolean( sUsesMainColorSpaceForCopyAsText    );
 }
 
 
@@ -373,39 +351,4 @@ static void sRegisterDefaults(void)
     [self setRgbaColorSnippetTemplate: sDefaultRGBAColorSnippetTemplate];
 }
     
-
-@synthesize colorMode           = m_colorMode,
-            holdColorMode       = m_holdColorMode,
-            colorProfileType    = m_colorProfileType;
-            
-@synthesize zoomLevel           = m_zoomLevel,
-            apertureSize        = m_apertureSize,
-            apertureColor       = m_apertureColor,
-            clickInSwatchAction = m_clickInSwatchAction,
-            dragInSwatchAction  = m_dragInSwatchAction;
-
-@synthesize nsColorSnippetTemplate   = m_nsColorSnippetTemplate,
-            uiColorSnippetTemplate   = m_uiColorSnippetTemplate,
-            hexColorSnippetTemplate  = m_hexColorSnippetTemplate,
-            rgbColorSnippetTemplate  = m_rgbColorSnippetTemplate,
-            rgbaColorSnippetTemplate = m_rgbaColorSnippetTemplate;
-
-@synthesize showApplicationShortcut  = m_showApplicationShortcut,
-            holdColorShortcut        = m_holdColorShortcut;
-
-
-@synthesize updatesContinuously   = m_updatesContinuously,
-            floatWindow           = m_floatWindow,
-            showMouseCoordinates  = m_showMouseCoordinates,
-            clickInSwatchEnabled  = m_clickInSwatchEnabled,
-            dragInSwatchEnabled   = m_dragInSwatchEnabled,
-            arrowKeysEnabled      = m_arrowKeysEnabled,
-            usesLowercaseHex      = m_usesLowercaseHex,
-            showsHoldLabels       = m_showsHoldLabels,
-            showsHoldColorSliders = m_showsHoldColorSliders,
-            usesPoundPrefix       = m_usesPoundPrefix;
-
-@synthesize usesDifferentColorSpaceInHoldColor = m_usesDifferentColorSpaceInHoldColor,
-            usesMainColorSpaceForCopyAsText    = m_usesMainColorSpaceForCopyAsText;
-
 @end

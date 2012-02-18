@@ -14,23 +14,23 @@
 
 - (IBAction) updatePreferences:(id)sender;
 
-@property (nonatomic, retain) IBOutlet NSPopUpButton *apertureColorPopUp;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *apertureColorPopUp;
 
-@property (nonatomic, retain) IBOutlet NSButton      *clickInSwatchButton;
-@property (nonatomic, retain) IBOutlet NSPopUpButton *clickInSwatchPopUp;
+@property (nonatomic, strong) IBOutlet NSButton      *clickInSwatchButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *clickInSwatchPopUp;
 
-@property (nonatomic, retain) IBOutlet NSButton      *dragInSwatchButton;
-@property (nonatomic, retain) IBOutlet NSPopUpButton *dragInSwatchPopUp;
+@property (nonatomic, strong) IBOutlet NSButton      *dragInSwatchButton;
+@property (nonatomic, strong) IBOutlet NSPopUpButton *dragInSwatchPopUp;
 
-@property (nonatomic, retain) IBOutlet NSButton      *useLowercaseHexButton;
-@property (nonatomic, retain) IBOutlet NSButton      *usePoundPrefixButton;
-@property (nonatomic, retain) IBOutlet NSButton      *arrowKeysButton;
+@property (nonatomic, strong) IBOutlet NSButton      *useLowercaseHexButton;
+@property (nonatomic, strong) IBOutlet NSButton      *usePoundPrefixButton;
+@property (nonatomic, strong) IBOutlet NSButton      *arrowKeysButton;
 
-@property (nonatomic, retain) IBOutlet NSButton      *showsHoldColorSlidersButton;
-@property (nonatomic, retain) IBOutlet NSButton      *usesDifferentColorSpaceInHoldColorButton;
-@property (nonatomic, retain) IBOutlet NSButton      *usesMainColorSpaceForCopyAsTextButton;
+@property (nonatomic, strong) IBOutlet NSButton      *showsHoldColorSlidersButton;
+@property (nonatomic, strong) IBOutlet NSButton      *usesDifferentColorSpaceInHoldColorButton;
+@property (nonatomic, strong) IBOutlet NSButton      *usesMainColorSpaceForCopyAsTextButton;
 
-@property (nonatomic, retain) IBOutlet ShortcutView  *showApplicationShortcutView;
-@property (nonatomic, retain) IBOutlet ShortcutView  *holdColorShortcutView;
+@property (nonatomic, strong) IBOutlet ShortcutView  *showApplicationShortcutView;
+@property (nonatomic, strong) IBOutlet ShortcutView  *holdColorShortcutView;
 
 @end

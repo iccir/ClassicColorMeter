@@ -16,6 +16,7 @@
 #import "PreviewView.h"
 #import "RecessedButton.h"
 #import "ResultView.h"
+#import "Shortcut.h"
 #import "ShortcutManager.h"
 #import "SnippetsController.h"
 #import "Util.h"
@@ -40,38 +41,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 @class PreviewView;
 
 @interface AppDelegate () {
-    NSWindow       *o_window;
-
-    NSView         *o_leftContainer;
-    NSView         *o_middleContainer;
-    NSView         *o_rightContainer;
-
-    PreviewView    *o_previewView;
-    NSPopUpButton  *o_colorModePopUp;
-    NSView         *o_container;
-    ResultView     *o_resultView;
-    NSSlider       *o_apertureSizeSlider;
-
-    NSTextField    *o_apertureSizeLabel;
-    NSTextField    *o_statusText;
-
-    NSTextField    *o_label1;
-    NSTextField    *o_label2;
-    NSTextField    *o_label3;
-
-    NSTextField    *o_value1;
-    NSTextField    *o_value2;
-    NSTextField    *o_value3;
-
-    NSTextField    *o_holdingLabel;
-    RecessedButton *o_profileButton;
-    RecessedButton *o_topHoldLabelButton;
-    RecessedButton *o_bottomHoldLabelButton;
-
-    NSSlider       *o_slider1;
-    NSSlider       *o_slider2;
-    NSSlider       *o_slider3;
-
     NSView         *m_layerContainer;
     CALayer        *m_leftSnapshot;
     CALayer        *m_middleSnapshot;
@@ -125,6 +94,31 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 @implementation AppDelegate
 
+@synthesize window                = o_window,
+            leftContainer         = o_leftContainer,
+            middleContainer       = o_middleContainer,
+            rightContainer        = o_rightContainer,
+            colorModePopUp        = o_colorModePopUp,
+            previewView           = o_previewView,
+            resultView            = o_resultView,
+            apertureSizeLabel     = o_apertureSizeLabel,
+            statusText            = o_statusText,
+            apertureSizeSlider    = o_apertureSizeSlider,
+            label1                = o_label1,
+            label2                = o_label2,
+            label3                = o_label3,
+            value1                = o_value1,
+            value2                = o_value2,
+            value3                = o_value3,
+            holdingLabel          = o_holdingLabel,
+            profileButton         = o_profileButton,
+            topHoldLabelButton    = o_topHoldLabelButton,
+            bottomHoldLabelButton = o_bottomHoldLabelButton,
+            slider1               = o_slider1,
+            slider2               = o_slider2,
+            slider3               = o_slider3;
+
+
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     m_color = [[Color alloc] init];
@@ -158,8 +152,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [etching setInactiveLightOpacity:iL]; 
         
         [[host superview] addSubview:etching positioned:NSWindowAbove relativeTo:host];
-        
-        [etching release];
     };
     
     addEtching(o_value1,      0.10, 0.33, 0.0, 0.1);
@@ -176,8 +168,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [item setTag:mode];
 
         [menu addItem:item];
-        
-        [item release];
     };
 
     addMenu( ColorMode_RGB_Percentage );
@@ -237,22 +227,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 {
     [[ShortcutManager sharedInstance] removeListener:self];
 
-    [m_layerContainer release];
-    m_layerContainer = nil;
-
     if (m_colorSyncTransform) CFRelease(m_colorSyncTransform);
     m_colorSyncTransform = NULL;
-
-    [m_preferencesController release];
-    m_preferencesController = nil;
-    
-    [m_snippetsController release];
-    m_snippetsController = nil;
-
-    [m_timer release];
-    m_timer = nil;
-
-    [super dealloc];
 }
 
 
@@ -514,8 +490,8 @@ static void sUpdateTextFields(AppDelegate *self)
     static NSColor *sBlackColor = nil;
     
     if (!sRedColor) {
-        sRedColor   = [[NSColor redColor]   retain];
-        sBlackColor = [[NSColor blackColor] retain];
+        sRedColor   = [NSColor redColor];
+        sBlackColor = [NSColor blackColor];
     }
 
     BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHue(colorMode)) && self->m_isHoldingColor;
@@ -560,29 +536,25 @@ static void sUpdateColorSync(AppDelegate *self)
         if (!toProfile) goto cleanup;
 
         NSMutableDictionary *fromDictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-            (id)fromProfile,                       (id)kColorSyncProfile,
-            (id)kColorSyncRenderingIntentRelative, (id)kColorSyncRenderingIntent,
-            (id)kColorSyncTransformDeviceToPCS,    (id)kColorSyncTransformTag,
+            (__bridge id)fromProfile,                       (__bridge id)kColorSyncProfile,
+            (__bridge id)kColorSyncRenderingIntentRelative, (__bridge id)kColorSyncRenderingIntent,
+            (__bridge id)kColorSyncTransformDeviceToPCS,    (__bridge id)kColorSyncTransformTag,
             nil];
 
         NSMutableDictionary *toDictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-            (id)toProfile,                         (id)kColorSyncProfile,
-            (id)kColorSyncRenderingIntentRelative, (id)kColorSyncRenderingIntent,
-            (id)kColorSyncTransformPCSToDevice,    (id)kColorSyncTransformTag,
+            (__bridge id)toProfile,                         (__bridge id)kColorSyncProfile,
+            (__bridge id)kColorSyncRenderingIntentRelative, (__bridge id)kColorSyncRenderingIntent,
+            (__bridge id)kColorSyncTransformPCSToDevice,    (__bridge id)kColorSyncTransformTag,
             nil];
             
         NSArray *profileSequence = [[NSArray alloc] initWithObjects:fromDictionary, toDictionary, nil];
         
-        self->m_colorSyncTransform = ColorSyncTransformCreate((CFArrayRef)profileSequence, NULL);
-
-        [profileSequence release];
-        [toDictionary    release];
-        [fromDictionary  release];
+        self->m_colorSyncTransform = ColorSyncTransformCreate((__bridge CFArrayRef)profileSequence, NULL);
     }
 
     // Update profile name
     {
-        NSString *name = [(id)ColorSyncProfileCopyDescriptionString(fromProfile) autorelease];
+        NSString *name = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(fromProfile));
         if (![name length]) name = NSLocalizedString(@"Display", @"");
 
         NSMutableArray *profiles = [NSMutableArray array];
@@ -790,8 +762,6 @@ cleanup:
     }
 
     [o_statusText setStringValue:[status componentsJoinedByString:@", "]];
-
-    [status release];
 }
 
 
@@ -804,7 +774,7 @@ cleanup:
     [o_previewView drawRect:[o_previewView bounds]];
     [image unlockFocus];
     
-    return [image autorelease];
+    return image;
 }
 
 
@@ -916,7 +886,7 @@ cleanup:
 
     } else if (actionTag == CopyColorAsImage) {
         NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
-        NSImage *image = [[[NSImage alloc] initWithSize:bounds.size] autorelease];
+        NSImage *image = [[NSImage alloc] initWithSize:bounds.size];
         
         [image lockFocus];
         [[m_color NSColor] set];
@@ -950,7 +920,7 @@ cleanup:
     }
     
     if (clipboardText) {
-        NSPasteboardItem *item = [[[NSPasteboardItem alloc] initWithPasteboardPropertyList:clipboardText ofType:NSPasteboardTypeString] autorelease];
+        NSPasteboardItem *item = [[NSPasteboardItem alloc] initWithPasteboardPropertyList:clipboardText ofType:NSPasteboardTypeString];
         result = item;
     }
 
@@ -983,8 +953,6 @@ cleanup:
         [[NSColor whiteColor] set];
         [path fill];
 
-        [shadow release];
-        
         CGContextRestoreGState(context);
     }
 
@@ -1001,7 +969,6 @@ cleanup:
 
             NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
             [gradient drawInRect:circleRect angle:-90];
-            [gradient release];
         }
         
         CGContextRestoreGState(context);
@@ -1015,12 +982,10 @@ cleanup:
     
 
     NSString *key = NSDraggingImageComponentIconKey;
-    NSDraggingImageComponent *component = [[[NSDraggingImageComponent alloc] initWithKey:key] autorelease];
+    NSDraggingImageComponent *component = [[NSDraggingImageComponent alloc] initWithKey:key];
 
     [component setContents:image];
     [component setFrame:imageRect];
-
-    [image release];
     
     return component;
 }
@@ -1044,9 +1009,8 @@ cleanup:
         return [NSArray arrayWithObject:component];
     }];
     
-    [colorCopy release];
 
-    return [draggingItem autorelease];
+    return draggingItem;
 }
 
 
@@ -1057,8 +1021,6 @@ cleanup:
 
         [pasteboard clearContents];
         [pasteboard writeObjects:[NSArray arrayWithObject:item]];
-
-        [item release];
     }
 }
 
@@ -1504,33 +1466,5 @@ cleanup:
     NSURL *url = [NSURL URLWithString:sFeedbackURL];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
-
-
-#pragma mark -
-#pragma mark Accessors
-
-@synthesize window                = o_window,
-            leftContainer         = o_leftContainer,
-            middleContainer       = o_middleContainer,
-            rightContainer        = o_rightContainer,
-            colorModePopUp        = o_colorModePopUp,
-            previewView           = o_previewView,
-            resultView            = o_resultView,
-            apertureSizeLabel     = o_apertureSizeLabel,
-            statusText            = o_statusText,
-            apertureSizeSlider    = o_apertureSizeSlider,
-            label1                = o_label1,
-            label2                = o_label2,
-            label3                = o_label3,
-            value1                = o_value1,
-            value2                = o_value2,
-            value3                = o_value3,
-            holdingLabel          = o_holdingLabel,
-            profileButton         = o_profileButton,
-            topHoldLabelButton    = o_topHoldLabelButton,
-            bottomHoldLabelButton = o_bottomHoldLabelButton,
-            slider1               = o_slider1,
-            slider2               = o_slider2,
-            slider3               = o_slider3;
 
 @end

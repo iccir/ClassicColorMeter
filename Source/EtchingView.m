@@ -8,17 +8,17 @@
 
 #import "EtchingView.h"
 
-@interface EtchingView () {
-    CGFloat m_activeDarkOpacity;
-    CGFloat m_activeLightOpacity;
-    CGFloat m_inactiveLightOpacity;
-    CGFloat m_inactiveDarkOpacity;
-}
-
+@interface EtchingView ()
 @end
 
 
 @implementation EtchingView
+
+@synthesize activeDarkOpacity    = m_activeDarkOpacity,
+            activeLightOpacity   = m_activeLightOpacity,
+            inactiveDarkOpacity  = m_inactiveDarkOpacity,
+            inactiveLightOpacity = m_inactiveLightOpacity;
+
 
 - (void) drawRect:(NSRect)dirtyRect
 {
@@ -79,10 +79,5 @@
         [self setNeedsDisplay:YES];
     }
 }
-
-@synthesize activeDarkOpacity    = m_activeDarkOpacity,
-            activeLightOpacity   = m_activeLightOpacity,
-            inactiveDarkOpacity  = m_inactiveDarkOpacity,
-            inactiveLightOpacity = m_inactiveLightOpacity;
 
 @end

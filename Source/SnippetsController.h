@@ -9,11 +9,11 @@
 
 @interface SnippetsController : NSWindowController
 
-@property (nonatomic, retain) IBOutlet NSTextField *nsColorSnippetField;
-@property (nonatomic, retain) IBOutlet NSTextField *uiColorSnippetField;
-@property (nonatomic, retain) IBOutlet NSTextField *htmlSnippetField;
-@property (nonatomic, retain) IBOutlet NSTextField *rgbSnippetField;
-@property (nonatomic, retain) IBOutlet NSTextField *rgbaSnippetField;
+@property (nonatomic, strong) IBOutlet NSTextField *nsColorSnippetField;
+@property (nonatomic, strong) IBOutlet NSTextField *uiColorSnippetField;
+@property (nonatomic, strong) IBOutlet NSTextField *htmlSnippetField;
+@property (nonatomic, strong) IBOutlet NSTextField *rgbSnippetField;
+@property (nonatomic, strong) IBOutlet NSTextField *rgbaSnippetField;
 
 - (IBAction) updateSnippets:(id)sender;
 - (IBAction) restoreDefaults:(id)sender;
