@@ -14,9 +14,9 @@
 static id sSharedInstance = nil;
 
 @interface ShortcutManager () {
-    NSHashTable         *m_listeners;
-    NSMutableDictionary *m_shortcutIDToRefMap;
-    NSMutableDictionary *m_shortcutIDToShortcutMap;  
+    NSHashTable         *_listeners;
+    NSMutableDictionary *_shortcutIDToRefMap;
+    NSMutableDictionary *_shortcutIDToShortcutMap;  
 }
 
 - (BOOL) _handleHotKeyID:(NSUInteger)hotKeyID;
@@ -41,7 +41,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 @implementation ShortcutManager
 
-@synthesize shortcuts = m_shortcuts;
+@synthesize shortcuts = _shortcuts;
 
 
 + (BOOL) hasSharedInstance
@@ -71,9 +71,9 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 - (id) init
 {
     if ((self = [super init])) {
-        m_listeners               = [NSHashTable hashTableWithWeakObjects];
-        m_shortcutIDToRefMap      = [[NSMutableDictionary alloc] init];
-        m_shortcutIDToShortcutMap = [[NSMutableDictionary alloc] init];
+        _listeners               = [NSHashTable hashTableWithWeakObjects];
+        _shortcutIDToRefMap      = [[NSMutableDictionary alloc] init];
+        _shortcutIDToShortcutMap = [[NSMutableDictionary alloc] init];
     }
 
     return self;
@@ -82,7 +82,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 - (void) dealloc
 {
-    for (Shortcut *shortcut in m_shortcuts) {
+    for (Shortcut *shortcut in _shortcuts) {
         [self _unregisterShortcut:shortcut];
     }
 }
@@ -95,11 +95,11 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 {
     NSNumber *keyIDAsNumber = [[NSNumber alloc] initWithUnsignedInteger:keyID];
 
-    Shortcut *shortcut = [m_shortcutIDToShortcutMap objectForKey:keyIDAsNumber];
+    Shortcut *shortcut = [_shortcutIDToShortcutMap objectForKey:keyIDAsNumber];
     BOOL yn = NO;
 
     if (shortcut) {
-        for (id<ShortcutListener> listener in m_listeners) {
+        for (id<ShortcutListener> listener in _listeners) {
             yn = yn || [listener performShortcut:shortcut];
         }
     }
@@ -110,11 +110,11 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 - (void) _unregisterShortcutIDAsNumber:(NSNumber *)key
 {
-    EventHotKeyRef hotKeyRef = [[m_shortcutIDToRefMap objectForKey:key] pointerValue];
+    EventHotKeyRef hotKeyRef = [[_shortcutIDToRefMap objectForKey:key] pointerValue];
     if (hotKeyRef) UnregisterEventHotKey(hotKeyRef);
 
-    [m_shortcutIDToRefMap      removeObjectForKey:key];
-    [m_shortcutIDToShortcutMap removeObjectForKey:key];
+    [_shortcutIDToRefMap      removeObjectForKey:key];
+    [_shortcutIDToShortcutMap removeObjectForKey:key];
 }
 
 
@@ -146,8 +146,8 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
     if (modifierFlags & NSAlternateKeyMask)  flags |= optionKey;
 
 	if (RegisterEventHotKey(keyCode, flags, eventKeyID, GetEventDispatcherTarget(), 0, &hotKeyRef) == noErr) {
-        [m_shortcutIDToRefMap setObject:[NSValue valueWithPointer:hotKeyRef] forKey:shortcutIDAsNumber];
-        [m_shortcutIDToShortcutMap setObject:shortcut forKey:shortcutIDAsNumber];
+        [_shortcutIDToRefMap setObject:[NSValue valueWithPointer:hotKeyRef] forKey:shortcutIDAsNumber];
+        [_shortcutIDToShortcutMap setObject:shortcut forKey:shortcutIDAsNumber];
     }
 
 }
@@ -158,13 +158,13 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 - (void) addListener:(id<ShortcutListener>)listener
 {
-    [m_listeners addObject:listener];
+    [_listeners addObject:listener];
 }
 
 
 - (void) removeListener:(id<ShortcutListener>)listener
 {
-    [m_listeners removeObject:listener];
+    [_listeners removeObject:listener];
 }
 
 
@@ -173,22 +173,22 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 - (void) setShortcuts:(NSArray *)shortcuts
 {
-    if (shortcuts != m_shortcuts) {
+    if (shortcuts != _shortcuts) {
         // Add new shortcuts
         for (Shortcut *shortcut in shortcuts) {
-            if (![m_shortcuts containsObject:shortcut]) {
+            if (![_shortcuts containsObject:shortcut]) {
                 [self _registerShortcut:shortcut];
             }
         }
         
         // Delete old shortcuts 
-        for (Shortcut *shortcut in m_shortcuts) {
+        for (Shortcut *shortcut in _shortcuts) {
             if (![shortcuts containsObject:shortcut]) {
                 [self _unregisterShortcut:shortcut];
             }
         }
         
-        m_shortcuts = [shortcuts copy];
+        _shortcuts = [shortcuts copy];
     }
 }
 

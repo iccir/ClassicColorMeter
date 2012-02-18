@@ -72,8 +72,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 @implementation Shortcut
 
-@synthesize modifierFlags = m_modifierFlags,
-            keyCode       = m_keyCode;
+@synthesize modifierFlags = _modifierFlags,
+            keyCode       = _keyCode;
 
 #pragma mark -
 #pragma mark Class Methods
@@ -217,8 +217,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 - (id) initWithKeyCode:(unsigned short)keyCode modifierFlags:(NSUInteger)modifierFlags
 {
     if ((self = [super init])) {
-        m_keyCode       = keyCode;
-        m_modifierFlags = modifierFlags;
+        _keyCode       = keyCode;
+        _modifierFlags = modifierFlags;
     }
 
     return self;
@@ -255,8 +255,8 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
     if ([anotherObject isKindOfClass:[Shortcut class]]) {
         Shortcut *anotherShortcut = (Shortcut *)anotherObject;
 
-        return anotherShortcut->m_modifierFlags == m_modifierFlags &&
-               anotherShortcut->m_keyCode       == m_keyCode;
+        return anotherShortcut->_modifierFlags == _modifierFlags &&
+               anotherShortcut->_keyCode       == _keyCode;
     }
 
     return NO;
@@ -276,12 +276,12 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 {
     NSUInteger shortcutID = 0;
 
-    if (m_modifierFlags & NSControlKeyMask  )  shortcutID |= 0x10000;
-    if (m_modifierFlags & NSCommandKeyMask  )  shortcutID |= 0x20000;
-    if (m_modifierFlags & NSShiftKeyMask    )  shortcutID |= 0x40000;
-    if (m_modifierFlags & NSAlternateKeyMask)  shortcutID |= 0x80000;
+    if (_modifierFlags & NSControlKeyMask  )  shortcutID |= 0x10000;
+    if (_modifierFlags & NSCommandKeyMask  )  shortcutID |= 0x20000;
+    if (_modifierFlags & NSShiftKeyMask    )  shortcutID |= 0x40000;
+    if (_modifierFlags & NSAlternateKeyMask)  shortcutID |= 0x80000;
 
-    shortcutID |= m_keyCode;
+    shortcutID |= _keyCode;
     
     return shortcutID;
 }
@@ -289,14 +289,14 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 - (NSString *) preferencesString
 {
-    return sGetPreferencesString(m_modifierFlags, m_keyCode);
+    return sGetPreferencesString(_modifierFlags, _keyCode);
 }
 
 
 - (NSString *) displayString
 {
-    NSString *modifierString = [Shortcut stringForModifierFlags:m_modifierFlags];
-    NSString *keyCodeString  = [Shortcut stringForKeyCode:m_keyCode];
+    NSString *modifierString = [Shortcut stringForModifierFlags:_modifierFlags];
+    NSString *keyCodeString  = [Shortcut stringForKeyCode:_keyCode];
 
     return [NSString stringWithFormat:@"%@%@", modifierString, keyCodeString];
 }

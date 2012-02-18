@@ -14,21 +14,21 @@
 
 @implementation Color
 
-@synthesize red           = m_red,
-            green         = m_green,
-            blue          = m_blue,
-            hue           = m_hue,
-            saturationHSB = m_saturationHSB,
-            brightness    = m_brightness,
-            saturationHSL = m_saturationHSL,
-            lightness     = m_lightness;
+@synthesize red           = _red,
+            green         = _green,
+            blue          = _blue,
+            hue           = _hue,
+            saturationHSB = _saturationHSB,
+            brightness    = _brightness,
+            saturationHSL = _saturationHSL,
+            lightness     = _lightness;
 
 
 static void sDidChangeHSB(Color *self)
 {
-    float hue        = self->m_hue;
-    float saturation = self->m_saturationHSB;
-    float brightness = self->m_brightness;
+    float hue        = self->_hue;
+    float saturation = self->_saturationHSB;
+    float brightness = self->_brightness;
 
     float r = 0.0;
     float g = 0.0;
@@ -88,9 +88,9 @@ static void sDidChangeHSB(Color *self)
         }
     }
 
-    self->m_red   = r;
-    self->m_green = g;
-    self->m_blue  = b;
+    self->_red   = r;
+    self->_green = g;
+    self->_blue  = b;
 }
 
 
@@ -107,9 +107,9 @@ static float sHueToRGB(float p, float q, float t)
 
 static void sDidChangeHSL(Color *self)
 {
-    float hue        = self->m_hue;
-    float saturation = self->m_saturationHSL;
-    float lightness  = self->m_lightness;
+    float hue        = self->_hue;
+    float saturation = self->_saturationHSL;
+    float lightness  = self->_lightness;
 
     float r = 0.0;
     float g = 0.0;
@@ -133,17 +133,17 @@ static void sDidChangeHSL(Color *self)
         b = sHueToRGB(p, q, hue - (1.0 / 3.0));
     }
 
-    self->m_red   = r;
-    self->m_green = g;
-    self->m_blue  = b;
+    self->_red   = r;
+    self->_green = g;
+    self->_blue  = b;
 }
 
 
 static void sDidChangeRGB(Color *self)
 {
-    float r = self->m_red;
-    float g = self->m_green;
-    float b = self->m_blue;
+    float r = self->_red;
+    float g = self->_green;
+    float b = self->_blue;
     
     float maxRGB = fmaxf(fmaxf(r, g), b);
     float minRGB = fminf(fminf(r, g), b);
@@ -181,11 +181,11 @@ static void sDidChangeRGB(Color *self)
     
     hue /= 6.0;
     
-    self->m_hue           = hue;
-    self->m_saturationHSB = saturationHSB;
-    self->m_brightness    = brightness;
-    self->m_saturationHSL = saturationHSL;
-    self->m_lightness     = lightness;
+    self->_hue           = hue;
+    self->_saturationHSB = saturationHSB;
+    self->_brightness    = brightness;
+    self->_saturationHSL = saturationHSL;
+    self->_lightness     = lightness;
 }
 
 
@@ -193,14 +193,14 @@ static void sDidChangeRGB(Color *self)
 {
     Color *result = [[Color alloc] init];
     
-    result->m_red           = m_red;
-    result->m_green         = m_green;
-    result->m_blue          = m_blue;
-    result->m_hue           = m_hue;
-    result->m_saturationHSL = m_saturationHSL;
-    result->m_saturationHSB = m_saturationHSB;
-    result->m_brightness    = m_brightness;
-    result->m_lightness     = m_lightness;
+    result->_red           = _red;
+    result->_green         = _green;
+    result->_blue          = _blue;
+    result->_hue           = _hue;
+    result->_saturationHSL = _saturationHSL;
+    result->_saturationHSB = _saturationHSB;
+    result->_brightness    = _brightness;
+    result->_lightness     = _lightness;
 
     return result;
 }
@@ -212,35 +212,35 @@ static void sDidChangeRGB(Color *self)
 - (void) setFloatValue:(float)value forComponent:(ColorComponent)component
 {
     if (component == ColorComponentRed) {
-        m_red = value;
+        _red = value;
         sDidChangeRGB(self);
 
     } else if (component == ColorComponentGreen) {
-        m_green = value;
+        _green = value;
         sDidChangeRGB(self);
     
     } else if (component == ColorComponentBlue) {
-        m_blue = value;
+        _blue = value;
         sDidChangeRGB(self);
     
     } else if (component == ColorComponentHue) {
-        m_hue = value;
+        _hue = value;
         sDidChangeHSB(self);
     
     } else if (component == ColorComponentSaturationHSB) {
-        m_saturationHSB = value;
+        _saturationHSB = value;
         sDidChangeHSB(self);
 
     } else if (component == ColorComponentBrightness) {
-        m_brightness = value;
+        _brightness = value;
         sDidChangeHSB(self);
 
     } else if (component == ColorComponentSaturationHSL) {
-        m_saturationHSL = value;
+        _saturationHSL = value;
         sDidChangeHSL(self);
 
     } else if (component == ColorComponentLightness) {
-        m_lightness = value;
+        _lightness = value;
         sDidChangeHSL(self);
     }
 }
@@ -249,28 +249,28 @@ static void sDidChangeRGB(Color *self)
 - (float) floatValueForComponent:(ColorComponent)component
 {
     if (component == ColorComponentRed) {
-        return m_red;
+        return _red;
 
     } else if (component == ColorComponentGreen) {
-        return m_green;
+        return _green;
     
     } else if (component == ColorComponentBlue) {
-        return m_blue;
+        return _blue;
     
     } else if (component == ColorComponentHue) {
-        return m_hue;
+        return _hue;
     
     } else if (component == ColorComponentSaturationHSB) {
-        return m_saturationHSB;
+        return _saturationHSB;
     
     } else if (component == ColorComponentBrightness) {
-        return m_brightness;
+        return _brightness;
 
     } else if (component == ColorComponentSaturationHSL) {
-        return m_saturationHSL;
+        return _saturationHSL;
 
     } else if (component == ColorComponentLightness) {
-        return m_lightness;
+        return _lightness;
 
     } else {
         return 0.0;
@@ -280,9 +280,9 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setRed:(float)red green:(float)green blue:(float)blue
 {
-    if ( m_red   != red   )  m_red   = red;
-    if ( m_green != green )  m_green = green;
-    if ( m_blue  != blue  )  m_blue  = blue;
+    if ( _red   != red   )  _red   = red;
+    if ( _green != green )  _green = green;
+    if ( _blue  != blue  )  _blue  = blue;
     
     sDidChangeRGB(self);
 }
@@ -290,9 +290,9 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setHue:(float)hue saturation:(float)saturation brightness:(float)brightness
 {
-    if ( m_hue           != hue        )  m_hue           = hue;
-    if ( m_saturationHSB != saturation )  m_saturationHSB = saturation;
-    if ( m_brightness    != brightness )  m_brightness    = brightness;
+    if ( _hue           != hue        )  _hue           = hue;
+    if ( _saturationHSB != saturation )  _saturationHSB = saturation;
+    if ( _brightness    != brightness )  _brightness    = brightness;
     
     sDidChangeHSB(self);
 }
@@ -300,9 +300,9 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setHue:(float)hue saturation:(float)saturation lightness:(float)lightness
 {
-    if ( m_hue           != hue        )  m_hue           = hue;
-    if ( m_saturationHSL != saturation )  m_saturationHSL = saturation;
-    if ( m_lightness     != lightness  )  m_lightness     = lightness;
+    if ( _hue           != hue        )  _hue           = hue;
+    if ( _saturationHSL != saturation )  _saturationHSL = saturation;
+    if ( _lightness     != lightness  )  _lightness     = lightness;
     
     sDidChangeHSL(self);
 }
@@ -310,25 +310,25 @@ static void sDidChangeRGB(Color *self)
 
 - (void) getRed:(float *)outR green:(float *)outG blue:(float *)outB
 {
-    if (outR)  *outR = m_red;
-    if (outG)  *outG = m_green;
-    if (outB)  *outB = m_blue;
+    if (outR)  *outR = _red;
+    if (outG)  *outG = _green;
+    if (outB)  *outB = _blue;
 }
 
 
 - (void) getHue:(float *)outH saturation:(float *)outS brightness:(float *)outB
 {
-    if (outH)  *outH = m_hue;
-    if (outS)  *outS = m_saturationHSB;
-    if (outB)  *outB = m_brightness;
+    if (outH)  *outH = _hue;
+    if (outS)  *outS = _saturationHSB;
+    if (outB)  *outB = _brightness;
 }
 
 
 - (void) getHue:(float *)outH saturation:(float *)outS lightness:(float *)outL
 {
-    if (outH)  *outH = m_hue;
-    if (outS)  *outS = m_saturationHSL;
-    if (outL)  *outL = m_lightness;
+    if (outH)  *outH = _hue;
+    if (outS)  *outS = _saturationHSL;
+    if (outL)  *outL = _lightness;
 }
 
 
@@ -337,14 +337,14 @@ static void sDidChangeRGB(Color *self)
 
 - (NSColor *) NSColor
 {
-    return [NSColor colorWithDeviceRed:m_red green:m_green blue:m_blue alpha:1.0];
+    return [NSColor colorWithDeviceRed:_red green:_green blue:_blue alpha:1.0];
 }
 
 
 - (void) setRed:(float)red
 {
-    if (m_red != red) {
-        m_red = red;
+    if (_red != red) {
+        _red = red;
         sDidChangeRGB(self);
     }
 }
@@ -352,8 +352,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setGreen:(float)green
 {
-    if (m_green != green) {
-        m_green = green;
+    if (_green != green) {
+        _green = green;
         sDidChangeRGB(self);
     }
 }
@@ -361,8 +361,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setBlue:(float)blue
 {
-    if (m_blue != blue) {
-        m_blue = blue;
+    if (_blue != blue) {
+        _blue = blue;
         sDidChangeRGB(self);
     }
 }
@@ -370,8 +370,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setHue:(float)hue
 {
-    if (m_hue != hue) {
-        m_hue = hue;
+    if (_hue != hue) {
+        _hue = hue;
         sDidChangeHSB(self);
     }
 }
@@ -379,8 +379,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setSaturationHSB:(float)saturation
 {
-    if (m_saturationHSB != saturation) {
-        m_saturationHSB = saturation;
+    if (_saturationHSB != saturation) {
+        _saturationHSB = saturation;
         sDidChangeHSB(self);
     }
 }
@@ -388,8 +388,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setBrightness:(float)brightness
 {
-    if (m_brightness != brightness) {
-        m_brightness = brightness;
+    if (_brightness != brightness) {
+        _brightness = brightness;
         sDidChangeHSB(self);
     }
 }
@@ -397,8 +397,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setSaturationHSL:(float)saturation
 {
-    if (m_saturationHSL != saturation) {
-        m_saturationHSL = saturation;
+    if (_saturationHSL != saturation) {
+        _saturationHSL = saturation;
         sDidChangeHSL(self);
     }
 }
@@ -406,8 +406,8 @@ static void sDidChangeRGB(Color *self)
 
 - (void) setLightness:(float)lightness
 {
-    if (m_lightness != lightness) {
-        m_lightness = lightness;
+    if (_lightness != lightness) {
+        _lightness = lightness;
         sDidChangeHSL(self);
     }
 }

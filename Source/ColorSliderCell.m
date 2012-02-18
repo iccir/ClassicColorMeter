@@ -16,8 +16,8 @@
 
 @implementation ColorSliderCell
 
-@synthesize component = m_component,
-            color     = m_color;
+@synthesize component = _component,
+            color     = _color;
 
 
 #pragma mark -
@@ -28,12 +28,12 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
     CGRect   rect     = inRect;
     CGFloat  maxX     = NSMaxX(inRect);
 
-    ColorComponent component = self->m_component;
+    ColorComponent component = self->_component;
 
     rect.size.width = 1.0;
     
     if (component != ColorComponentNone) {
-        Color *color = [self->m_color copy];
+        Color *color = [self->_color copy];
     
         while (rect.origin.x <= maxX) {
             float percent = (rect.origin.x - inRect.origin.x) / inRect.size.width;
@@ -103,8 +103,8 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
 
 - (void) setComponent:(ColorComponent)component
 {
-    if (component != m_component) {
-        m_component = component;
+    if (component != _component) {
+        _component = component;
         [[self controlView] setNeedsDisplay:YES];
     }
 }

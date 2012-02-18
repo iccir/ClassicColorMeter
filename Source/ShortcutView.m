@@ -268,8 +268,8 @@ static NSImage *sGetClearIcon()
 
 @implementation _ShortcutCell
 
-@synthesize shortcut = m_shortcut,
-            mouseDownInClearIcon = m_mouseDownInClearIcon;
+@synthesize shortcut = _shortcut,
+            mouseDownInClearIcon = _mouseDownInClearIcon;
 
 
 - (BOOL) acceptsFirstResponder
@@ -300,12 +300,12 @@ static NSImage *sGetClearIcon()
 
     // Draw circle X
     //
-    if (m_shortcut) {
+    if (_shortcut) {
         CGRect clearImageRect = [self rectOfClearIconForFrame:cellFrame];
         maxX = NSMaxX(clearImageRect);
         
         NSImage *image = sGetClearIcon();
-        if (m_mouseDownInClearIcon) {
+        if (_mouseDownInClearIcon) {
             image = sGetPressedClearIcon();
         }
 
@@ -326,8 +326,8 @@ static NSImage *sGetClearIcon()
 
         [style setAlignment:NSCenterTextAlignment];
 
-        if (m_shortcut) {
-            stringToDraw = [m_shortcut displayString];
+        if (_shortcut) {
+            stringToDraw = [_shortcut displayString];
             stringRect = NSInsetRect(stringRect, 3, 2);
 
         } else {

@@ -14,10 +14,10 @@
 
 @implementation EtchingView
 
-@synthesize activeDarkOpacity    = m_activeDarkOpacity,
-            activeLightOpacity   = m_activeLightOpacity,
-            inactiveDarkOpacity  = m_inactiveDarkOpacity,
-            inactiveLightOpacity = m_inactiveLightOpacity;
+@synthesize activeDarkOpacity    = _activeDarkOpacity,
+            activeLightOpacity   = _activeLightOpacity,
+            inactiveDarkOpacity  = _inactiveDarkOpacity,
+            inactiveLightOpacity = _inactiveLightOpacity;
 
 
 - (void) drawRect:(NSRect)dirtyRect
@@ -35,10 +35,10 @@
     NSRect topRect = bottomRect;
     topRect.origin.y += topRect.size.height;
 
-    CGContextSetGrayFillColor(context, 1.0, (active ? m_activeLightOpacity : m_inactiveLightOpacity));
+    CGContextSetGrayFillColor(context, 1.0, (active ? _activeLightOpacity : _inactiveLightOpacity));
     CGContextFillRect(context, bottomRect);
 
-    CGContextSetGrayFillColor(context, 0.0, (active ? m_activeDarkOpacity : m_inactiveDarkOpacity));
+    CGContextSetGrayFillColor(context, 0.0, (active ? _activeDarkOpacity : _inactiveDarkOpacity));
     CGContextFillRect(context, topRect);
     
     CGContextRestoreGState(context);
@@ -47,8 +47,8 @@
 
 - (void) setActiveLightOpacity:(CGFloat)lightOpacity
 {
-    if (m_activeLightOpacity != lightOpacity) {
-        m_activeLightOpacity = lightOpacity;
+    if (_activeLightOpacity != lightOpacity) {
+        _activeLightOpacity = lightOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -56,8 +56,8 @@
 
 - (void) setActiveDarkOpacity:(CGFloat)darkOpacity
 {
-    if (m_activeDarkOpacity != darkOpacity) {
-        m_activeDarkOpacity = darkOpacity;
+    if (_activeDarkOpacity != darkOpacity) {
+        _activeDarkOpacity = darkOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -65,8 +65,8 @@
 
 - (void) setInactiveLightOpacity:(CGFloat)lightOpacity
 {
-    if (m_inactiveLightOpacity != lightOpacity) {
-        m_inactiveLightOpacity = lightOpacity;
+    if (_inactiveLightOpacity != lightOpacity) {
+        _inactiveLightOpacity = lightOpacity;
         [self setNeedsDisplay:YES];
     }
 }
@@ -74,8 +74,8 @@
 
 - (void) setInactiveDarkOpacity:(CGFloat)darkOpacity
 {
-    if (m_inactiveDarkOpacity != darkOpacity) {
-        m_inactiveDarkOpacity = darkOpacity;
+    if (_inactiveDarkOpacity != darkOpacity) {
+        _inactiveDarkOpacity = darkOpacity;
         [self setNeedsDisplay:YES];
     }
 }

@@ -113,39 +113,39 @@ static void sRegisterDefaults(void)
 
 @implementation Preferences
 
-@synthesize colorMode           = m_colorMode,
-            holdColorMode       = m_holdColorMode,
-            colorProfileType    = m_colorProfileType;
+@synthesize colorMode           = _colorMode,
+            holdColorMode       = _holdColorMode,
+            colorProfileType    = _colorProfileType;
             
-@synthesize zoomLevel           = m_zoomLevel,
-            apertureSize        = m_apertureSize,
-            apertureColor       = m_apertureColor,
-            clickInSwatchAction = m_clickInSwatchAction,
-            dragInSwatchAction  = m_dragInSwatchAction;
+@synthesize zoomLevel           = _zoomLevel,
+            apertureSize        = _apertureSize,
+            apertureColor       = _apertureColor,
+            clickInSwatchAction = _clickInSwatchAction,
+            dragInSwatchAction  = _dragInSwatchAction;
 
-@synthesize nsColorSnippetTemplate   = m_nsColorSnippetTemplate,
-            uiColorSnippetTemplate   = m_uiColorSnippetTemplate,
-            hexColorSnippetTemplate  = m_hexColorSnippetTemplate,
-            rgbColorSnippetTemplate  = m_rgbColorSnippetTemplate,
-            rgbaColorSnippetTemplate = m_rgbaColorSnippetTemplate;
+@synthesize nsColorSnippetTemplate   = _nsColorSnippetTemplate,
+            uiColorSnippetTemplate   = _uiColorSnippetTemplate,
+            hexColorSnippetTemplate  = _hexColorSnippetTemplate,
+            rgbColorSnippetTemplate  = _rgbColorSnippetTemplate,
+            rgbaColorSnippetTemplate = _rgbaColorSnippetTemplate;
 
-@synthesize showApplicationShortcut  = m_showApplicationShortcut,
-            holdColorShortcut        = m_holdColorShortcut;
+@synthesize showApplicationShortcut  = _showApplicationShortcut,
+            holdColorShortcut        = _holdColorShortcut;
 
 
-@synthesize updatesContinuously   = m_updatesContinuously,
-            floatWindow           = m_floatWindow,
-            showMouseCoordinates  = m_showMouseCoordinates,
-            clickInSwatchEnabled  = m_clickInSwatchEnabled,
-            dragInSwatchEnabled   = m_dragInSwatchEnabled,
-            arrowKeysEnabled      = m_arrowKeysEnabled,
-            usesLowercaseHex      = m_usesLowercaseHex,
-            showsHoldLabels       = m_showsHoldLabels,
-            showsHoldColorSliders = m_showsHoldColorSliders,
-            usesPoundPrefix       = m_usesPoundPrefix;
+@synthesize updatesContinuously   = _updatesContinuously,
+            floatWindow           = _floatWindow,
+            showMouseCoordinates  = _showMouseCoordinates,
+            clickInSwatchEnabled  = _clickInSwatchEnabled,
+            dragInSwatchEnabled   = _dragInSwatchEnabled,
+            arrowKeysEnabled      = _arrowKeysEnabled,
+            usesLowercaseHex      = _usesLowercaseHex,
+            showsHoldLabels       = _showsHoldLabels,
+            showsHoldColorSliders = _showsHoldColorSliders,
+            usesPoundPrefix       = _usesPoundPrefix;
 
-@synthesize usesDifferentColorSpaceInHoldColor = m_usesDifferentColorSpaceInHoldColor,
-            usesMainColorSpaceForCopyAsText    = m_usesMainColorSpaceForCopyAsText;
+@synthesize usesDifferentColorSpaceInHoldColor = _usesDifferentColorSpaceInHoldColor,
+            usesMainColorSpaceForCopyAsText    = _usesMainColorSpaceForCopyAsText;
 
 
 + (id) sharedInstance
@@ -238,37 +238,37 @@ static void sRegisterDefaults(void)
         return [defaults boolForKey:key];
     };
 
-    m_colorMode           = loadInteger( sColorModeKey         );
-    m_holdColorMode       = loadInteger( sHoldColorModeKey     );
-    m_colorProfileType    = loadInteger( sColorProfileTypeKey  );
-    m_zoomLevel           = loadInteger( sZoomLevelKey         );
-    m_apertureSize        = loadInteger( sApertureSizeKey      );
-    m_apertureColor       = loadInteger( sApertureColorKey     );
-    m_clickInSwatchAction = loadInteger( sSwatchClickActionKey );
-    m_dragInSwatchAction  = loadInteger( sSwatchDragActionKey  );
+    _colorMode           = loadInteger( sColorModeKey         );
+    _holdColorMode       = loadInteger( sHoldColorModeKey     );
+    _colorProfileType    = loadInteger( sColorProfileTypeKey  );
+    _zoomLevel           = loadInteger( sZoomLevelKey         );
+    _apertureSize        = loadInteger( sApertureSizeKey      );
+    _apertureColor       = loadInteger( sApertureColorKey     );
+    _clickInSwatchAction = loadInteger( sSwatchClickActionKey );
+    _dragInSwatchAction  = loadInteger( sSwatchDragActionKey  );
 
-    m_nsColorSnippetTemplate   = loadString( sCodeSnippetTemplateNSKey   );
-    m_uiColorSnippetTemplate   = loadString( sCodeSnippetTemplateUIKey   );
-    m_hexColorSnippetTemplate  = loadString( sCodeSnippetTemplateHexKey  );
-    m_rgbColorSnippetTemplate  = loadString( sCodeSnippetTemplateRGBKey  );
-    m_rgbaColorSnippetTemplate = loadString( sCodeSnippetTemplateRGBAKey );
+    _nsColorSnippetTemplate   = loadString( sCodeSnippetTemplateNSKey   );
+    _uiColorSnippetTemplate   = loadString( sCodeSnippetTemplateUIKey   );
+    _hexColorSnippetTemplate  = loadString( sCodeSnippetTemplateHexKey  );
+    _rgbColorSnippetTemplate  = loadString( sCodeSnippetTemplateRGBKey  );
+    _rgbaColorSnippetTemplate = loadString( sCodeSnippetTemplateRGBAKey );
 
-    m_showApplicationShortcut  = loadShortcut( sShowApplicationShortcutKey );
-    m_holdColorShortcut        = loadShortcut( sHoldColorShortcutKey       );
+    _showApplicationShortcut  = loadShortcut( sShowApplicationShortcutKey );
+    _holdColorShortcut        = loadShortcut( sHoldColorShortcutKey       );
 
-    m_updatesContinuously   = loadBoolean( sUpdatesContinuouslyKey   );
-    m_floatWindow           = loadBoolean( sFloatWindowKey           );
-    m_showMouseCoordinates  = loadBoolean( sShowMouseCoordinatesKey  );
-    m_clickInSwatchEnabled  = loadBoolean( sSwatchClickEnabledKey    );
-    m_dragInSwatchEnabled   = loadBoolean( sSwatchDragEnabledKey     );
-    m_arrowKeysEnabled      = loadBoolean( sArrowKeysEnabledKey      );
-    m_showsHoldLabels       = loadBoolean( sShowsHoldLabelsKey       );
-    m_usesLowercaseHex      = loadBoolean( sUsesLowercaseHexKey      );
-    m_usesPoundPrefix       = loadBoolean( sUsesPoundPrefixKey       );
-    m_showsHoldColorSliders = loadBoolean( sShowsHoldColorSlidersKey );
+    _updatesContinuously   = loadBoolean( sUpdatesContinuouslyKey   );
+    _floatWindow           = loadBoolean( sFloatWindowKey           );
+    _showMouseCoordinates  = loadBoolean( sShowMouseCoordinatesKey  );
+    _clickInSwatchEnabled  = loadBoolean( sSwatchClickEnabledKey    );
+    _dragInSwatchEnabled   = loadBoolean( sSwatchDragEnabledKey     );
+    _arrowKeysEnabled      = loadBoolean( sArrowKeysEnabledKey      );
+    _showsHoldLabels       = loadBoolean( sShowsHoldLabelsKey       );
+    _usesLowercaseHex      = loadBoolean( sUsesLowercaseHexKey      );
+    _usesPoundPrefix       = loadBoolean( sUsesPoundPrefixKey       );
+    _showsHoldColorSliders = loadBoolean( sShowsHoldColorSlidersKey );
                   
-    m_usesDifferentColorSpaceInHoldColor = loadBoolean( sUsesDifferentColorSpaceInHoldColor );
-    m_usesMainColorSpaceForCopyAsText    = loadBoolean( sUsesMainColorSpaceForCopyAsText    );
+    _usesDifferentColorSpaceInHoldColor = loadBoolean( sUsesDifferentColorSpaceInHoldColor );
+    _usesMainColorSpaceForCopyAsText    = loadBoolean( sUsesMainColorSpaceForCopyAsText    );
 }
 
 
@@ -296,38 +296,38 @@ static void sRegisterDefaults(void)
         [defaults setBool:yn forKey:key];
     };
 
-    saveInteger( m_colorMode,                sColorModeKey               );
-    saveInteger( m_holdColorMode,            sHoldColorModeKey           );
-    saveInteger( m_colorProfileType,         sColorProfileTypeKey        );
+    saveInteger( _colorMode,                sColorModeKey               );
+    saveInteger( _holdColorMode,            sHoldColorModeKey           );
+    saveInteger( _colorProfileType,         sColorProfileTypeKey        );
 
-    saveInteger( m_zoomLevel,                sZoomLevelKey               );
-    saveInteger( m_apertureSize,             sApertureSizeKey            );
-    saveInteger( m_apertureColor,            sApertureColorKey           );
-    saveInteger( m_clickInSwatchAction,      sSwatchClickActionKey       );
-    saveInteger( m_dragInSwatchAction,       sSwatchDragActionKey        );
+    saveInteger( _zoomLevel,                sZoomLevelKey               );
+    saveInteger( _apertureSize,             sApertureSizeKey            );
+    saveInteger( _apertureColor,            sApertureColorKey           );
+    saveInteger( _clickInSwatchAction,      sSwatchClickActionKey       );
+    saveInteger( _dragInSwatchAction,       sSwatchDragActionKey        );
 
-    saveObject( m_nsColorSnippetTemplate,    sCodeSnippetTemplateNSKey   );
-    saveObject( m_uiColorSnippetTemplate,    sCodeSnippetTemplateUIKey   );
-    saveObject( m_hexColorSnippetTemplate,   sCodeSnippetTemplateHexKey  );
-    saveObject( m_rgbColorSnippetTemplate,   sCodeSnippetTemplateRGBKey  );
-    saveObject( m_rgbaColorSnippetTemplate,  sCodeSnippetTemplateRGBAKey );
+    saveObject( _nsColorSnippetTemplate,    sCodeSnippetTemplateNSKey   );
+    saveObject( _uiColorSnippetTemplate,    sCodeSnippetTemplateUIKey   );
+    saveObject( _hexColorSnippetTemplate,   sCodeSnippetTemplateHexKey  );
+    saveObject( _rgbColorSnippetTemplate,   sCodeSnippetTemplateRGBKey  );
+    saveObject( _rgbaColorSnippetTemplate,  sCodeSnippetTemplateRGBAKey );
     
-    saveShortcut( m_showApplicationShortcut, sShowApplicationShortcutKey );
-    saveShortcut( m_holdColorShortcut,       sHoldColorShortcutKey       );
+    saveShortcut( _showApplicationShortcut, sShowApplicationShortcutKey );
+    saveShortcut( _holdColorShortcut,       sHoldColorShortcutKey       );
     
-    saveBoolean( m_updatesContinuously,      sUpdatesContinuouslyKey     );
-    saveBoolean( m_floatWindow,              sFloatWindowKey             );
-    saveBoolean( m_showMouseCoordinates,     sShowMouseCoordinatesKey    );
-    saveBoolean( m_clickInSwatchEnabled,     sSwatchClickEnabledKey      );
-    saveBoolean( m_dragInSwatchEnabled,      sSwatchDragEnabledKey       );
-    saveBoolean( m_arrowKeysEnabled,         sArrowKeysEnabledKey        );
-    saveBoolean( m_usesLowercaseHex,         sUsesLowercaseHexKey        );
-    saveBoolean( m_usesPoundPrefix,          sUsesPoundPrefixKey         );
-    saveBoolean( m_showsHoldLabels,          sShowsHoldLabelsKey         );
-    saveBoolean( m_showsHoldColorSliders,    sShowsHoldColorSlidersKey   );
+    saveBoolean( _updatesContinuously,      sUpdatesContinuouslyKey     );
+    saveBoolean( _floatWindow,              sFloatWindowKey             );
+    saveBoolean( _showMouseCoordinates,     sShowMouseCoordinatesKey    );
+    saveBoolean( _clickInSwatchEnabled,     sSwatchClickEnabledKey      );
+    saveBoolean( _dragInSwatchEnabled,      sSwatchDragEnabledKey       );
+    saveBoolean( _arrowKeysEnabled,         sArrowKeysEnabledKey        );
+    saveBoolean( _usesLowercaseHex,         sUsesLowercaseHexKey        );
+    saveBoolean( _usesPoundPrefix,          sUsesPoundPrefixKey         );
+    saveBoolean( _showsHoldLabels,          sShowsHoldLabelsKey         );
+    saveBoolean( _showsHoldColorSliders,    sShowsHoldColorSlidersKey   );
 
-    saveBoolean( m_usesDifferentColorSpaceInHoldColor, sUsesDifferentColorSpaceInHoldColor );
-    saveBoolean( m_usesMainColorSpaceForCopyAsText,    sUsesMainColorSpaceForCopyAsText    );
+    saveBoolean( _usesDifferentColorSpaceInHoldColor, sUsesDifferentColorSpaceInHoldColor );
+    saveBoolean( _usesMainColorSpaceForCopyAsText,    sUsesMainColorSpaceForCopyAsText    );
 
     [defaults synchronize];
 }

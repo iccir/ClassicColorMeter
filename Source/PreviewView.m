@@ -15,19 +15,19 @@
 
 @implementation PreviewView
 
-@synthesize attributes    = m_attributes,
-            zoomLevel     = m_zoomLevel,
-            apertureSize  = m_apertureSize,
-            apertureColor = m_apertureColor,
-            image         = m_image,
-            mouseLocation = m_mouseLocation,
-            showsLocation = m_showsLocation;
+@synthesize attributes    = _attributes,
+            zoomLevel     = _zoomLevel,
+            apertureSize  = _apertureSize,
+            apertureColor = _apertureColor,
+            image         = _image,
+            mouseLocation = _mouseLocation,
+            showsLocation = _showsLocation;
 
 
 - (void) dealloc
 {
-    CGImageRelease(m_image);
-	m_image = NULL;
+    CGImageRelease(_image);
+	_image = NULL;
 }
 
 
@@ -44,29 +44,29 @@
     
     NSRect bounds = [self bounds];
     
-    if (m_image) {
+    if (_image) {
         CGContextSetInterpolationQuality(context, kCGInterpolationNone);
 
-        CGFloat size         = (CGImageGetWidth(m_image) * m_zoomLevel);
+        CGFloat size         = (CGImageGetWidth(_image) * _zoomLevel);
         CGFloat origin       = round((bounds.size.width - size) / 2.0);
         CGRect  zoomedBounds = CGRectMake(origin, origin, size, size);
         
-        CGContextDrawImage(context, zoomedBounds, m_image);
+        CGContextDrawImage(context, zoomedBounds, _image);
     }
 
-    if (m_showsLocation) {
-        if (!m_attributes) {
+    if (_showsLocation) {
+        if (!_attributes) {
             NSFont *font = [NSFont boldSystemFontOfSize:12.0];
 
-            m_attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+            _attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
                 font, NSFontAttributeName,
                 [NSColor whiteColor], NSForegroundColorAttributeName,
                 nil];
         }
     
-        NSString *locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)m_mouseLocation.x, (long)m_mouseLocation.y];
+        NSString *locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)_mouseLocation.x, (long)_mouseLocation.y];
 
-        CGRect textRect = [locationString boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:m_attributes];
+        CGRect textRect = [locationString boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:_attributes];
 
         {
             CGRect boxRect  = CGRectMake(1.0, 1.0, bounds.size.width - 2.0, textRect.size.height);
@@ -77,12 +77,12 @@
 
         textRect.origin.x = (bounds.size.width - textRect.size.width) - 2.0;
         textRect.origin.y = 4.0;
-        [locationString drawWithRect:textRect options:0 attributes:m_attributes];
+        [locationString drawWithRect:textRect options:0 attributes:_attributes];
     }
 
     // Draw aperture
     {
-        CGFloat size   = (m_apertureSize * 16) + 10;
+        CGFloat size   = (_apertureSize * 16) + 10;
         CGFloat origin = round((bounds.size.width - size) / 2.0);;
 
         // Special case for max aperture size
@@ -93,17 +93,17 @@
         
         CGRect apertureRect = CGRectMake(origin, origin, size, size);
         
-        if (m_apertureSize >= 0 && m_apertureSize < 8) {
-            if (m_apertureColor == ApertureColorBlack) {
+        if (_apertureSize >= 0 && _apertureSize < 8) {
+            if (_apertureColor == ApertureColorBlack) {
                 CGContextSetGrayStrokeColor(context, 0.0, 0.75);
 
-            } else if (m_apertureColor == ApertureColorGrey) {
+            } else if (_apertureColor == ApertureColorGrey) {
                 CGContextSetGrayStrokeColor(context, 0.5, 0.8);
 
-            } else if (m_apertureColor == ApertureColorWhite) {
+            } else if (_apertureColor == ApertureColorWhite) {
                 CGContextSetGrayStrokeColor(context, 1.0, 0.8);
 
-            } else if (m_apertureColor == ApertureColorBlackAndWhite) {
+            } else if (_apertureColor == ApertureColorBlackAndWhite) {
                 CGRect innerRect = CGRectInset(apertureRect, 1.5, 1.5);
                 CGContextSetGrayStrokeColor(context, 1.0, 0.66);
                 CGContextStrokeRect(context, innerRect);
@@ -128,8 +128,8 @@
 
 - (void) setZoomLevel:(NSInteger)zoomLevel
 {
-    if (m_zoomLevel != zoomLevel) {
-        m_zoomLevel = zoomLevel;
+    if (_zoomLevel != zoomLevel) {
+        _zoomLevel = zoomLevel;
         [self setNeedsDisplay:YES];
     }
 }
@@ -137,8 +137,8 @@
 
 - (void) setApertureSize:(NSInteger)apertureSize
 {
-    if (m_apertureSize != apertureSize) {
-        m_apertureSize = apertureSize;
+    if (_apertureSize != apertureSize) {
+        _apertureSize = apertureSize;
         [self setNeedsDisplay:YES];
     }
 }
@@ -146,8 +146,8 @@
 
 - (void) setApertureColor:(ApertureColor)apertureColor
 {
-    if (m_apertureColor != apertureColor) {
-        m_apertureColor = apertureColor;
+    if (_apertureColor != apertureColor) {
+        _apertureColor = apertureColor;
         [self setNeedsDisplay:YES];
     }
 }
@@ -155,9 +155,9 @@
 
 - (void) setImage:(CGImageRef)image
 {
-    if (m_image != image) {
-        CGImageRelease(m_image);
-        m_image = CGImageRetain(image);
+    if (_image != image) {
+        CGImageRelease(_image);
+        _image = CGImageRetain(image);
 
         [self setNeedsDisplay:YES];
     }
@@ -166,7 +166,7 @@
 
 - (void) setMouseLocation:(NSPoint)mouseLocation
 {
-    m_mouseLocation = mouseLocation;
+    _mouseLocation = mouseLocation;
     [self setNeedsDisplay:YES];
 }
 
