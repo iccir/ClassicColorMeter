@@ -9,10 +9,8 @@
 #import "RecessedButton.h"
 #import "Util.h"
 
-@interface RecessedButtonCell () {
-    NSRect _arrowRect;
-}
-
+@interface RecessedButtonCell () 
+@property (nonatomic, assign) NSRect arrowRect;
 @end
 
 
@@ -31,6 +29,9 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
 
 
 @implementation RecessedButtonCell
+
+@synthesize arrowRect = _arrowRect;
+
 
 - (void) drawBezelWithFrame:(NSRect)frame inView:(NSView *)controlView
 {

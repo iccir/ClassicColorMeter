@@ -13,14 +13,14 @@
 
 static id sSharedInstance = nil;
 
-@interface ShortcutManager () {
-    NSHashTable         *_listeners;
-    NSMutableDictionary *_shortcutIDToRefMap;
-    NSMutableDictionary *_shortcutIDToShortcutMap;  
-}
+@interface ShortcutManager ()
 
 - (BOOL) _handleHotKeyID:(NSUInteger)hotKeyID;
 - (void) _unregisterShortcut:(Shortcut *)shortcut;
+
+@property (nonatomic, strong) NSHashTable *listeners;
+@property (nonatomic, strong) NSMutableDictionary *shortcutIDToRefMap;
+@property (nonatomic, strong) NSMutableDictionary *shortcutIDToShortcutMap;
 
 @end
 
@@ -41,7 +41,10 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 
 @implementation ShortcutManager
 
-@synthesize shortcuts = _shortcuts;
+@synthesize shortcuts = _shortcuts,
+            listeners = _listeners,
+            shortcutIDToRefMap = _shortcutIDToRefMap,
+            shortcutIDToShortcutMap = _shortcutIDToShortcutMap;
 
 
 + (BOOL) hasSharedInstance

@@ -12,11 +12,9 @@
 
 static CGFloat sDistanceForDrag = 10.0;
 
-@interface ResultView () {
-    CGPoint _mouseDownLocation;
-    BOOL    _isInDrag;
-}
-
+@interface ResultView ()
+@property (nonatomic, assign) CGPoint mouseDownLocation;
+@property (nonatomic, assign, getter=isInDrag) BOOL inDrag;
 @end
 
 
@@ -25,7 +23,9 @@ static CGFloat sDistanceForDrag = 10.0;
 @synthesize color        = _color,
             delegate     = _delegate,
             clickEnabled = _clickEnabled,
-            dragEnabled  = _dragEnabled;
+            dragEnabled  = _dragEnabled,
+            mouseDownLocation = _mouseDownLocation,
+            inDrag = _inDrag;
 
 
 - (BOOL) isOpaque
@@ -36,7 +36,7 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
-    _isInDrag = NO;
+    _inDrag = NO;
 
     _mouseDownLocation = [theEvent locationInWindow];
 
@@ -52,7 +52,7 @@ static CGFloat sDistanceForDrag = 10.0;
 {
     // If tracking drags, we don't call the delegate on mouseDown, so do it now
     //
-    if (_dragEnabled && !_isInDrag) {
+    if (_dragEnabled && !_inDrag) {
         [_delegate resultViewClicked:self];
     }
 }
@@ -60,14 +60,14 @@ static CGFloat sDistanceForDrag = 10.0;
 
 - (void) mouseDragged:(NSEvent *)theEvent
 {
-    if (_dragEnabled && !_isInDrag) {
+    if (_dragEnabled && !_inDrag) {
         NSPoint location = [theEvent locationInWindow];
         float   deltaX   = location.x - _mouseDownLocation.x;
         float   deltaY   = location.y - _mouseDownLocation.y;
         float   distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
 
         if (distance > sDistanceForDrag) {
-            _isInDrag = YES;
+            _inDrag = YES;
             [_delegate resultView:self dragInitiatedWithEvent:theEvent];
         }
     }
