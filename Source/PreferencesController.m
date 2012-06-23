@@ -18,7 +18,16 @@
 
 @implementation PreferencesController
 
-@synthesize apertureColorPopUp    = o_apertureColorPopUp,
+@synthesize generalPane    = o_generalPane,
+            conversionPane = o_conversionPane,
+            keyboardPane   = o_keyboardPane,
+            
+            toolbar        = o_toolbar,
+            generalItem    = o_generalItem,
+            conversionItem = o_conversionItem,
+            keyboardItem   = o_keyboardItem,
+
+            apertureColorPopUp    = o_apertureColorPopUp,
 
             clickInSwatchButton   = o_clickInSwatchButton,
             clickInSwatchPopUp    = o_clickInSwatchPopUp,
@@ -29,13 +38,28 @@
             useLowercaseHexButton = o_useLowercaseHexButton,
             usePoundPrefixButton  = o_usePoundPrefixButton,
             arrowKeysButton       = o_arrowKeysButton,
+            showLockGuidesButton  = o_showLockGuidesButton,
             
             showsHoldColorSlidersButton              = o_showsHoldColorSlidersButton,
             usesDifferentColorSpaceInHoldColorButton = o_usesDifferentColorSpaceInHoldColorButton,
             usesMainColorSpaceForCopyAsTextButton    = o_usesMainColorSpaceForCopyAsTextButton,
+
+            enableSystemClippedColorButton = o_enableSystemClippedColorButton,
+            systemClippedColorWell         = o_systemClippedColorWell,
+            useSystemClippedValueButton    = o_useSystemClippedValueButton,
+
+            enableMyClippedColorButton     = o_enableMyClippedColorButton,
+            myClippedColorWell             = o_myClippedColorWell,
+            useMyClippedValueButton        = o_useMyClippedValueButton,
             
             showApplicationShortcutView  = o_showApplicationShortcutView,
-            holdColorShortcutView        = o_holdColorShortcutView;
+            holdColorShortcutView        = o_holdColorShortcutView,
+            lockPositionShortcutView     = o_lockPositionShortcutView,
+            nsColorSnippetShortcutView   = o_nsColorSnippetShortcutView,
+            uiColorSnippetShortcutView   = o_uiColorSnippetShortcutView,
+            hexColorSnippetShortcutView  = o_hexColorSnippetShortcutView,
+            rgbColorSnippetShortcutView  = o_rgbColorSnippetShortcutView,
+            rgbaColorSnippetShortcutView = o_rgbaColorSnippetShortcutView;
 
 
 - (id) initWithWindow:(NSWindow *)window
@@ -72,6 +96,9 @@
     [o_arrowKeysButton setTarget:nil];
     [o_arrowKeysButton setAction:NULL];
 
+    [o_showLockGuidesButton setTarget:nil];
+    [o_showLockGuidesButton setAction:NULL];
+
     [o_usePoundPrefixButton setTarget:nil];
     [o_usePoundPrefixButton setAction:NULL];
 
@@ -89,6 +116,24 @@
 
     [o_holdColorShortcutView setTarget:nil];
     [o_holdColorShortcutView setAction:NULL];
+
+    [o_lockPositionShortcutView setTarget:nil];
+    [o_lockPositionShortcutView setAction:NULL];
+
+    [o_nsColorSnippetShortcutView setTarget:nil];
+    [o_nsColorSnippetShortcutView setAction:NULL];
+
+    [o_uiColorSnippetShortcutView setTarget:nil];
+    [o_uiColorSnippetShortcutView setAction:NULL];
+
+    [o_hexColorSnippetShortcutView setTarget:nil];
+    [o_hexColorSnippetShortcutView setAction:NULL];
+
+    [o_rgbColorSnippetShortcutView setTarget:nil];
+    [o_rgbColorSnippetShortcutView setAction:NULL];
+
+    [o_rgbaColorSnippetShortcutView setTarget:nil];
+    [o_rgbaColorSnippetShortcutView setAction:NULL];
 }
 
 
@@ -101,6 +146,7 @@
 - (void ) windowDidLoad
 {
     [self _handlePreferencesDidChange:nil];
+    [self selectPane:0 animated:NO];
 }
 
 
@@ -108,14 +154,17 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
+    BOOL clickInSwatchEnabled          = [preferences clickInSwatchEnabled];
+    BOOL dragInSwatchEnabled           = [preferences dragInSwatchEnabled];
+    BOOL highlightsMyClippedValues     = [preferences highlightsMyClippedValues];
+    BOOL highlightsSystemClippedValues = [preferences highlightsSystemClippedValues];
+
     [o_apertureColorPopUp selectItemWithTag:[preferences apertureColor]];
 
-    BOOL clickInSwatchEnabled = [preferences clickInSwatchEnabled];
     [o_clickInSwatchButton setState:clickInSwatchEnabled];
     [o_clickInSwatchPopUp  selectItemWithTag:[preferences clickInSwatchAction]];
     [o_clickInSwatchPopUp  setEnabled:clickInSwatchEnabled];
 
-    BOOL dragInSwatchEnabled = [preferences dragInSwatchEnabled];
     [o_dragInSwatchButton  setState:dragInSwatchEnabled];
     [o_dragInSwatchPopUp   selectItemWithTag:[preferences dragInSwatchAction]];
     [o_dragInSwatchPopUp   setEnabled:dragInSwatchEnabled];
@@ -123,8 +172,19 @@
     [o_useLowercaseHexButton setState:[preferences usesLowercaseHex]];
     [o_usePoundPrefixButton  setState:[preferences usesPoundPrefix]];
     [o_arrowKeysButton       setState:[preferences arrowKeysEnabled]];
+    [o_showLockGuidesButton  setState:[preferences showsLockGuides]];
 
     [o_showsHoldColorSlidersButton              setState:[preferences showsHoldColorSliders]];
+
+    [o_enableSystemClippedColorButton setState: highlightsSystemClippedValues];
+    [o_systemClippedColorWell       setEnabled: highlightsSystemClippedValues];
+    [o_systemClippedColorWell         setColor: [preferences colorForSystemClippedValues]];
+    [o_useSystemClippedValueButton    setState: [preferences usesSystemClippedValues]];
+
+    [o_enableMyClippedColorButton setState: highlightsMyClippedValues];
+    [o_myClippedColorWell       setEnabled: highlightsMyClippedValues];
+    [o_myClippedColorWell         setColor: [preferences colorForMyClippedValues]];
+    [o_useMyClippedValueButton    setState: [preferences usesMyClippedValues]];
 
     BOOL usesDifferentColorSpaceInHoldColor = [preferences usesDifferentColorSpaceInHoldColor];
 
@@ -132,12 +192,67 @@
     [o_usesMainColorSpaceForCopyAsTextButton setEnabled:usesDifferentColorSpaceInHoldColor];
     [o_usesMainColorSpaceForCopyAsTextButton setState:[preferences usesMainColorSpaceForCopyAsText]];
 
-    [o_showApplicationShortcutView setShortcut:[preferences showApplicationShortcut]];
-    [o_holdColorShortcutView setShortcut:[preferences holdColorShortcut]];
+    [o_showApplicationShortcutView  setShortcut:[preferences showApplicationShortcut]];
+    [o_holdColorShortcutView        setShortcut:[preferences holdColorShortcut]];
+    [o_lockPositionShortcutView     setShortcut:[preferences lockPositionShortcut]];
+    [o_nsColorSnippetShortcutView   setShortcut:[preferences nsColorSnippetShortcut]];
+    [o_uiColorSnippetShortcutView   setShortcut:[preferences uiColorSnippetShortcut]];
+    [o_hexColorSnippetShortcutView  setShortcut:[preferences hexColorSnippetShortcut]];
+    [o_rgbColorSnippetShortcutView  setShortcut:[preferences rgbColorSnippetShortcut]];
+    [o_rgbaColorSnippetShortcutView setShortcut:[preferences rgbaColorSnippetShortcut]];
+}
+
+- (void) selectPane:(NSInteger)tag animated:(BOOL)animated
+{
+    NSToolbarItem *item;
+    NSView *pane;
+    NSString *title;
+
+    if (tag == 2) {
+        item = o_keyboardItem;
+        pane = o_keyboardPane;
+        title = NSLocalizedString(@"Keyboard", nil);
+
+    } else if (tag == 1) {
+        item = o_conversionItem;
+        pane = o_conversionPane;
+        title = NSLocalizedString(@"Conversion", nil);
+
+    } else {
+        item = o_generalItem;
+        pane = o_generalPane;
+        title = NSLocalizedString(@"General", nil);
+    }
+    
+    [o_toolbar setSelectedItemIdentifier:[item itemIdentifier]];
+    
+    NSWindow *window = [self window];
+    NSView *contentView = [window contentView];
+    for (NSView *view in [contentView subviews]) {
+        [view removeFromSuperview];
+    }
+
+    NSRect paneFrame = [pane frame];
+    NSRect windowFrame = [window frame];
+    NSRect newFrame = [window frameRectForContentRect:paneFrame];
+    
+    newFrame.origin = windowFrame.origin;
+    newFrame.origin.y += (windowFrame.size.height - newFrame.size.height);
+
+    [window setFrame:newFrame display:YES animate:animated];
+    [window setTitle:title];
+
+    [contentView addSubview:pane];
 }
 
 
-- (void) updatePreferences:(id)sender
+- (IBAction) selectPane:(id)sender
+{
+    [self selectPane:[sender tag] animated:YES];
+}
+
+
+- (IBAction) updatePreferences:(id)sender
 {
     Preferences *preferences = [Preferences sharedInstance];
 
@@ -165,6 +280,9 @@
     } else if (sender == o_arrowKeysButton) {
         [preferences setArrowKeysEnabled:([sender state] == NSOnState)];
 
+    } else if (sender == o_showLockGuidesButton) {
+        [preferences setShowsLockGuides:([sender state] == NSOnState)];
+
     } else if (sender == o_showsHoldColorSlidersButton) {
         [preferences setShowsHoldColorSliders:([sender state] == NSOnState)];
 
@@ -175,11 +293,54 @@
         [preferences setUsesMainColorSpaceForCopyAsText:([sender state] == NSOnState)];
 
     } else if (sender == o_showApplicationShortcutView) {
-        [preferences setShowApplicationShortcut:[o_showApplicationShortcutView shortcut]];
+        [preferences setShowApplicationShortcut:[sender shortcut]];
     
     } else if (sender == o_holdColorShortcutView) {
-        [preferences setHoldColorShortcut:[o_holdColorShortcutView shortcut]];
+        [preferences setHoldColorShortcut:[sender shortcut]];
+
+    } else if (sender == o_lockPositionShortcutView) {
+        [preferences setLockPositionShortcut:[sender shortcut]];
+
+    } else if (sender == o_nsColorSnippetShortcutView) {
+        [preferences setNsColorSnippetShortcut:[sender shortcut]];
+    
+    } else if (sender == o_uiColorSnippetShortcutView) {
+        [preferences setUiColorSnippetShortcut:[sender shortcut]];
+
+    } else if (sender == o_hexColorSnippetShortcutView) {
+        [preferences setHexColorSnippetShortcut:[sender shortcut]];
+
+    } else if (sender == o_rgbColorSnippetShortcutView) {
+        [preferences setRgbColorSnippetShortcut:[sender shortcut]];
+
+    } else if (sender == o_rgbaColorSnippetShortcutView) {
+        [preferences setRgbaColorSnippetShortcut:[sender shortcut]];
+
+    } else if (sender == o_enableSystemClippedColorButton) {
+        [preferences setHighlightsSystemClippedValues:([sender state] == NSOnState)];
+
+    } else if (sender == o_systemClippedColorWell) {
+        [preferences setColorForSystemClippedValues:[sender color]];
+
+    } else if (sender == o_useSystemClippedValueButton) {
+        [preferences setUsesSystemClippedValues:([sender state] == NSOnState)];
+
+    } else if (sender == o_enableMyClippedColorButton) {
+        [preferences setHighlightsMyClippedValues:([sender state] == NSOnState)];
+
+    } else if (sender == o_myClippedColorWell) {
+        [preferences setColorForMyClippedValues:[sender color]];
+
+    } else if (sender == o_useMyClippedValueButton) {
+        [preferences setUsesMyClippedValues:([sender state] == NSOnState)];
     }
 }
+
+
+- (IBAction) learnAboutConversion:(id)sender
+{
+    
+}
+
 
 @end

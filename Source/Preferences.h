@@ -20,7 +20,7 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic, assign) ColorMode colorMode;
 @property (nonatomic, assign) ColorMode holdColorMode;
-@property (nonatomic, assign) ColorProfileType colorProfileType;
+@property (nonatomic, assign) ColorConversion colorConversion;
 
 @property (nonatomic, assign) NSInteger zoomLevel;
 @property (nonatomic, assign) NSInteger apertureSize;
@@ -34,8 +34,23 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, strong) NSString *rgbColorSnippetTemplate;
 @property (nonatomic, strong) NSString *rgbaColorSnippetTemplate;
 
+@property (nonatomic, assign) BOOL     usesMyClippedValues;
+@property (nonatomic, assign) BOOL     highlightsMyClippedValues;
+@property (nonatomic, strong) NSColor *colorForMyClippedValues;
+
+@property (nonatomic, assign) BOOL     usesSystemClippedValues;
+@property (nonatomic, assign) BOOL     highlightsSystemClippedValues;
+@property (nonatomic, strong) NSColor *colorForSystemClippedValues;
+
 @property (nonatomic, strong) Shortcut *showApplicationShortcut;
 @property (nonatomic, strong) Shortcut *holdColorShortcut;
+@property (nonatomic, strong) Shortcut *lockPositionShortcut;
+
+@property (nonatomic, strong) Shortcut *nsColorSnippetShortcut;
+@property (nonatomic, strong) Shortcut *uiColorSnippetShortcut;
+@property (nonatomic, strong) Shortcut *hexColorSnippetShortcut;
+@property (nonatomic, strong) Shortcut *rgbColorSnippetShortcut;
+@property (nonatomic, strong) Shortcut *rgbaColorSnippetShortcut;
 
 @property (nonatomic, assign) BOOL updatesContinuously;
 @property (nonatomic, assign) BOOL floatWindow;
@@ -47,6 +62,7 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic, assign) BOOL showsHoldColorSliders;
 @property (nonatomic, assign) BOOL usesPoundPrefix;
 @property (nonatomic, assign) BOOL showsHoldLabels;
+@property (nonatomic, assign) BOOL showsLockGuides;
 @property (nonatomic, assign) BOOL usesDifferentColorSpaceInHoldColor;
 @property (nonatomic, assign) BOOL usesMainColorSpaceForCopyAsText;
 

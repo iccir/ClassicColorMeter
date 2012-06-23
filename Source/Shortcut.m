@@ -14,7 +14,7 @@
 
 
 static NSString *sNumericPadMarker    = @"<<<PAD>>>";
-static NSString * __strong *sKeyCodeToStringMap = nil;
+static NSString * __unsafe_unretained *sKeyCodeToStringMap = nil;
 
 static NSString *sGetPreferencesString(NSUInteger modifierFlags, unsigned short keyCode)
 {
@@ -72,17 +72,11 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 
 @implementation Shortcut
 
-@synthesize modifierFlags = _modifierFlags,
-            keyCode       = _keyCode;
-
-#pragma mark -
-#pragma mark Class Methods
-
 + (void) initialize
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sKeyCodeToStringMap = (NSString * __strong *) calloc(sizeof(void *), 128);
+        sKeyCodeToStringMap = (NSString * __unsafe_unretained *) calloc(sizeof(void *), 128);
 
         sKeyCodeToStringMap[36]  = @"\u21A9";
         sKeyCodeToStringMap[48]  = @"\u21E5";
@@ -156,10 +150,10 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 {
     NSMutableString *result = [NSMutableString stringWithCapacity:4];
     
-    if (modifierFlags & NSControlKeyMask)   [result appendFormat:@"%C", kControlUnicode];
-    if (modifierFlags & NSAlternateKeyMask) [result appendFormat:@"%C", kOptionUnicode];
-    if (modifierFlags & NSShiftKeyMask)     [result appendFormat:@"%C", kShiftUnicode];
-    if (modifierFlags & NSCommandKeyMask)   [result appendFormat:@"%C", kCommandUnicode];
+    if (modifierFlags & NSControlKeyMask)   [result appendFormat:@"%C", (unsigned short)kControlUnicode];
+    if (modifierFlags & NSAlternateKeyMask) [result appendFormat:@"%C", (unsigned short)kOptionUnicode];
+    if (modifierFlags & NSShiftKeyMask)     [result appendFormat:@"%C", (unsigned short)kShiftUnicode];
+    if (modifierFlags & NSCommandKeyMask)   [result appendFormat:@"%C", (unsigned short)kCommandUnicode];
 
     return result;
 }

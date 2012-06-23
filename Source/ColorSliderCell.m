@@ -9,31 +9,23 @@
 #import "ColorSliderCell.h"
 #import <AppKit/AppKit.h>
 
-@interface ColorSliderCell ()
-@end
-
-
 
 @implementation ColorSliderCell
-
-@synthesize component = _component,
-            color     = _color;
-
 
 #pragma mark -
 #pragma mark Drawing
 
-static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NSRect inRect)
+- (void) _drawColorBackgroundInRect:(CGRect)inRect context:(CGContextRef)context
 {
-    CGRect   rect     = inRect;
-    CGFloat  maxX     = NSMaxX(inRect);
+    CGRect  rect = inRect;
+    CGFloat maxX = NSMaxX(inRect);
 
-    ColorComponent component = self->_component;
+    ColorComponent component = _component;
 
     rect.size.width = 1.0;
     
     if (component != ColorComponentNone) {
-        Color *color = [self->_color copy];
+        Color *color = [_color copy];
     
         while (rect.origin.x <= maxX) {
             float percent = (rect.origin.x - inRect.origin.x) / inRect.size.width;
@@ -81,7 +73,8 @@ static void sDrawColorBackground(ColorSliderCell *self, CGContextRef context, NS
         {
             NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:barRect xRadius:minRadius yRadius:minRadius];
             [barPath addClip];
-            sDrawColorBackground(self, context, aRect);
+            
+            [self _drawColorBackgroundInRect:aRect context:context];
         }
         CGContextRestoreGState(context);
 

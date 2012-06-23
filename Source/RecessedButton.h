@@ -8,11 +8,11 @@
 
 #import <AppKit/AppKit.h>
 
+
 @interface RecessedButtonCell : NSButtonCell
-
-
 @end
 
-@interface RecessedButton : NSButton
 
+@interface RecessedButton : NSButton
+- (void) doPopOutAnimation;
 @end

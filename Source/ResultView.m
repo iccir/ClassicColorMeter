@@ -20,13 +20,6 @@ static CGFloat sDistanceForDrag = 10.0;
 
 @implementation ResultView
 
-@synthesize color        = _color,
-            delegate     = _delegate,
-            clickEnabled = _clickEnabled,
-            dragEnabled  = _dragEnabled,
-            mouseDownLocation = _mouseDownLocation,
-            inDrag = _inDrag;
-
 
 - (BOOL) isOpaque
 {
@@ -138,8 +131,10 @@ static CGFloat sDistanceForDrag = 10.0;
     CGContextSetRGBFillColor(context, [_color red], [_color green], [_color blue], 1.0);
     CGContextFillRect(context, bounds);
     
-    CGContextSetGrayStrokeColor(context, 0.0, 0.5);
-    CGContextStrokeRect(context, NSInsetRect(bounds, 0.5, 0.5));
+    if (_drawsBorder) {
+        CGContextSetGrayStrokeColor(context, 0.0, 0.5);
+        CGContextStrokeRect(context, NSInsetRect(bounds, 0.5, 0.5));
+    }
 
     CGContextRestoreGState(context);
 }
@@ -149,6 +144,15 @@ static CGFloat sDistanceForDrag = 10.0;
 {
     if (_color != color) {
         _color = color;
+        [self setNeedsDisplay:YES];
+    }
+}
+
+
+- (void) setDrawsBorder:(BOOL)drawsBorder
+{
+    if (_drawsBorder != drawsBorder) {
+        _drawsBorder = drawsBorder;
         [self setNeedsDisplay:YES];
     }
 }

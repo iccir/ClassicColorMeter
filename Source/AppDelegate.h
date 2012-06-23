@@ -35,6 +35,8 @@
 - (IBAction) copyImage:(id)sender;
 - (IBAction) saveImage:(id)sender;
 
+- (IBAction) showColorWindow:(id)sender;
+
 // Color menu
 - (IBAction) holdColor:(id)sender;
 - (IBAction) pasteTextAsColor:(id)sender;
@@ -58,7 +60,6 @@
 @property (nonatomic, strong) IBOutlet ResultView    *resultView;
 
 @property (nonatomic, strong) IBOutlet NSTextField   *apertureSizeLabel;
-@property (nonatomic, strong) IBOutlet NSTextField   *statusText;
 
 @property (nonatomic, strong) IBOutlet NSTextField   *label1;
 @property (nonatomic, strong) IBOutlet NSTextField   *label2;
@@ -76,5 +77,8 @@
 @property (nonatomic, strong) IBOutlet NSSlider      *slider1;
 @property (nonatomic, strong) IBOutlet NSSlider      *slider2;
 @property (nonatomic, strong) IBOutlet NSSlider      *slider3;
+
+@property (nonatomic, strong) IBOutlet NSWindow      *colorWindow;
+@property (nonatomic, weak)   IBOutlet ResultView    *colorResultView;
 
 @end

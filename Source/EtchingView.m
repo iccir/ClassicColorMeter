@@ -14,12 +14,6 @@
 
 @implementation EtchingView
 
-@synthesize activeDarkOpacity    = _activeDarkOpacity,
-            activeLightOpacity   = _activeLightOpacity,
-            inactiveDarkOpacity  = _inactiveDarkOpacity,
-            inactiveLightOpacity = _inactiveLightOpacity;
-
-
 - (void) drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];

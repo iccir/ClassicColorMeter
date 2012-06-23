@@ -14,38 +14,13 @@
 static id sSharedInstance = nil;
 
 @interface ShortcutManager ()
-
-- (BOOL) _handleHotKeyID:(NSUInteger)hotKeyID;
-- (void) _unregisterShortcut:(Shortcut *)shortcut;
-
 @property (nonatomic, strong) NSHashTable *listeners;
 @property (nonatomic, strong) NSMutableDictionary *shortcutIDToRefMap;
 @property (nonatomic, strong) NSMutableDictionary *shortcutIDToShortcutMap;
-
 @end
 
 
-static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *inUserData)
-{
-	@autoreleasepool {
-		EventHotKeyID hotKeyID = { 0, 0 };
-
-		if (noErr == GetEventParameter(inEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID)) {
-        	[(__bridge ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
-    	}
-    }
-
-    return noErr;
-}
-
-
 @implementation ShortcutManager
-
-@synthesize shortcuts = _shortcuts,
-            listeners = _listeners,
-            shortcutIDToRefMap = _shortcutIDToRefMap,
-            shortcutIDToShortcutMap = _shortcutIDToShortcutMap;
-
 
 + (BOOL) hasSharedInstance
 {
@@ -108,6 +83,20 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
     }
 
     return yn;
+}
+
+
+static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEvent, void *inUserData)
+{
+	@autoreleasepool {
+		EventHotKeyID hotKeyID = { 0, 0 };
+
+		if (noErr == GetEventParameter(inEvent, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID)) {
+        	[(__bridge ShortcutManager *)inUserData _handleHotKeyID:(NSUInteger)hotKeyID.id];
+    	}
+    }
+
+    return noErr;
 }
 
 

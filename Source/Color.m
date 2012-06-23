@@ -8,28 +8,507 @@
 
 #import "Color.h"
 
-@interface Color ()
-@end
+#pragma mark -
+#pragma mark Color Class
+
+@implementation Color {
+    BOOL  _rawValid;
+    float _rawRed;
+    float _rawGreen;
+    float _rawBlue;
+}
 
 
-@implementation Color
-
-@synthesize red           = _red,
-            green         = _green,
-            blue          = _blue,
-            hue           = _hue,
-            saturationHSB = _saturationHSB,
-            brightness    = _brightness,
-            saturationHSL = _saturationHSL,
-            lightness     = _lightness;
-
-
-static void sDidChangeHSB(Color *self)
++ (Color *) colorWithString:(NSString *)string
 {
-    float hue        = self->_hue;
-    float saturation = self->_saturationHSB;
-    float brightness = self->_brightness;
+    return sGetColorFromParsedString(string);
+}
 
+
+- (id) copyWithZone:(NSZone *)zone
+{
+    Color *result = [[Color alloc] init];
+    
+    result->_red           = _red;
+    result->_green         = _green;
+    result->_blue          = _blue;
+    result->_rawValid      = _rawValid;
+    result->_rawRed        = _rawRed;
+    result->_rawGreen      = _rawGreen;
+    result->_rawBlue       = _rawBlue;
+    result->_hue           = _hue;
+    result->_saturationHSL = _saturationHSL;
+    result->_saturationHSB = _saturationHSB;
+    result->_brightness    = _brightness;
+    result->_lightness     = _lightness;
+
+    return result;
+}
+
+
+#pragma mark -
+#pragma mark Static Functions
+
+static inline float sClamp(float f, BOOL *didClamp)
+{
+    if (f > 1.0) {
+        *didClamp = YES;
+        return 1.0;
+    } else if (f < 0.0) {
+        *didClamp = YES;
+        return 0.0;
+    } else {
+        *didClamp = NO;
+        return f;
+    }
+}
+
+
+static Color *sGetColorFromParsedString(NSString *stringToParse)
+{
+    if (!stringToParse) return nil;
+
+    __block Color *color = nil;
+
+    float (^scanHex)(NSString *, float) = ^(NSString *string, float maxValue) {
+        const char *s = [string UTF8String];
+        float result = s ? (strtol(s, NULL, 16) / maxValue) : 0.0;
+        return result;
+    };
+
+    void (^withPattern)(NSString *, void(^)(NSArray *)) = ^(NSString *pattern, void (^callback)(NSArray *result)) {
+        if (color) return;
+
+        NSRegularExpression  *re     = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:NULL];
+        NSTextCheckingResult *result = [re firstMatchInString:stringToParse options:0 range:NSMakeRange(0, [stringToParse length])];
+
+        NSInteger numberOfRanges = [result numberOfRanges];
+        if ([result numberOfRanges] > 1) {
+            NSMutableArray *captureGroups = [NSMutableArray array];
+            
+            NSInteger i;
+            for (i = 1; i < numberOfRanges; i++) {
+                NSRange captureRange = [result rangeAtIndex:i];
+                [captureGroups addObject:[stringToParse substringWithRange:captureRange]];
+            }
+            
+            callback(captureGroups);
+        }
+    };
+
+    withPattern(@"#([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[Color alloc] init];
+            
+            [color setRed: scanHex([result objectAtIndex:0], 65535.0)
+                    green: scanHex([result objectAtIndex:1], 65535.0)
+                     blue: scanHex([result objectAtIndex:2], 65535.0)];
+        }
+    });
+    
+    withPattern(@"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[Color alloc] init];
+            
+            [color setRed: scanHex([result objectAtIndex:0], 255.0)
+                    green: scanHex([result objectAtIndex:1], 255.0)
+                     blue: scanHex([result objectAtIndex:2], 255.0)];
+        }
+    });
+
+    withPattern(@"rgb\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[Color alloc] init];
+            
+            [color setRed: ([[result objectAtIndex:0] floatValue] / 255.0)
+                    green: ([[result objectAtIndex:1] floatValue] / 255.0)
+                     blue: ([[result objectAtIndex:2] floatValue] / 255.0)];
+        }
+    });
+
+    withPattern(@"rgba\\s*\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*\\)", ^(NSArray *result) {
+        if ([result count] == 4) {
+            color = [[Color alloc] init];
+            
+            [color setRed: ([[result objectAtIndex:0] floatValue] / 255.0)
+                    green: ([[result objectAtIndex:1] floatValue] / 255.0)
+                     blue: ([[result objectAtIndex:2] floatValue] / 255.0)];
+        }
+    });
+
+    withPattern(@"([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", ^(NSArray *result) {
+        if ([result count] == 3) {
+            color = [[Color alloc] init];
+            
+            [color setRed: scanHex([result objectAtIndex:0], 255.0)
+                    green: scanHex([result objectAtIndex:1], 255.0)
+                     blue: scanHex([result objectAtIndex:2], 255.0)];
+        }
+    });
+
+    return color;
+}
+
+
+static void sConvertColor(Color *inColor, CFStringRef profileName, float *outFloat0, float *outFloat1, float *outFloat2)
+{
+    ColorSyncProfileRef fromProfile = ColorSyncProfileCreateWithDisplayID(CGMainDisplayID());
+    ColorSyncProfileRef toProfile   = ColorSyncProfileCreateWithName(profileName);
+    
+    NSDictionary *from = [[NSDictionary alloc] initWithObjectsAndKeys:
+        (__bridge id)fromProfile,                       (__bridge id)kColorSyncProfile,
+        (__bridge id)kColorSyncRenderingIntentRelative, (__bridge id)kColorSyncRenderingIntent,
+        (__bridge id)kColorSyncTransformDeviceToPCS,    (__bridge id)kColorSyncTransformTag,
+        nil];
+
+    NSDictionary *to = [[NSDictionary alloc] initWithObjectsAndKeys:
+        (__bridge id)toProfile,                         (__bridge id)kColorSyncProfile,
+        (__bridge id)kColorSyncRenderingIntentRelative, (__bridge id)kColorSyncRenderingIntent,
+        (__bridge id)kColorSyncTransformPCSToDevice,    (__bridge id)kColorSyncTransformTag,
+        nil];
+        
+    NSArray      *profiles = [[NSArray alloc] initWithObjects:from, to, nil];
+    NSDictionary *options  = [[NSDictionary alloc] initWithObjectsAndKeys:
+        (__bridge id)kColorSyncBestQuality, (__bridge id)kColorSyncConvertQuality,
+        nil]; 
+
+    ColorSyncTransformRef transform = ColorSyncTransformCreate((__bridge CFArrayRef)profiles, (__bridge CFDictionaryRef)options);
+    
+    if (transform) {
+        float red, green, blue;
+        [inColor getRed:&red green:&green blue:&blue];
+        
+        float input[3]  = { red, green, blue };
+        float output[3] = { 0.0, 0.0, 0.0 };
+
+        ColorSyncTransformConvert(transform, 1, 1, &output[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, &input[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, NULL);
+
+        *outFloat0 = output[0];
+        *outFloat1 = output[1];
+        *outFloat2 = output[2];
+    
+        CFRelease(transform);
+    }
+
+    if (fromProfile) CFRelease(fromProfile);
+    if (toProfile)   CFRelease(toProfile);
+}
+
+
+static void sMakeStrings(
+    Color *color,
+    ColorMode mode,
+    ColorStringOptions options,
+    NSString * __autoreleasing *outClipboard,
+    NSString * __autoreleasing outString[3],
+    NSColor  * __autoreleasing outColor[3]
+)
+{
+    NSString *value1    = nil;
+    NSString *value2    = nil;
+    NSString *value3    = nil;
+    NSString *clipboard = nil;
+
+    float red, green, blue;
+    [color getRed:&red green:&green blue:&blue];
+
+    BOOL lowercaseHex    = (options & ColorStringUsesLowercaseHex) > 0;
+    BOOL usesPoundPrefix = (options & ColorStringUsesPoundPrefix)  > 0;
+    
+    BOOL clipped1 = NO;
+    BOOL clipped2 = NO;
+    BOOL clipped3 = NO;
+    BOOL clamped1 = NO;
+    BOOL clamped2 = NO;
+    BOOL clamped3 = NO;
+
+
+    if (color->_rawValid) {
+        long rRaw = lround(color->_rawRed   * 255);
+        long gRaw = lround(color->_rawGreen * 255);
+        long bRaw = lround(color->_rawBlue  * 255);
+        long r255 = lround(red   * 255);
+        long g255 = lround(green * 255);
+        long b255 = lround(blue  * 255);
+    
+        if (rRaw >= 255 && r255 <= 254) {
+            clamped1 = YES;
+            red = 1.0;
+
+        } else if (rRaw <= 0 && r255 >= 1) {
+            clamped1 = YES;
+            red = 0.0;
+        }
+
+        if (gRaw >= 255 && g255 <= 254) {
+            clamped2 = YES;
+            green = 1.0;
+
+        } else if (gRaw <= 0 && g255 >= 1) {
+            clamped2 = YES;
+            green = 0.0;
+        }
+
+        if (bRaw >= 255 && b255 <= 254) {
+            clamped3 = YES;
+            blue = 1.0;
+        
+        } else if (bRaw <= 0 && b255 >= 1) {
+            clamped3 = YES;
+            blue = 0.0;
+        }
+    }
+
+    if (mode == ColorMode_RGB_Percentage) {
+        red   *= 100;
+        green *= 100;
+        blue  *= 100;
+
+        // Clip if needed
+        {
+            if      (red   >= 100.0499) { red   = 100.0; clipped1 = YES; }
+            else if (red   <=  -0.0499) { red   =   0.0; clipped1 = YES; }
+
+            if      (green >= 100.0499) { green = 100.0; clipped2 = YES; }
+            else if (green <=  -0.0499) { green =   0.0; clipped2 = YES; }
+
+            if      (blue  >= 100.0499) { blue  = 100.0; clipped3 = YES; }
+            else if (blue  <=  -0.0499) { blue  =   0.0; clipped3 = YES; }
+        }
+
+        value1 = [NSString stringWithFormat:@"%0.1lf", red];
+        value2 = [NSString stringWithFormat:@"%0.1lf", green];
+        value3 = [NSString stringWithFormat:@"%0.1lf", blue];
+
+    } else if (mode == ColorMode_RGB_Value_8 || mode == ColorMode_RGB_HexValue_8) {
+        NSString *format = @"%ld";
+        
+        if (mode == ColorMode_RGB_HexValue_8) {
+            format = lowercaseHex ? @"%02lx" : @"%02lX";
+        }
+        
+        long redLong   = lroundf(red   * 255);
+        long greenLong = lroundf(green * 255);
+        long blueLong  = lroundf(blue  * 255);
+        
+        {
+            if      (redLong   > 255) { redLong   = 255; clipped1 = YES; }
+            else if (redLong   < 0)   { redLong   = 0;   clipped1 = YES; }
+
+            if      (greenLong > 255) { greenLong = 255; clipped2 = YES; }
+            else if (greenLong < 0)   { greenLong = 0;   clipped2 = YES; }
+
+            if      (blueLong  > 255) { blueLong  = 255; clipped3 = YES; }
+            else if (blueLong  < 0)   { blueLong  = 0;   clipped3 = YES; }
+        }
+        
+        value1 = [NSString stringWithFormat:format, redLong];
+        value2 = [NSString stringWithFormat:format, greenLong];
+        value3 = [NSString stringWithFormat:format, blueLong];
+
+        if (mode == ColorMode_RGB_HexValue_8) { 
+            if (usesPoundPrefix) {
+                clipboard = [NSString stringWithFormat:@"#%@%@%@", value1, value2, value3];
+            } else {
+                clipboard = [NSString stringWithFormat: @"%@%@%@", value1, value2, value3];
+            }
+        }
+
+    } else if (mode == ColorMode_RGB_Value_16 || mode == ColorMode_RGB_HexValue_16) {
+        NSString *format = @"%ld";
+        
+        if (mode == ColorMode_RGB_HexValue_16) {
+            format = lowercaseHex ? @"%04lx" : @"%04lX";
+        }
+
+        long redLong   = lroundf(red   * 65535);
+        long greenLong = lroundf(green * 65535);
+        long blueLong  = lroundf(blue  * 65535);
+        
+        {
+            if      (redLong   > 65535) { redLong   = 65535; clipped1 = YES; }
+            else if (redLong   < 0)     { redLong   = 0;     clipped1 = YES; }
+
+            if      (greenLong > 65535) { greenLong = 65535; clipped2 = YES; }
+            else if (greenLong < 0)     { greenLong = 0;     clipped2 = YES; }
+
+            if      (blueLong  > 65535) { blueLong  = 65535; clipped3 = YES; }
+            else if (blueLong  < 0)     { blueLong  = 0;     clipped3 = YES; }
+        }
+
+        value1 = [NSString stringWithFormat:format, redLong];
+        value2 = [NSString stringWithFormat:format, greenLong];
+        value3 = [NSString stringWithFormat:format, blueLong];
+
+    } else if (mode >= ColorMode_YPbPr_601 && mode <= ColorMode_YCbCr_709) {
+        BOOL is601     = (mode == ColorMode_YPbPr_601 || mode == ColorMode_YCbCr_601);
+        BOOL isDigital = (mode == ColorMode_YCbCr_601 || mode == ColorMode_YCbCr_709);
+
+        double kr = is601 ? 0.299 : 0.2126;
+        double kb = is601 ? 0.114 : 0.0722;
+
+        double y  = (kr * red) + ((1 - (kr + kb)) * green) + (kb * blue);
+        double pb = 0.5 * ((blue - y) / (1 - kb));
+        double pr = 0.5 * ((red  - y) / (1 - kr));
+        
+        if (isDigital) {
+            value1 = [NSString stringWithFormat:@"%ld", (long)(16  + round(y  * 219.0))];
+            value2 = [NSString stringWithFormat:@"%ld", (long)(128 + round(pb * 224.0))];
+            value3 = [NSString stringWithFormat:@"%ld", (long)(128 + round(pr * 224.0))];
+
+        } else {
+            value1 = [NSString stringWithFormat:@"%0.03lf", y];
+            value2 = [NSString stringWithFormat:@"%0.03lf", pb];
+            value3 = [NSString stringWithFormat:@"%0.03lf", pr];
+        }
+
+    } else if (ColorModeIsXYZ(mode)) {
+        float x = 0.0;
+        float y = 0.0;
+        float z = 0.0;
+        sConvertColor(color, kColorSyncGenericXYZProfile, &x, &y, &z);
+
+        if (mode == ColorMode_CIE_1931) {
+            float divisor = x + y + z;
+
+            value1    = [NSString stringWithFormat:@"%0.03lf", (divisor == 0.0) ? 0.0 : (x / divisor)];
+            value2    = [NSString stringWithFormat:@"%0.03lf", (divisor == 0.0) ? 0.0 : (y / divisor)];
+            value3    = [NSString stringWithFormat:@"%0.03lf", (y * 100)];
+        
+        } else if (mode == ColorMode_CIE_1976) {
+            float divisor = (x + (15 * y) + (3 * z));
+
+            value1    = [NSString stringWithFormat:@"%0.03lf", (divisor == 0.0) ? 0.0 : ((4 * x) / divisor)];
+            value2    = [NSString stringWithFormat:@"%0.03lf", (divisor == 0.0) ? 0.0 : ((9 * y) / divisor)];
+            value3    = [NSString stringWithFormat:@"%0.03lf", (y * 100)];
+        
+        } else if (mode == ColorMode_Tristimulus) {
+            value1    = [NSString stringWithFormat:@"%0.03lf", x * 100];
+            value2    = [NSString stringWithFormat:@"%0.03lf", y * 100];
+            value3    = [NSString stringWithFormat:@"%0.03lf", z * 100];
+        }
+        
+    } else if (mode == ColorMode_CIE_Lab) {
+        float l = 0.0;
+        float a = 0.0;
+        float b = 0.0;
+        sConvertColor(color, kColorSyncGenericLabProfile, &l, &a, &b);
+        
+        value1    = [NSString stringWithFormat:@"%0.03lf", (l * 100.0)];
+        value2    = [NSString stringWithFormat:@"%0.03lf", (a * 256.0) - 128.0];
+        value3    = [NSString stringWithFormat:@"%0.03lf", (b * 256.0) - 128.0];
+
+    } else if ((mode == ColorMode_HSB) || (mode == ColorMode_HSL)) {
+        float f1, f2, f3;
+        if (mode == ColorMode_HSB) {
+            [color getHue:&f1 saturation:&f2 brightness:&f3];
+        } else {
+            [color getHue:&f1 saturation:&f2 lightness:&f3];
+        }
+        
+        long h  = lround(f1 * 360);
+        long s  = lround(f2 * 100);
+        long bl = lround(f3 * 100);
+
+        while (h > 360) { h -= 360; }
+        while (h < 0)   { h += 360; }
+
+        if      (s > 100) { s = 100; clipped2 = YES; }
+        else if (s < 0)   { s = 0;   clipped2 = YES; }
+
+        if      (bl > 100) { bl = 100; clipped3 = YES; }
+        else if (bl < 0)   { bl = 0;   clipped3 = YES; }
+
+        value1 = [NSString stringWithFormat:@"%ld", h];
+        value2 = [NSString stringWithFormat:@"%ld", s];
+        value3 = [NSString stringWithFormat:@"%ld", bl];
+    }
+    
+    if (!clipboard) {
+        clipboard = [NSString stringWithFormat:@"%@\t%@\t%@", value1, value2, value3];
+    }
+
+    if (outString) {
+        outString[0] = value1;
+        outString[1] = value2;
+        outString[2] = value3;
+    }
+
+    if (outColor) {
+        NSColor *(^getColor)(BOOL, BOOL) = ^(BOOL clamped, BOOL clipped) {
+            if (clamped) {
+                return [NSColor blueColor];
+            } else if (clipped) {
+                return [NSColor redColor];
+            } else {
+                return [NSColor blackColor];
+            }
+        };
+
+        outColor[0] = getColor(clamped1, clipped1);
+        outColor[1] = getColor(clamped2, clipped2);
+        outColor[2] = getColor(clamped3, clipped3);
+    }
+
+    if (outClipboard) {
+        *outClipboard = clipboard;
+    }
+}
+
+
+#pragma mark -
+#pragma mark Private
+
+- (void) _didChangeRGB
+{
+    float r = _red;
+    float g = _green;
+    float b = _blue;
+
+    float maxRGB = fmaxf(fmaxf(r, g), b);
+    float minRGB = fminf(fminf(r, g), b);
+    float delta  = maxRGB - minRGB;
+
+    _hue           = 0.0;
+    _saturationHSB = 0.0;
+    _saturationHSL = 0.0;
+    _brightness    = maxRGB;
+    _lightness     = (minRGB + maxRGB) * 0.5;
+
+    if (maxRGB != 0.0) {
+        _saturationHSB = delta / maxRGB;
+    }
+    
+    // Override previous value for now
+    float divisor =  (1 - fabsf((2 * _lightness) - 1));
+    if (divisor != 0) {
+        _saturationHSL = delta / divisor;
+    }
+
+    if (_saturationHSB != 0.0) {
+        if (maxRGB == r) {
+            _hue = 0 + ((g - b) / delta);
+        } else if (maxRGB == g) {
+            _hue = 2 + ((b - r) / delta);
+        } else if (maxRGB == b) {
+            _hue = 4 + ((r - g) / delta);
+        }
+    }
+    
+    while (_hue < 0.0) {
+        _hue += 6.0;
+    }
+    
+    _hue /= 6.0;
+}
+
+
+- (void) _didChangeHSB
+{
+    float hue        = _hue;
+    float saturation = _saturationHSB;
+    float brightness = _brightness;
+    
     float r = 0.0;
     float g = 0.0;
     float b = 0.0;
@@ -88,28 +567,27 @@ static void sDidChangeHSB(Color *self)
         }
     }
 
-    self->_red   = r;
-    self->_green = g;
-    self->_blue  = b;
+    _rawValid = NO;
+    _red   = r;
+    _green = g;
+    _blue  = b;
 }
 
 
-static float sHueToRGB(float p, float q, float t)
+- (void) _didChangeHSL
 {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < (1.0 / 6.0)) return p + (q - p) * 6.0 * t;
-    if (t < (1.0 / 2.0)) return q;
-    if (t < (2.0 / 3.0)) return p + (q - p) * ((2.0 / 3.0) - t) * 6.0;
-    return p;
-}
+    float (^convertHue)(float, float, float) = ^(float p, float q, float t) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < (1.0 / 6.0)) return (float)(p + (q - p) * 6.0 * t);
+        if (t < (1.0 / 2.0)) return q;
+        if (t < (2.0 / 3.0)) return (float)(p + (q - p) * ((2.0 / 3.0) - t) * 6.0);
+        return p;
+    };
 
-
-static void sDidChangeHSL(Color *self)
-{
-    float hue        = self->_hue;
-    float saturation = self->_saturationHSL;
-    float lightness  = self->_lightness;
+    float hue        = _hue;
+    float saturation = _saturationHSL;
+    float lightness  = _lightness;
 
     float r = 0.0;
     float g = 0.0;
@@ -128,120 +606,149 @@ static void sDidChangeHSL(Color *self)
          
         float p = (2 * lightness) - q;
 
-        r = sHueToRGB(p, q, hue + (1.0 / 3.0));
-        g = sHueToRGB(p, q, hue              );
-        b = sHueToRGB(p, q, hue - (1.0 / 3.0));
+        r = convertHue(p, q, hue + (1.0 / 3.0));
+        g = convertHue(p, q, hue              );
+        b = convertHue(p, q, hue - (1.0 / 3.0));
     }
 
-    self->_red   = r;
-    self->_green = g;
-    self->_blue  = b;
-}
-
-
-static void sDidChangeRGB(Color *self)
-{
-    float r = self->_red;
-    float g = self->_green;
-    float b = self->_blue;
-    
-    float maxRGB = fmaxf(fmaxf(r, g), b);
-    float minRGB = fminf(fminf(r, g), b);
-    float delta  = maxRGB - minRGB;
-
-    float hue           = 0.0;
-    float saturationHSB = 0.0;
-    float saturationHSL = 0.0;
-    float brightness    = maxRGB;
-    float lightness     = (minRGB + maxRGB) * 0.5;
-
-    if (maxRGB != 0.0) {
-        saturationHSB = delta / maxRGB;
-    }
-    
-    // Override previous value for now
-    float divisor =  (1 - fabsf((2 * lightness) - 1));
-    if (divisor != 0) {
-        saturationHSL = delta / divisor;
-    }
-
-    if (saturationHSB != 0.0) {
-        if (maxRGB == r) {
-            hue = 0 + ((g - b) / delta);
-        } else if (maxRGB == g) {
-            hue = 2 + ((b - r) / delta);
-        } else if (maxRGB == b) {
-            hue = 4 + ((r - g) / delta);
-        }
-    }
-    
-    while (hue < 0.0) {
-        hue += 6.0;
-    }
-    
-    hue /= 6.0;
-    
-    self->_hue           = hue;
-    self->_saturationHSB = saturationHSB;
-    self->_brightness    = brightness;
-    self->_saturationHSL = saturationHSL;
-    self->_lightness     = lightness;
-}
-
-
-- (id) copyWithZone:(NSZone *)zone
-{
-    Color *result = [[Color alloc] init];
-    
-    result->_red           = _red;
-    result->_green         = _green;
-    result->_blue          = _blue;
-    result->_hue           = _hue;
-    result->_saturationHSL = _saturationHSL;
-    result->_saturationHSB = _saturationHSB;
-    result->_brightness    = _brightness;
-    result->_lightness     = _lightness;
-
-    return result;
+    _rawValid = NO;
+    _red   = r;
+    _green = g;
+    _blue  = b;
 }
 
 
 #pragma mark -
 #pragma mark Public Methods
 
+- (void) getComponentsForMode: (ColorMode) mode
+                      options: (NSUInteger) options
+                      strings: (NSString * __autoreleasing [3]) strings
+                       colors: (NSColor  * __autoreleasing [3]) colors
+{
+    sMakeStrings(self, mode, options, NULL, strings, colors);
+}
+
+
+- (NSString *) clipboardStringForMode:(ColorMode)mode options:(NSUInteger)options
+{
+    NSString *result;
+    sMakeStrings(self, mode, options, &result, NULL, NULL);
+    return result;
+}
+
+
+- (NSString *) codeSnippetForTemplate:(NSString *)template options:(NSUInteger)options
+{
+    NSMutableString *result = [template mutableCopy];
+
+    BOOL lowercaseHex = (options & ColorStringUsesLowercaseHex) > 0;
+
+    void (^replaceHex)(NSString *, float) = ^(NSString *key, float component) {
+        if (component > 1.0) component = 1.0;
+        if (component < 0.0) component = 0.0;
+
+        NSString *hexFormat = lowercaseHex ? @"%02x" : @"%02X";
+        NSString *hexValue = [NSString stringWithFormat:hexFormat, (NSInteger)(component * 255.0)];
+        [result replaceOccurrencesOfString:key withString:hexValue options:NSLiteralSearch range:NSMakeRange(0, [result length])];
+    };
+    
+    void (^replaceNumber)(NSString *, float, float) = ^(NSString *key, float multiplier, float component) {
+        NSRange range = [result rangeOfString:key];
+
+        if (range.location != NSNotFound) {
+            if (component > 1.0) component = 1.0;
+            if (component < 0.0) component = 0.0;
+
+            NSString *string = [NSString stringWithFormat: @"%ld", lroundf(multiplier * component)];
+            
+            if (string) {
+                [result replaceOccurrencesOfString:key withString:string options:NSLiteralSearch range:NSMakeRange(0, [result length])];
+            }
+        }
+    };
+    
+    void (^replaceFloat)(NSString *, float) = ^(NSString *key, float component) {
+        NSRange range = [result rangeOfString:key];
+
+        if (range.location != NSNotFound) {
+            if (component > 1.0) component = 1.0;
+            if (component < 0.0) component = 0.0;
+
+            unichar number = [result characterAtIndex:(range.location + 3)];
+            
+            NSString *keyWithNumber = [NSString stringWithFormat:@"%@%C", key, number];
+            NSString *format = [NSString stringWithFormat: @"%%.%Cf", number];
+            NSString *string = [NSString stringWithFormat: format, component];
+            
+            if (string) {
+                [result replaceOccurrencesOfString:keyWithNumber withString:string options:NSLiteralSearch range:NSMakeRange(0, [result length])];
+            }
+        }
+    };
+
+    BOOL didClamp;
+    float red   = sClamp(_red,   &didClamp);
+    float green = sClamp(_green, &didClamp);
+    float blue  = sClamp(_blue,  &didClamp);
+
+    replaceHex(@"$RHEX", red);
+    replaceHex(@"$GHEX", green);
+    replaceHex(@"$BHEX", blue);
+
+    replaceNumber(@"$RN255", 255, red);
+    replaceNumber(@"$GN255", 255, green);
+    replaceNumber(@"$BN255", 255, blue);
+    
+    replaceFloat(@"$RF", red);
+    replaceFloat(@"$GF", green);
+    replaceFloat(@"$BF", blue);
+
+    [result replaceOccurrencesOfString:@"$$" withString:@"$" options:NSLiteralSearch range:NSMakeRange(0, [result length])];
+
+    return result;
+}
+
+
 - (void) setFloatValue:(float)value forComponent:(ColorComponent)component
 {
     if (component == ColorComponentRed) {
+        _rawValid = NO;
         _red = value;
-        sDidChangeRGB(self);
+
+        [self _didChangeRGB];
 
     } else if (component == ColorComponentGreen) {
+        _rawValid = NO;
         _green = value;
-        sDidChangeRGB(self);
+
+        [self _didChangeRGB];
     
     } else if (component == ColorComponentBlue) {
-        _blue = value;
-        sDidChangeRGB(self);
+        _rawValid = NO;
+        _blue  = value;
+
+        [self _didChangeRGB];
     
     } else if (component == ColorComponentHue) {
         _hue = value;
-        sDidChangeHSB(self);
+        [self _didChangeHSB];
     
     } else if (component == ColorComponentSaturationHSB) {
         _saturationHSB = value;
-        sDidChangeHSB(self);
+        [self _didChangeHSB];
 
     } else if (component == ColorComponentBrightness) {
         _brightness = value;
-        sDidChangeHSB(self);
+        [self _didChangeHSB];
 
     } else if (component == ColorComponentSaturationHSL) {
         _saturationHSL = value;
-        sDidChangeHSL(self);
+        [self _didChangeHSL];
 
     } else if (component == ColorComponentLightness) {
         _lightness = value;
-        sDidChangeHSL(self);
+        [self _didChangeHSL];
     }
 }
 
@@ -278,13 +785,40 @@ static void sDidChangeRGB(Color *self)
 }
 
 
+- (void) setRed:(float)red green:(float)green blue:(float)blue transform:(ColorSyncTransformRef)transform
+{
+    float src[3];
+    float dst[3];
+
+    _rawValid = NO;
+    _rawRed   = _red   = src[0] = red;
+    _rawGreen = _green = src[1] = green;
+    _rawBlue  = _blue  = src[2] = blue;
+
+    if (transform && ColorSyncTransformConvert(transform, 1, 1,
+        &dst, kColorSync32BitFloat, 0, 12,
+        &src, kColorSync32BitFloat, 0, 12,
+        NULL)
+    ) {
+        _rawValid = YES;
+        _red   = dst[0];
+        _green = dst[1];
+        _blue  = dst[2];
+    }
+    
+    [self _didChangeRGB];
+}
+
+
 - (void) setRed:(float)red green:(float)green blue:(float)blue
 {
-    if ( _red   != red   )  _red   = red;
-    if ( _green != green )  _green = green;
-    if ( _blue  != blue  )  _blue  = blue;
-    
-    sDidChangeRGB(self);
+    _rawValid = NO;
+
+    _red   = red;
+    _green = green;
+    _blue  = blue;
+
+    [self _didChangeRGB];
 }
 
 
@@ -294,7 +828,7 @@ static void sDidChangeRGB(Color *self)
     if ( _saturationHSB != saturation )  _saturationHSB = saturation;
     if ( _brightness    != brightness )  _brightness    = brightness;
     
-    sDidChangeHSB(self);
+    [self _didChangeHSB];
 }
 
 
@@ -304,7 +838,7 @@ static void sDidChangeRGB(Color *self)
     if ( _saturationHSL != saturation )  _saturationHSL = saturation;
     if ( _lightness     != lightness  )  _lightness     = lightness;
     
-    sDidChangeHSL(self);
+    [self _didChangeHSL];
 }
 
 
@@ -338,78 +872,6 @@ static void sDidChangeRGB(Color *self)
 - (NSColor *) NSColor
 {
     return [NSColor colorWithDeviceRed:_red green:_green blue:_blue alpha:1.0];
-}
-
-
-- (void) setRed:(float)red
-{
-    if (_red != red) {
-        _red = red;
-        sDidChangeRGB(self);
-    }
-}
-
-
-- (void) setGreen:(float)green
-{
-    if (_green != green) {
-        _green = green;
-        sDidChangeRGB(self);
-    }
-}
-
-
-- (void) setBlue:(float)blue
-{
-    if (_blue != blue) {
-        _blue = blue;
-        sDidChangeRGB(self);
-    }
-}
-
-
-- (void) setHue:(float)hue
-{
-    if (_hue != hue) {
-        _hue = hue;
-        sDidChangeHSB(self);
-    }
-}
-
-
-- (void) setSaturationHSB:(float)saturation
-{
-    if (_saturationHSB != saturation) {
-        _saturationHSB = saturation;
-        sDidChangeHSB(self);
-    }
-}
-
-
-- (void) setBrightness:(float)brightness
-{
-    if (_brightness != brightness) {
-        _brightness = brightness;
-        sDidChangeHSB(self);
-    }
-}
-
-
-- (void) setSaturationHSL:(float)saturation
-{
-    if (_saturationHSL != saturation) {
-        _saturationHSL = saturation;
-        sDidChangeHSL(self);
-    }
-}
-
-
-- (void) setLightness:(float)lightness
-{
-    if (_lightness != lightness) {
-        _lightness = lightness;
-        sDidChangeHSL(self);
-    }
 }
 
 @end

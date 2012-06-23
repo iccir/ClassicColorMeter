@@ -8,25 +8,26 @@
 
 #import <Foundation/Foundation.h>
 
-enum {
+typedef enum : NSInteger {
     ApertureColorBlack,
     ApertureColorGrey,
     ApertureColorWhite,
     ApertureColorBlackAndWhite
-};
-typedef NSInteger ApertureColor;
+} ApertureColor;
 
 
-enum {
-    ColorProfileUseNativeValues     = 0,
-    ColorProfileConvertToSRGB       = 1,
-    ColorProfileConvertToGenericRGB = 2,
-    ColorProfileConvertToAdobeRGB   = 3
-};
-typedef NSInteger ColorProfileType;
+typedef enum : NSInteger {
+    ColorConversionNone = 0,
+
+    ColorConversionConvertToMainDisplay  = 4,
+
+    ColorConversionDisplayInSRGB         = 1,
+    ColorConversionDisplayInGenericRGB   = 2,
+    ColorConversionDisplayInAdobeRGB     = 3
+} ColorConversion;
 
 
-enum {
+typedef enum : NSInteger {
     ColorMode_RGB_Percentage,
 
     ColorMode_RGB_Value_8,
@@ -47,7 +48,5 @@ enum {
     
     ColorMode_HSB,
     ColorMode_HSL
-};
-typedef NSInteger ColorMode;
-
+} ColorMode;
 

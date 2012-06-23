@@ -20,6 +20,8 @@
 @property (nonatomic, assign, getter=isClickEnabled) BOOL clickEnabled;
 @property (nonatomic, assign, getter=isDragEnabled)  BOOL dragEnabled;
 
+@property (nonatomic, assign) BOOL drawsBorder;
+
 @end
 
 
