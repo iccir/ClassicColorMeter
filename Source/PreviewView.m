@@ -15,7 +15,9 @@
 @end
 
 
-@implementation PreviewView
+@implementation PreviewView {
+    NSImage *_backgroundImage;
+}
 
 - (void) awakeFromNib
 {
@@ -42,7 +44,10 @@
 {
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     CGContextSaveGState(context);
-    
+ 
+    if (!_backgroundImage) _backgroundImage = [NSImage imageNamed:@"background"];
+    [_backgroundImage drawAtPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0, 0, 120, 120) operation:NSCompositeSourceOver fraction:1.0];
+          
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;
 

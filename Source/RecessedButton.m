@@ -168,5 +168,4 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
 }
 
 
-
 @end

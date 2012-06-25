@@ -91,7 +91,7 @@
 {
     _scaleFactor = [_cursor displayScaleFactor];
     
-    CGFloat pointsToCapture = (120.0 / _zoomLevel) + 50;
+    CGFloat pointsToCapture = (120.0 / _zoomLevel) + 1;
     CGFloat pointsToAverage = ((_apertureSize * 2) + 1) * (8.0 / (_zoomLevel * _scaleFactor));
 
     CGFloat captureOffset = floor(pointsToCapture / 2.0);
