@@ -46,6 +46,9 @@
 - (IBAction) updateComponent:(id)sender;
 
 - (IBAction) sendFeedback:(id)sender;
+- (IBAction) viewSite:(id)sender;
+- (IBAction) learnAboutConversion:(id)sender;
+- (IBAction) viewOnAppStore:(id)sender;
 
 @property (nonatomic, strong) IBOutlet NSWindow      *window;
 

@@ -53,7 +53,7 @@ static NSString * const sUsesMainColorSpaceForCopyAsText    = @"UsesMainColorSpa
 
 static NSString * const sUsesMyClippedValues           = @"UsesMyClippedValues";
 static NSString * const sHighlightsMyClippedValues     = @"HighlightsMyClippedValues";
-static NSString * const sColorForMyClippedValues       = @"HighlightsMyClippedValues";
+static NSString * const sColorForMyClippedValues       = @"ColorForMyClippedValues";
 
 static NSString * const sUsesSystemClippedValues       = @"UsesSystemClippedValues";
 static NSString * const sHighlightsSystemClippedValues = @"HighlightsSystemClippedValues";

@@ -339,7 +339,7 @@
 
 - (IBAction) learnAboutConversion:(id)sender
 {
-    
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ConversionsURLString]];
 }
 
 

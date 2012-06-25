@@ -24,12 +24,22 @@ typedef enum : NSInteger {
 } ColorComponent;
 
 
+typedef enum : NSInteger {
+    ColorStringColorNormal,
+    ColorStringColorClipped,
+    ColorStringColorSystemClipped
+} ColorStringColor;
+
+
 enum {
-    ColorStringUsesLowercaseHex = 1 << 0,
-    ColorStringUsesPoundPrefix  = 1 << 1
+    ColorStringUsesLowercaseHex  = 1 << 0,
+    ColorStringUsesPoundPrefix   = 1 << 1,
+    ColorStringUsesClippedValues = 1 << 2,
+    ColorStringUsesSystemClippedValues = 1 << 3
 };
 typedef NSUInteger ColorStringOptions;
 
+@class ColorTransform;
 
 @interface Color : NSObject <NSCopying>
 
@@ -37,8 +47,8 @@ typedef NSUInteger ColorStringOptions;
 
 - (void) getComponentsForMode: (ColorMode) mode
                       options: (ColorStringOptions) options
-                      strings: (NSString * __autoreleasing [3]) strings
-                       colors: (NSColor  * __autoreleasing [3]) colors;
+                       colors: (ColorStringColor[3]) colors
+                      strings: (NSString * __autoreleasing [3]) strings;
 
 - (NSString *) clipboardStringForMode: (ColorMode) mode
                               options: (ColorStringOptions) options;

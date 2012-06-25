@@ -13,8 +13,8 @@
 @end
 
 
-static NSString *sNumericPadMarker    = @"<<<PAD>>>";
-static NSString * __unsafe_unretained *sKeyCodeToStringMap = nil;
+static CFStringRef  sNumericPadMarker   = CFSTR("<<<PAD>>>");
+static CFStringRef *sKeyCodeToStringMap = nil;
 
 static NSString *sGetPreferencesString(NSUInteger modifierFlags, unsigned short keyCode)
 {
@@ -76,22 +76,22 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sKeyCodeToStringMap = (NSString * __unsafe_unretained *) calloc(sizeof(void *), 128);
+        sKeyCodeToStringMap = (CFStringRef *)calloc(128, sizeof(CFStringRef));
 
-        sKeyCodeToStringMap[36]  = @"\u21A9";
-        sKeyCodeToStringMap[48]  = @"\u21E5";
-        sKeyCodeToStringMap[49]  = @"Space";
-        sKeyCodeToStringMap[51]  = @"\u232B";
-        sKeyCodeToStringMap[53]  = @"\u238B";
-        sKeyCodeToStringMap[64]  = @"F17";
-        sKeyCodeToStringMap[71]  = @"\u2327";
-        sKeyCodeToStringMap[76]  = @"\u2305";
-        sKeyCodeToStringMap[79]  = @"F18";
-        sKeyCodeToStringMap[80]  = @"F19";
-        sKeyCodeToStringMap[96]  = @"F5";
-        sKeyCodeToStringMap[97]  = @"F6";
-        sKeyCodeToStringMap[98]  = @"F7";
-        sKeyCodeToStringMap[99]  = @"F3";
+        sKeyCodeToStringMap[36]  = CFSTR( "\u21A9" );
+        sKeyCodeToStringMap[48]  = CFSTR( "\u21E5" );
+        sKeyCodeToStringMap[49]  = CFSTR( "Space"  );
+        sKeyCodeToStringMap[51]  = CFSTR( "\u232B" );
+        sKeyCodeToStringMap[53]  = CFSTR( "\u238B" );
+        sKeyCodeToStringMap[64]  = CFSTR( "F17"    );
+        sKeyCodeToStringMap[71]  = CFSTR( "\u2327" );
+        sKeyCodeToStringMap[76]  = CFSTR( "\u2305" );
+        sKeyCodeToStringMap[79]  = CFSTR( "F18"    );
+        sKeyCodeToStringMap[80]  = CFSTR( "F19"    );
+        sKeyCodeToStringMap[96]  = CFSTR( "F5"     );
+        sKeyCodeToStringMap[97]  = CFSTR( "F6"     );
+        sKeyCodeToStringMap[98]  = CFSTR( "F7"     );
+        sKeyCodeToStringMap[99]  = CFSTR( "F3"     );
         sKeyCodeToStringMap[65]  = sNumericPadMarker;
         sKeyCodeToStringMap[67]  = sNumericPadMarker;
         sKeyCodeToStringMap[69]  = sNumericPadMarker;
@@ -108,28 +108,28 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
         sKeyCodeToStringMap[89]  = sNumericPadMarker;
         sKeyCodeToStringMap[91]  = sNumericPadMarker;
         sKeyCodeToStringMap[92]  = sNumericPadMarker;
-        sKeyCodeToStringMap[100] = @"F8";
-        sKeyCodeToStringMap[101] = @"F9";
-        sKeyCodeToStringMap[103] = @"F11";
-        sKeyCodeToStringMap[105] = @"F13";
-        sKeyCodeToStringMap[106] = @"F16";
-        sKeyCodeToStringMap[107] = @"F14";
-        sKeyCodeToStringMap[109] = @"F10";
-        sKeyCodeToStringMap[111] = @"F12";
-        sKeyCodeToStringMap[113] = @"F15";
-        sKeyCodeToStringMap[114] = @"\x3F";
-        sKeyCodeToStringMap[115] = @"\u2196";
-        sKeyCodeToStringMap[116] = @"\u21DE";
-        sKeyCodeToStringMap[117] = @"\u2326";
-        sKeyCodeToStringMap[118] = @"F4";
-        sKeyCodeToStringMap[119] = @"\u2198";
-        sKeyCodeToStringMap[120] = @"F2";
-        sKeyCodeToStringMap[121] = @"\u21DF";
-        sKeyCodeToStringMap[122] = @"F1";
-        sKeyCodeToStringMap[123] = @"\u2190";
-        sKeyCodeToStringMap[124] = @"\u2192";
-        sKeyCodeToStringMap[125] = @"\u2193";
-        sKeyCodeToStringMap[126] = @"\u2191";
+        sKeyCodeToStringMap[100] = CFSTR( "F8"     );
+        sKeyCodeToStringMap[101] = CFSTR( "F9"     );
+        sKeyCodeToStringMap[103] = CFSTR( "F11"    );
+        sKeyCodeToStringMap[105] = CFSTR( "F13"    );
+        sKeyCodeToStringMap[106] = CFSTR( "F16"    );
+        sKeyCodeToStringMap[107] = CFSTR( "F14"    );
+        sKeyCodeToStringMap[109] = CFSTR( "F10"    );
+        sKeyCodeToStringMap[111] = CFSTR( "F12"    );
+        sKeyCodeToStringMap[113] = CFSTR( "F15"    );
+        sKeyCodeToStringMap[114] = CFSTR( "\x3F"   );
+        sKeyCodeToStringMap[115] = CFSTR( "\u2196" );
+        sKeyCodeToStringMap[116] = CFSTR( "\u21DE" );
+        sKeyCodeToStringMap[117] = CFSTR( "\u2326" );
+        sKeyCodeToStringMap[118] = CFSTR( "F4"     );
+        sKeyCodeToStringMap[119] = CFSTR( "\u2198" );
+        sKeyCodeToStringMap[120] = CFSTR( "F2"     );
+        sKeyCodeToStringMap[121] = CFSTR( "\u21DF" );
+        sKeyCodeToStringMap[122] = CFSTR( "F1"     );
+        sKeyCodeToStringMap[123] = CFSTR( "\u2190" );
+        sKeyCodeToStringMap[124] = CFSTR( "\u2192" );
+        sKeyCodeToStringMap[125] = CFSTR( "\u2193" );
+        sKeyCodeToStringMap[126] = CFSTR( "\u2191" );
     });
 }
 
@@ -162,7 +162,7 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
 + (NSString *) stringForKeyCode:(unsigned short)keyCode
 {
     BOOL isNumericPad = NO;
-    NSString *mapLookup = nil;
+    CFStringRef mapLookup = nil;
 
     if ((keyCode >= 0) && (keyCode < 128)) {
         mapLookup = sKeyCodeToStringMap[keyCode];
@@ -173,7 +173,7 @@ static void sReadPreferencesString(NSString *string, NSUInteger *outFlags, NSUIn
         } 
         
         if (mapLookup) {
-            return mapLookup;
+            return (__bridge NSString *)mapLookup;
         }
     }
 

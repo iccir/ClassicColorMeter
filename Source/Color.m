@@ -49,6 +49,16 @@
 #pragma mark -
 #pragma mark Static Functions
 
+static NSString *sGetHexString(NSString *format, long value)
+{
+    if (value >= 0) {
+        return [NSString stringWithFormat:format, value];
+    } else {
+        return [NSString stringWithFormat:@"-%@", [NSString stringWithFormat:format, -value]];
+    }
+}
+
+
 static inline float sClamp(float f, BOOL *didClamp)
 {
     if (f > 1.0) {
@@ -201,7 +211,7 @@ static void sMakeStrings(
     ColorStringOptions options,
     NSString * __autoreleasing *outClipboard,
     NSString * __autoreleasing outString[3],
-    NSColor  * __autoreleasing outColor[3]
+    ColorStringColor outColor[3]
 )
 {
     NSString *value1    = nil;
@@ -212,8 +222,10 @@ static void sMakeStrings(
     float red, green, blue;
     [color getRed:&red green:&green blue:&blue];
 
-    BOOL lowercaseHex    = (options & ColorStringUsesLowercaseHex) > 0;
-    BOOL usesPoundPrefix = (options & ColorStringUsesPoundPrefix)  > 0;
+    BOOL lowercaseHex      = (options & ColorStringUsesLowercaseHex) > 0;
+    BOOL usesPoundPrefix   = (options & ColorStringUsesPoundPrefix) > 0;
+    BOOL usesClipped       = (options & ColorStringUsesClippedValues) > 0;
+    BOOL usesSystemClipped = (options & ColorStringUsesSystemClippedValues) > 0;
     
     BOOL clipped1 = NO;
     BOOL clipped2 = NO;
@@ -221,7 +233,6 @@ static void sMakeStrings(
     BOOL clamped1 = NO;
     BOOL clamped2 = NO;
     BOOL clamped3 = NO;
-
 
     if (color->_rawValid) {
         long rRaw = lround(color->_rawRed   * 255);
@@ -233,29 +244,29 @@ static void sMakeStrings(
     
         if (rRaw >= 255 && r255 <= 254) {
             clamped1 = YES;
-            red = 1.0;
+            if (usesSystemClipped) red = 1.0;
 
         } else if (rRaw <= 0 && r255 >= 1) {
             clamped1 = YES;
-            red = 0.0;
+            if (usesSystemClipped) red = 0.0;
         }
 
         if (gRaw >= 255 && g255 <= 254) {
             clamped2 = YES;
-            green = 1.0;
+            if (usesSystemClipped) green = 1.0;
 
         } else if (gRaw <= 0 && g255 >= 1) {
             clamped2 = YES;
-            green = 0.0;
+            if (usesSystemClipped) green = 0.0;
         }
 
         if (bRaw >= 255 && b255 <= 254) {
             clamped3 = YES;
-            blue = 1.0;
+            if (usesSystemClipped) blue = 1.0;
         
         } else if (bRaw <= 0 && b255 >= 1) {
             clamped3 = YES;
-            blue = 0.0;
+            if (usesSystemClipped) blue = 0.0;
         }
     }
 
@@ -266,14 +277,14 @@ static void sMakeStrings(
 
         // Clip if needed
         {
-            if      (red   >= 100.0499) { red   = 100.0; clipped1 = YES; }
-            else if (red   <=  -0.0499) { red   =   0.0; clipped1 = YES; }
+            if      (red   >= 100.0499) { if (usesClipped) { red   = 100.0; } clipped1 = YES; }
+            else if (red   <=  -0.0499) { if (usesClipped) { red   =   0.0; } clipped1 = YES; }
 
-            if      (green >= 100.0499) { green = 100.0; clipped2 = YES; }
-            else if (green <=  -0.0499) { green =   0.0; clipped2 = YES; }
+            if      (green >= 100.0499) { if (usesClipped) { green = 100.0; } clipped2 = YES; }
+            else if (green <=  -0.0499) { if (usesClipped) { green =   0.0; } clipped2 = YES; }
 
-            if      (blue  >= 100.0499) { blue  = 100.0; clipped3 = YES; }
-            else if (blue  <=  -0.0499) { blue  =   0.0; clipped3 = YES; }
+            if      (blue  >= 100.0499) { if (usesClipped) { blue  = 100.0; } clipped3 = YES; }
+            else if (blue  <=  -0.0499) { if (usesClipped) { blue  =   0.0; } clipped3 = YES; }
         }
 
         value1 = [NSString stringWithFormat:@"%0.1lf", red];
@@ -281,64 +292,74 @@ static void sMakeStrings(
         value3 = [NSString stringWithFormat:@"%0.1lf", blue];
 
     } else if (mode == ColorMode_RGB_Value_8 || mode == ColorMode_RGB_HexValue_8) {
-        NSString *format = @"%ld";
-        
-        if (mode == ColorMode_RGB_HexValue_8) {
-            format = lowercaseHex ? @"%02lx" : @"%02lX";
-        }
-        
         long redLong   = lroundf(red   * 255);
         long greenLong = lroundf(green * 255);
         long blueLong  = lroundf(blue  * 255);
+
+        long redClipped, greenClipped, blueClipped;
         
         {
-            if      (redLong   > 255) { redLong   = 255; clipped1 = YES; }
-            else if (redLong   < 0)   { redLong   = 0;   clipped1 = YES; }
+            if      (redLong   > 255) { redClipped   = 255; clipped1 = YES; }
+            else if (redLong   < 0)   { redClipped   = 0;   clipped1 = YES; }
+            else                      { redClipped   = redLong; }
 
-            if      (greenLong > 255) { greenLong = 255; clipped2 = YES; }
-            else if (greenLong < 0)   { greenLong = 0;   clipped2 = YES; }
+            if      (greenLong > 255) { greenClipped = 255; clipped2 = YES; }
+            else if (greenLong < 0)   { greenClipped = 0;   clipped2 = YES; }
+            else                      { greenClipped = greenLong; }
 
-            if      (blueLong  > 255) { blueLong  = 255; clipped3 = YES; }
-            else if (blueLong  < 0)   { blueLong  = 0;   clipped3 = YES; }
+            if      (blueLong  > 255) { blueClipped  = 255; clipped3 = YES; }
+            else if (blueLong  < 0)   { blueClipped  = 0;   clipped3 = YES; }
+            else                      { blueClipped  = blueLong; }
         }
         
-        value1 = [NSString stringWithFormat:format, redLong];
-        value2 = [NSString stringWithFormat:format, greenLong];
-        value3 = [NSString stringWithFormat:format, blueLong];
+        if (mode == ColorMode_RGB_Value_8) {
+            value1 = [NSString stringWithFormat:@"%ld", (usesClipped ? redClipped   : redLong)  ];
+            value2 = [NSString stringWithFormat:@"%ld", (usesClipped ? greenClipped : greenLong)];
+            value3 = [NSString stringWithFormat:@"%ld", (usesClipped ? blueClipped  : blueLong) ];
+        } else {
+            NSString *format = lowercaseHex ? @"%02lx" : @"%02lX";
 
-        if (mode == ColorMode_RGB_HexValue_8) { 
-            if (usesPoundPrefix) {
-                clipboard = [NSString stringWithFormat:@"#%@%@%@", value1, value2, value3];
+            value1 = sGetHexString(format, usesClipped ? redClipped   : redLong);
+            value2 = sGetHexString(format, usesClipped ? greenClipped : greenLong);
+            value3 = sGetHexString(format, usesClipped ? blueClipped  : blueLong);
+        }
+
+        if (mode == ColorMode_RGB_HexValue_8) {
+            if (lowercaseHex) {
+                clipboard = [NSString stringWithFormat:@"%s%02lx%02lx%02lx", (usesPoundPrefix ? "#" : ""), redClipped, greenClipped, blueClipped];
             } else {
-                clipboard = [NSString stringWithFormat: @"%@%@%@", value1, value2, value3];
+                clipboard = [NSString stringWithFormat:@"%s%02lX%02lX%02lX", (usesPoundPrefix ? "#" : ""), redClipped, greenClipped, blueClipped];
             }
         }
 
     } else if (mode == ColorMode_RGB_Value_16 || mode == ColorMode_RGB_HexValue_16) {
-        NSString *format = @"%ld";
-        
-        if (mode == ColorMode_RGB_HexValue_16) {
-            format = lowercaseHex ? @"%04lx" : @"%04lX";
-        }
-
         long redLong   = lroundf(red   * 65535);
         long greenLong = lroundf(green * 65535);
         long blueLong  = lroundf(blue  * 65535);
         
         {
-            if      (redLong   > 65535) { redLong   = 65535; clipped1 = YES; }
-            else if (redLong   < 0)     { redLong   = 0;     clipped1 = YES; }
+            if      (redLong   > 65535) { if (usesClipped) { redLong   = 65535; } clipped1 = YES; }
+            else if (redLong   < 0)     { if (usesClipped) { redLong   = 0;     } clipped1 = YES; }
 
-            if      (greenLong > 65535) { greenLong = 65535; clipped2 = YES; }
-            else if (greenLong < 0)     { greenLong = 0;     clipped2 = YES; }
+            if      (greenLong > 65535) { if (usesClipped) { greenLong = 65535; } clipped2 = YES; }
+            else if (greenLong < 0)     { if (usesClipped) { greenLong = 0;     } clipped2 = YES; }
 
-            if      (blueLong  > 65535) { blueLong  = 65535; clipped3 = YES; }
-            else if (blueLong  < 0)     { blueLong  = 0;     clipped3 = YES; }
+            if      (blueLong  > 65535) { if (usesClipped) { blueLong  = 65535; } clipped3 = YES; }
+            else if (blueLong  < 0)     { if (usesClipped) { blueLong  = 0;     } clipped3 = YES; }
         }
 
-        value1 = [NSString stringWithFormat:format, redLong];
-        value2 = [NSString stringWithFormat:format, greenLong];
-        value3 = [NSString stringWithFormat:format, blueLong];
+        if (mode == ColorMode_RGB_Value_16) {
+            value1 = [NSString stringWithFormat:@"%ld", redLong];
+            value2 = [NSString stringWithFormat:@"%ld", greenLong];
+            value3 = [NSString stringWithFormat:@"%ld", blueLong];
+
+        } else {
+            NSString *format = lowercaseHex ? @"%04lx" : @"%04lX";
+
+            value1 = sGetHexString(format, redLong);
+            value2 = sGetHexString(format, greenLong);
+            value3 = sGetHexString(format, blueLong);
+        }
 
     } else if (mode >= ColorMode_YPbPr_601 && mode <= ColorMode_YCbCr_709) {
         BOOL is601     = (mode == ColorMode_YPbPr_601 || mode == ColorMode_YCbCr_601);
@@ -413,11 +434,11 @@ static void sMakeStrings(
         while (h > 360) { h -= 360; }
         while (h < 0)   { h += 360; }
 
-        if      (s > 100) { s = 100; clipped2 = YES; }
-        else if (s < 0)   { s = 0;   clipped2 = YES; }
+        if      (s > 100) { if (usesClipped) { s = 100; } clipped2 = YES; }
+        else if (s < 0)   { if (usesClipped) { s = 0;   } clipped2 = YES; }
 
-        if      (bl > 100) { bl = 100; clipped3 = YES; }
-        else if (bl < 0)   { bl = 0;   clipped3 = YES; }
+        if      (bl > 100) { if (usesClipped) { bl = 100; } clipped3 = YES; }
+        else if (bl < 0)   { if (usesClipped) { bl = 0;   } clipped3 = YES; }
 
         value1 = [NSString stringWithFormat:@"%ld", h];
         value2 = [NSString stringWithFormat:@"%ld", s];
@@ -435,13 +456,13 @@ static void sMakeStrings(
     }
 
     if (outColor) {
-        NSColor *(^getColor)(BOOL, BOOL) = ^(BOOL clamped, BOOL clipped) {
+        ColorStringColor (^getColor)(BOOL, BOOL) = ^(BOOL clamped, BOOL clipped) {
             if (clamped) {
-                return [NSColor blueColor];
+                return ColorStringColorSystemClipped;
             } else if (clipped) {
-                return [NSColor redColor];
+                return ColorStringColorClipped;
             } else {
-                return [NSColor blackColor];
+                return ColorStringColorNormal;
             }
         };
 
@@ -623,8 +644,8 @@ static void sMakeStrings(
 
 - (void) getComponentsForMode: (ColorMode) mode
                       options: (NSUInteger) options
+                       colors: (ColorStringColor[3]) colors
                       strings: (NSString * __autoreleasing [3]) strings
-                       colors: (NSColor  * __autoreleasing [3]) colors
 {
     sMakeStrings(self, mode, options, NULL, strings, colors);
 }

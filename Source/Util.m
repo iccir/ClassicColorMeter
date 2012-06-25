@@ -10,6 +10,13 @@
 
 #import <ApplicationServices/ApplicationServices.h>
 
+
+NSString * const ProductSiteURLString = @"http://iccir.com/projects/classic-color-meter";
+NSString * const FeedbackURLString    = @"http://iccir.com/projects/classic-color-meter/feedback";
+NSString * const ConversionsURLString = @"http://iccir.com/articles/osx-color-conversions";
+NSString * const AppStoreURLString    = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
+
+
 BOOL ColorModeIsRGB(ColorMode mode)
 {
     return (mode == ColorMode_RGB_Percentage) ||
@@ -32,6 +39,7 @@ BOOL ColorModeIsXYZ(ColorMode mode)
            (mode == ColorMode_CIE_1976) ||
            (mode == ColorMode_Tristimulus);
 }
+
 
 float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NSString *string)
 {
@@ -88,9 +96,6 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
     
     return result;
 }
-
-
-
 
 
 NSString *ColorModeGetName(ColorMode mode)
@@ -280,8 +285,6 @@ CGImageRef CreateImageMask(CGSize size, CGFloat scale, void (^callback)(CGContex
 }
 
 
-
-
 CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))
 {
     size_t width  = size.width * scale;
@@ -314,7 +317,6 @@ CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)
 
     return cgImage;
 }
-
 
 
 NSString *GetArrowJoinerString()

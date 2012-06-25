@@ -9,6 +9,7 @@
 #import "Aperture.h"
 #import "MouseCursor.h"
 
+
 @interface Aperture () <MouseCursorListener>
 @property (nonatomic, strong) MouseCursor *cursor;
 @property (nonatomic, strong) NSTimer *timer;

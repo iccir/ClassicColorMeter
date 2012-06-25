@@ -39,7 +39,6 @@ typedef enum : NSInteger {
 } ColorAction;
 
 
-static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorMeter";
 
 @class PreviewView;
 
@@ -60,6 +59,8 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
     MouseCursor           *_cursor;
     Aperture              *_aperture;
+
+    ColorStringOptions     _colorStringOptions;
 
     BOOL           _isHoldingColor;
     Color         *_color;
@@ -448,25 +449,29 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (void) _updateTextFields
 {
+    Preferences *preferences = [Preferences sharedInstance];
     ColorMode colorMode = [self _currentColorMode];
 
-    NSString * __autoreleasing strings[3];
-    NSColor  * __autoreleasing colors[3];
+    NSColor *(^getColorForColor)(ColorStringColor) = ^(ColorStringColor color) {
+        if (color == ColorStringColorClipped && [preferences highlightsMyClippedValues]) {
+            return [preferences colorForMyClippedValues];
 
-    [_color getComponentsForMode:colorMode options:[self _colorStringOptions] strings:strings colors:colors];
+        } else if (color == ColorStringColorSystemClipped && [preferences highlightsSystemClippedValues]) {
+            return [preferences colorForSystemClippedValues];
+        }
+        
+        return [NSColor blackColor];
+    };
+
+    NSString * __autoreleasing strings[3];
+    ColorStringColor colors[3];
+
+    [_color getComponentsForMode:colorMode options:_colorStringOptions colors:colors strings:strings];
 
     if (strings[0]) [o_value1 setStringValue:strings[0]];
     if (strings[1]) [o_value2 setStringValue:strings[1]];
     if (strings[2]) [o_value3 setStringValue:strings[2]];
     
-    static NSColor *sRedColor = nil;
-    static NSColor *sBlackColor = nil;
-    
-    if (!sRedColor) {
-        sRedColor   = [NSColor redColor];
-        sBlackColor = [NSColor blackColor];
-    }
-
     BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHue(colorMode)) && _isHoldingColor;
 
     if (isEditable) {
@@ -477,9 +482,9 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
         [o_value3 setTextColor:black];
 
     } else {
-        [o_value1 setTextColor:colors[0]];
-        [o_value2 setTextColor:colors[1]];
-        [o_value3 setTextColor:colors[2]];
+        [o_value1 setTextColor:getColorForColor(colors[0])];
+        [o_value2 setTextColor:getColorForColor(colors[1])];
+        [o_value3 setTextColor:getColorForColor(colors[2])];
     }
 
     [o_value1 setEditable:isEditable];
@@ -513,16 +518,6 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 #pragma mark -
 #pragma mark Private Methods
 
-- (ColorStringOptions) _colorStringOptions
-{
-    ColorStringOptions options = 0;
-    if (_usesLowercaseHex) options |= ColorStringUsesLowercaseHex;
-    if (_usesPoundPrefix)  options |= ColorStringUsesPoundPrefix;
-        
-    return options;
-}
-
-
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
     Preferences *preferences  = [Preferences sharedInstance];
@@ -532,6 +527,12 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     _usesPoundPrefix      = [preferences usesPoundPrefix];
     _colorMode            = [preferences colorMode];
     _showMouseCoordinates = [preferences showMouseCoordinates];
+
+    _colorStringOptions = 0;
+    if (_usesLowercaseHex) _colorStringOptions |= ColorStringUsesLowercaseHex;
+    if (_usesPoundPrefix)  _colorStringOptions |= ColorStringUsesPoundPrefix;
+    if ([preferences usesSystemClippedValues]) _colorStringOptions |= ColorStringUsesSystemClippedValues;
+    if ([preferences usesMyClippedValues])     _colorStringOptions |= ColorStringUsesClippedValues;
 
     BOOL showsHoldLabels = [preferences showsHoldLabels];
     [o_topHoldLabelButton    setHidden:!showsHoldLabels];
@@ -753,7 +754,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
             mode = [preferences holdColorMode];
         }
         
-        clipboardText = [_color clipboardStringForMode:mode options:[self _colorStringOptions]];
+        clipboardText = [_color clipboardStringForMode:mode options:_colorStringOptions];
         
     } else if (actionTag == CopyColorAsImage) {
         NSRect   bounds = NSMakeRect(0, 0, 64.0, 64.0);
@@ -783,7 +784,7 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
     }
 
     if (template) {
-        clipboardText = [_color codeSnippetForTemplate:template options:[self _colorStringOptions]];
+        clipboardText = [_color codeSnippetForTemplate:template options:_colorStringOptions];
         
         if (!_usesPoundPrefix && [clipboardText hasPrefix:@"#"]) {
             clipboardText = [clipboardText substringFromIndex:1]; 
@@ -1362,8 +1363,26 @@ static NSString * const sFeedbackURL = @"http://iccir.com/feedback/ClassicColorM
 
 - (IBAction) sendFeedback:(id)sender
 {
-    NSURL *url = [NSURL URLWithString:sFeedbackURL];
-    [[NSWorkspace sharedWorkspace] openURL:url];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:FeedbackURLString]];
 }
+
+
+- (IBAction) viewSite:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ProductSiteURLString]];
+}
+
+
+- (IBAction) learnAboutConversion:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ConversionsURLString]];
+}
+
+
+- (IBAction) viewOnAppStore:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:AppStoreURLString]];
+}
+
 
 @end
