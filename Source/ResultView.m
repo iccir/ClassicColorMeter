@@ -20,6 +20,14 @@ static CGFloat sDistanceForDrag = 10.0;
 
 @implementation ResultView
 
+- (void) dealloc
+{
+    if (_colorSpace) {
+        CFRelease(_colorSpace);
+        _colorSpace = NULL;
+    }
+}
+
 
 - (BOOL) isOpaque
 {
@@ -128,7 +136,13 @@ static CGFloat sDistanceForDrag = 10.0;
 
     NSRect bounds = [self bounds];
 
-    CGContextSetRGBFillColor(context, [_color red], [_color green], [_color blue], 1.0);
+    if (_colorSpace) {
+        CGContextSetFillColorSpace(context, _colorSpace);
+        CGContextSetStrokeColorSpace(context, _colorSpace);
+    }
+
+    CGFloat components[4] = { [_color red], [_color green], [_color blue], 1.0 };
+    CGContextSetFillColor(context, components);
     CGContextFillRect(context, bounds);
     
     if (_drawsBorder) {
@@ -137,6 +151,18 @@ static CGFloat sDistanceForDrag = 10.0;
     }
 
     CGContextRestoreGState(context);
+}
+
+
+- (void) setColorSpace:(CGColorSpaceRef)colorSpace
+{
+    if (_colorSpace != colorSpace) {
+        CGColorSpaceRelease(_colorSpace);
+        _colorSpace = colorSpace;
+        CGColorSpaceRetain(_colorSpace);
+
+        [self setNeedsDisplay:YES];
+    }
 }
 
 

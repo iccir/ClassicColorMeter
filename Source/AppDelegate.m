@@ -502,6 +502,8 @@ typedef enum : NSInteger {
         [self _updateTextFields];
     }
 
+    [o_resultView setColorSpace:CGImageGetColorSpace(image)];
+
     [o_previewView setImage:image];
     [o_previewView setOffset:[_aperture offset]];
     [o_previewView setImageScale:[_aperture scaleFactor]];

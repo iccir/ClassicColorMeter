@@ -33,6 +33,7 @@
 		558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558444C913D3CA3E006C6F51 /* MainMenu.xib */; };
 		558444CF13D3EAAD006C6F51 /* EtchingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444CE13D3EAAD006C6F51 /* EtchingView.m */; };
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
+		5590DF34159A7FDC005CC7A7 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5590DF33159A7FDC005CC7A7 /* IOSurface.framework */; };
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E0602B13E4BB5800E35B3E /* beta.icns in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602A13E4BB5800E35B3E /* beta.icns */; };
 		55E0603213E4CD7E00E35B3E /* slider_cover_center.png in Resources */ = {isa = PBXBuildFile; fileRef = 55E0602C13E4CD7E00E35B3E /* slider_cover_center.png */; };
@@ -92,6 +93,7 @@
 		558444CD13D3EAAD006C6F51 /* EtchingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EtchingView.h; path = Source/EtchingView.h; sourceTree = "<group>"; };
 		558444CE13D3EAAD006C6F51 /* EtchingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EtchingView.m; path = Source/EtchingView.m; sourceTree = "<group>"; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		5590DF33159A7FDC005CC7A7 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		55D569621422B01000F7B77B /* RecessedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecessedButton.h; path = Source/RecessedButton.h; sourceTree = "<group>"; };
 		55D569631422B01000F7B77B /* RecessedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecessedButton.m; path = Source/RecessedButton.m; sourceTree = "<group>"; };
 		55E0602713E4B93200E35B3E /* Beta-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Beta-Info.plist"; path = "Resources/Beta-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -118,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5590DF34159A7FDC005CC7A7 /* IOSurface.framework in Frameworks */,
 				55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */,
 				558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */,
 				55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */,
@@ -199,6 +202,7 @@
 		55E67D7413CFC3000040DFDE = {
 			isa = PBXGroup;
 			children = (
+				5590DF33159A7FDC005CC7A7 /* IOSurface.framework */,
 				55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */,
 				5584449E13D3C8B4006C6F51 /* Source */,
 				55E67D8913CFC3000040DFDE /* Resources */,
@@ -439,7 +443,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Classic Color Meter";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Debug;
 		};
@@ -461,7 +465,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "Classic Color Meter";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Release;
 		};
@@ -474,7 +478,6 @@
 				INFOPLIST_FILE = "Resources/Beta-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -491,7 +494,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
