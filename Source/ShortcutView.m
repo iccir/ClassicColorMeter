@@ -268,9 +268,6 @@ static NSImage *sGetClearIcon()
 
 @implementation _ShortcutCell
 
-@synthesize shortcut = _shortcut,
-            mouseDownInClearIcon = _mouseDownInClearIcon;
-
 
 - (BOOL) acceptsFirstResponder
 {

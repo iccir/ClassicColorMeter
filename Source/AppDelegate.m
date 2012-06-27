@@ -496,10 +496,17 @@ typedef enum : NSInteger {
 - (void) aperture:(Aperture *)aperture didUpdateImage:(CGImageRef)image
 {
     if (!_isHoldingColor) {
+        float r1, g1, b1;
+        float r2, g2, b2;
+        
+        [_color getRed:&r1 green:&g1 blue:&b1];
         [_aperture averageAndUpdateColor:_color];
+        [_color getRed:&r2 green:&g2 blue:&b2];
 
-        [self _updateColorViews];
-        [self _updateTextFields];
+        if ((r1 != r2) || (g1 != g2) || (b1 != b2)) {
+            [self _updateColorViews];
+            [self _updateTextFields];
+        }
     }
 
     [o_resultView setColorSpace:CGImageGetColorSpace(image)];

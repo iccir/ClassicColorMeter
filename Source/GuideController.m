@@ -91,7 +91,6 @@
 }
 
 
-
 - (void) _updateContents
 {
     CGFloat scale = [_cursor displayScaleFactor];
@@ -138,18 +137,18 @@
 - (void) _updateLocation
 {
     NSScreen *screen = [_cursor screen];
-
     NSRect screenFrame = [screen frame];
-    CGPoint location = [_cursor unflippedLocation];
     
+    CGPoint location = [_cursor unflippedLocation];
+
     if ([_cursor isYLocked]) {
-        [_horizontalWindow setFrame:CGRectMake(0, location.y - 1.0, screenFrame.size.width, 3.0) display:YES];
         [_horizontalWindow orderFront:self];
+        [_horizontalWindow setFrame:CGRectMake(screenFrame.origin.x, location.y - 1.0, screenFrame.size.width, 3.0) display:YES];
     }
 
     if ([_cursor isXLocked]) {
-        [_verticalWindow setFrame:CGRectMake(location.x - 1.0, 0, 3.0, screenFrame.size.height) display:YES];
         [_verticalWindow orderFront:self];
+        [_verticalWindow setFrame:CGRectMake(location.x - 1.0, screenFrame.origin.y, 3.0, screenFrame.size.height) display:YES];
     }
 }
 
@@ -159,45 +158,16 @@
     [self _updateLocation];
     [self _updateContents];
     
-    BOOL isXLocked = [_cursor isXLocked];
-    BOOL isYLocked = [_cursor isYLocked];
-
-    if (isYLocked) {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [_horizontalLayer setOpacity:1.0];
-        [CATransaction commit];
-
+    if ([_cursor isYLocked]) {
+        [_horizontalWindow display];
     } else {
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:^{
-            if (![_cursor isYLocked]) {
-                [_horizontalWindow orderOut:self];
-            }
-        }];
-
-        [_horizontalLayer setOpacity:0.0];
-
-        [CATransaction commit];
+        [_horizontalWindow orderOut:self];
     }
 
-    if (isXLocked) {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [_verticalLayer setOpacity:1.0];
-        [CATransaction commit];
-
+    if ([_cursor isXLocked]) {
+        [_verticalWindow display];
     } else {
-        [CATransaction begin];
-        [CATransaction setCompletionBlock:^{
-            if (![_cursor isXLocked]) {
-                [_verticalWindow orderOut:self];
-            }
-        }];
-        
-        [_verticalLayer setOpacity:0.0];
-
-        [CATransaction commit];
+        [_verticalWindow orderOut:self];
     }
 }
 
@@ -216,11 +186,7 @@
 
 - (id<CAAction>) actionForLayer:(CALayer *)layer forKey:(NSString *)event
 {
-    if ([event isEqualToString:@"opacity"]) {
-        return nil;
-    } else {
-        return (id)[NSNull null];
-    }
+    return (id)[NSNull null];
 }
 
 
@@ -231,5 +197,6 @@
         [self update];
     }
 }
+
 
 @end

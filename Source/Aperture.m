@@ -21,6 +21,7 @@
     ColorConversion _colorConversion;
     NSTimeInterval _lastUpdateTimeInterval;
     CGRect         _screenBounds;
+    BOOL           _needsUpdate;
 }
 
 - (id) init
@@ -62,7 +63,7 @@
     NSTimeInterval now   = [NSDate timeIntervalSinceReferenceDate];
     BOOL needsUpdateTick = (now - _lastUpdateTimeInterval) > 0.5;
     
-    if (_updatesContinuously || needsUpdateTick) {
+    if (_updatesContinuously || _needsUpdate || needsUpdateTick) {
         [self _updateImage];
         _lastUpdateTimeInterval = now;
     }
@@ -84,6 +85,8 @@
     _image = CGWindowListCreateImage(screenBounds, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
 
     [_delegate aperture:self didUpdateImage:_image];
+
+    _needsUpdate = NO;
 }
 
 
@@ -91,7 +94,7 @@
 {
     _scaleFactor = [_cursor displayScaleFactor];
     
-    CGFloat pointsToCapture = (120.0 / _zoomLevel) + 2;
+    CGFloat pointsToCapture = (120.0 / _zoomLevel) + (_scaleFactor > 1 ? 2 : 0);
     CGFloat pointsToAverage = ((_apertureSize * 2) + 1) * (8.0 / (_zoomLevel * _scaleFactor));
 
     CGFloat captureOffset = floor(pointsToCapture / 2.0);
@@ -188,7 +191,7 @@
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
-    [self _updateImage];
+    _needsUpdate = YES;
 }
 
 

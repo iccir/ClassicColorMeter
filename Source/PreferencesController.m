@@ -184,7 +184,7 @@
     [o_enableMyClippedColorButton setState: highlightsMyClippedValues];
     [o_myClippedColorWell       setEnabled: highlightsMyClippedValues];
     [o_myClippedColorWell         setColor: [preferences colorForMyClippedValues]];
-    [o_useMyClippedValueButton    setState: [preferences usesMyClippedValues]];
+    [o_useMyClippedValueButton    setState: ![preferences usesMyClippedValues]];
 
     BOOL usesDifferentColorSpaceInHoldColor = [preferences usesDifferentColorSpaceInHoldColor];
 
@@ -332,7 +332,7 @@
         [preferences setColorForMyClippedValues:[sender color]];
 
     } else if (sender == o_useMyClippedValueButton) {
-        [preferences setUsesMyClippedValues:([sender state] == NSOnState)];
+        [preferences setUsesMyClippedValues:([sender state] != NSOnState)];
     }
 }
 
