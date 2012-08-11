@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1070</int>
-		<string key="IBDocument.SystemVersion">12A256</string>
+		<string key="IBDocument.SystemVersion">12A269</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2809</string>
-		<string key="IBDocument.AppKitVersion">1185</string>
-		<string key="IBDocument.HIToolboxVersion">622.00</string>
+		<string key="IBDocument.AppKitVersion">1187</string>
+		<string key="IBDocument.HIToolboxVersion">624.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">2809</string>
@@ -573,17 +573,17 @@
 						<object class="NSMenu" key="NSSubmenu" id="992780483">
 							<string key="NSTitle">Help</string>
 							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="587783468">
+								<object class="NSMenuItem" id="202182830">
 									<reference key="NSMenu" ref="992780483"/>
-									<string key="NSTitle">View Website…</string>
+									<string key="NSTitle">Send Feedback…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="918985629">
+								<object class="NSMenuItem" id="790324218">
 									<reference key="NSMenu" ref="992780483"/>
-									<string key="NSTitle">Learn about Color Conversion…</string>
+									<string key="NSTitle">View on App Store…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -599,17 +599,9 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
-								<object class="NSMenuItem" id="202182830">
+								<object class="NSMenuItem" id="918985629">
 									<reference key="NSMenu" ref="992780483"/>
-									<string key="NSTitle">Send Feedback…</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="35465992"/>
-									<reference key="NSMixedImage" ref="502551668"/>
-								</object>
-								<object class="NSMenuItem" id="790324218">
-									<reference key="NSMenu" ref="992780483"/>
-									<string key="NSTitle">View on App Store…</string>
+									<string key="NSTitle">Learn about Color Conversion…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="35465992"/>
@@ -724,6 +716,7 @@
 									<string key="NSFrame">{{0, 2}, {120, 19}}</string>
 									<reference key="NSSuperview" ref="714504242"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:2419</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="933520240">
@@ -1031,7 +1024,7 @@
 									<object class="NSTextFieldCell" key="NSCell" id="843613000">
 										<int key="NSCellFlags">-2073034687</int>
 										<int key="NSCellFlags2">272634880</int>
-										<string key="NSContents">88888</string>
+										<string key="NSContents"/>
 										<reference key="NSSupport" ref="493008872"/>
 										<string key="NSCellIdentifier">_NS:247</string>
 										<reference key="NSControlView" ref="83946657"/>
@@ -1199,6 +1192,7 @@
 							<string key="NSFrameSize">{240, 240}</string>
 							<reference key="NSSuperview" ref="499903875"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:498</string>
 							<string key="NSClassName">ResultView</string>
 						</object>
@@ -1821,14 +1815,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">viewSite:</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="587783468"/>
-					</object>
-					<int key="connectionID">959</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">learnAboutConversion:</string>
 						<reference key="source" ref="976324537"/>
 						<reference key="destination" ref="918985629"/>
@@ -2058,9 +2044,8 @@
 						<reference key="object" ref="992780483"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="202182830"/>
-							<reference ref="1684699"/>
 							<reference ref="790324218"/>
-							<reference ref="587783468"/>
+							<reference ref="1684699"/>
 							<reference ref="918985629"/>
 						</array>
 						<reference key="parent" ref="448692316"/>
@@ -2639,11 +2624,6 @@
 						<reference key="parent" ref="992780483"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">957</int>
-						<reference key="object" ref="587783468"/>
-						<reference key="parent" ref="992780483"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">958</int>
 						<reference key="object" ref="918985629"/>
 						<reference key="parent" ref="992780483"/>
@@ -2792,7 +2772,6 @@
 				<string key="953.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="955.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="956.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="957.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="958.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>

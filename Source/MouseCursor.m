@@ -9,7 +9,6 @@
 #import "MouseCursor.h"
 
 @implementation MouseCursor {
-    NSTimer *_timer;
     NSMutableArray *_listeners;
     CGFloat _screenZeroHeight;
     id _globalMonitor;
@@ -38,8 +37,7 @@
         
         _listeners = CFBridgingRelease(CFArrayCreateMutable(NULL, 0, NULL));
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDidChangeScreenParameters:) name:NSApplicationDidChangeScreenParametersNotification object:nil];
-        [self _handleDidChangeScreenParameters:nil];
+        [self update];
         [self _handleMouseMoved];
         
     }
@@ -111,8 +109,10 @@
 }
 
 
-- (void) _handleDidChangeScreenParameters:(NSNotification *)note
+- (void) update
 {
+    [self _updateDisplay];
+
     NSArray  *screensArray = [NSScreen screens];
     NSScreen *screenZero   = [screensArray count] ? [screensArray objectAtIndex:0] : nil;
 

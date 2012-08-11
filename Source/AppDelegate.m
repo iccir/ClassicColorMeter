@@ -206,6 +206,13 @@ typedef enum : NSInteger {
 }
 
 
+- (void) applicationDidChangeScreenParameters:(NSNotification *)notification
+{
+    [_cursor update];
+    [_aperture update];
+}
+
+
 - (void) dealloc
 {
     [[ShortcutManager sharedInstance] removeListener:self];
@@ -509,11 +516,13 @@ typedef enum : NSInteger {
         }
     }
 
-    [o_resultView setColorSpace:CGImageGetColorSpace(image)];
+    CGColorSpaceRef colorSpace = CGImageGetColorSpace(image);
+    [o_resultView setColorSpace:colorSpace];
+    [o_colorResultView setColorSpace:colorSpace];
 
     [o_previewView setImage:image];
-    [o_previewView setOffset:[_aperture offset]];
     [o_previewView setImageScale:[_aperture scaleFactor]];
+    [o_previewView setOffset:[_aperture offset]];
     [o_previewView setApertureRect:[_aperture apertureRect]];
 }
 

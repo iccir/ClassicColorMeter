@@ -18,11 +18,11 @@
 @implementation GuideController {
     MouseCursor *_cursor;
 
-    NSWindow *_horizontalWindow;
-    CALayer  *_horizontalLayer;
+    NSWindow    *_horizontalWindow;
+    NSImageView *_horizontalView;
 
-    NSWindow *_verticalWindow;
-    CALayer  *_verticalLayer;
+    NSWindow    *_verticalWindow;
+    NSImageView *_verticalView;
 }
 
 
@@ -40,11 +40,10 @@
          _cursor = [MouseCursor sharedInstance];
         [_cursor addListener:self];
 
-         void (^makeWindowAndLayer)(NSWindow **, CALayer **) = ^(NSWindow **outWindow, CALayer **outLayer) {
+         void (^makeWindowAndView)(NSWindow **, NSImageView **) = ^(NSWindow **outWindow, NSImageView **outView) {
             NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:0 backing:NSBackingStoreBuffered defer:NO];
             
-            CALayer *rootLayer = [CALayer layer];
-            [rootLayer setDelegate:self];
+            NSImageView *view = [[NSImageView alloc] initWithFrame:NSZeroRect];
 
             [window setOpaque:NO];
             [window setBackgroundColor:[NSColor clearColor]];
@@ -53,31 +52,32 @@
             [window setAnimationBehavior:NSWindowAnimationBehaviorNone];
             [window setIgnoresMouseEvents:YES];
 
-            [[window contentView] setLayer:rootLayer];
-            [[window contentView] setWantsLayer:YES];
+            [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [view setImageScaling:NSImageScaleAxesIndependently];
+            [[window contentView] addSubview:view];
             
             *outWindow = window;
-            *outLayer  = rootLayer;
+            *outView   = view;
         };
 
         {
             NSWindow *horizontalWindow;
-            CALayer  *horizontalLayer;
+            NSImageView *horizontalView;
 
-            makeWindowAndLayer(&horizontalWindow, &horizontalLayer);
+            makeWindowAndView(&horizontalWindow, &horizontalView);
 
             _horizontalWindow = horizontalWindow;
-            _horizontalLayer  = horizontalLayer;
+            _horizontalView   = horizontalView;
         }
 
         {
             NSWindow *verticalWindow;
-            CALayer  *verticalLayer;
+            NSImageView *verticalView;
 
-            makeWindowAndLayer(&verticalWindow, &verticalLayer);
+            makeWindowAndView(&verticalWindow, &verticalView);
 
             _verticalWindow = verticalWindow;
-            _verticalLayer  = verticalLayer;
+            _verticalView   = verticalView;
         }
     }
     
@@ -94,12 +94,12 @@
 - (void) _updateContents
 {
     CGFloat scale = [_cursor displayScaleFactor];
-
-    CGImageRef (^createImage)(BOOL) = ^(BOOL rotate) {
-        return CreateImage(CGSizeMake(3, 3), NO, scale, ^(CGContextRef context) {
+    
+    NSImage *(^makeImage)(BOOL) = ^(BOOL rotate) {
+        CGImageRef cgImage = CreateImage(CGSizeMake(3, 3), NO, scale, ^(CGContextRef context) {
             if (rotate) {
                 CGContextTranslateCTM(context, 1.5, 1.5);
-                CGContextRotateCTM(context, M_PI / 2.0);
+                CGContextRotateCTM(context, -M_PI / 2.0);
                 CGContextTranslateCTM(context, -1.5, -1.5);
             }
 
@@ -120,17 +120,18 @@
             
             CGColorSpaceRelease(space);
         });
+
+        return [[NSImage alloc] initWithCGImage:cgImage size:CGSizeMake(3, 3)];
     };
 
-    CGImageRef horizontalImage = createImage(NO);
-    [_horizontalLayer setContents:(__bridge id)horizontalImage];
-    [_horizontalLayer setContentsScale:scale];
-    CGImageRelease(horizontalImage);
 
-    CGImageRef verticalImage = createImage(YES);
-    [_verticalLayer setContents:(__bridge id)verticalImage];
-    [_verticalLayer setContentsScale:scale];
-    CGImageRelease(verticalImage);
+    NSImage *horizontalImage = makeImage(NO);
+    NSImage *verticalImage   = makeImage(YES);
+
+    [_horizontalView setImage:horizontalImage];
+    [_verticalView   setImage:verticalImage];
+    
+    [[verticalImage TIFFRepresentation] writeToFile:@"/tmp/ver.tiff" atomically:YES];
 }
 
 
@@ -141,15 +142,29 @@
     
     CGPoint location = [_cursor unflippedLocation];
 
+    NSDisableScreenUpdates();
+
     if ([_cursor isYLocked]) {
         [_horizontalWindow orderFront:self];
+
+        CGFloat remainder = fmod(location.y, 1.0);
+        location.y -= remainder;
+
+        [_horizontalView   setFrameOrigin:CGPointMake(0, remainder)];
         [_horizontalWindow setFrame:CGRectMake(screenFrame.origin.x, location.y - 1.0, screenFrame.size.width, 3.0) display:YES];
     }
 
     if ([_cursor isXLocked]) {
         [_verticalWindow orderFront:self];
+        
+        CGFloat remainder = fmod(location.x, 1.0);
+        location.x -= remainder;
+
+        [_verticalView   setFrameOrigin:CGPointMake(remainder, 0)];
         [_verticalWindow setFrame:CGRectMake(location.x - 1.0, screenFrame.origin.y, 3.0, screenFrame.size.height) display:YES];
     }
+    
+    NSEnableScreenUpdates();
 }
 
 
@@ -181,6 +196,7 @@
 - (void) mouseCursorMovedToDisplay:(CGDirectDisplayID)display
 {
     [self _updateLocation];
+    [self _updateContents];
 }
 
 

@@ -17,12 +17,17 @@
 
 
 @implementation Aperture {
-    ColorSyncTransformRef _colorSyncTransform;
-    ColorConversion _colorConversion;
-    NSTimeInterval _lastUpdateTimeInterval;
-    CGRect         _screenBounds;
-    BOOL           _needsUpdate;
+    CFMutableDictionaryRef _displayToScaleFactorMap;
+    ColorSyncTransformRef  _colorSyncTransform;
+    ColorConversion        _colorConversion;
+    NSTimeInterval         _lastUpdateTimeInterval;
+    CGRect                 _screenBounds;
+    CGRect                 _captureRect;
+    BOOL                   _needsUpdate;
+    BOOL                   _canHaveMixedScaleFactors;
+    BOOL                   _hasMixedScaleFactors;
 }
+
 
 - (id) init
 {
@@ -48,6 +53,11 @@
 
 - (void) dealloc
 {
+    if (_displayToScaleFactorMap) {
+        CFRelease(_displayToScaleFactorMap);
+        _displayToScaleFactorMap = NULL;
+    }
+
     if (_colorSyncTransform) {
         CFRelease(_colorSyncTransform);
         _colorSyncTransform = NULL;
@@ -64,6 +74,13 @@
     BOOL needsUpdateTick = (now - _lastUpdateTimeInterval) > 0.5;
     
     if (_updatesContinuously || _needsUpdate || needsUpdateTick) {
+        [self _updateOffsetAndCaptureRect];
+
+        if (_canHaveMixedScaleFactors) {
+            [self _updateScaleFactor];
+            [self _updateAperture];
+        }
+
         [self _updateImage];
         _lastUpdateTimeInterval = now;
     }
@@ -72,17 +89,19 @@
 
 - (void) _updateImage
 {
-    CGPoint location = [_cursor location];
-    CGPoint locationToUse = CGPointMake(floor(location.x), floor(location.y));
-    
-    _offset = CGPointMake(location.x - locationToUse.x, location.y - locationToUse.y);
-
-    CGRect screenBounds = _screenBounds;
-    screenBounds.origin.x += locationToUse.x;
-    screenBounds.origin.y += locationToUse.y;
-
     CGImageRelease(_image);
-    _image = CGWindowListCreateImage(screenBounds, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
+
+    CGWindowImageOption imageOption = kCGWindowImageDefault;
+    
+    if (_hasMixedScaleFactors) {
+        if (_scaleFactor == 1.0) {
+            imageOption |= kCGWindowImageNominalResolution;
+        } else {
+            imageOption |= kCGWindowImageBestResolution;
+        }
+    }
+
+    _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
 
     [_delegate aperture:self didUpdateImage:_image];
 
@@ -90,20 +109,66 @@
 }
 
 
-- (void) _updateAperture
+- (void) _updateScreenBounds
 {
-    _scaleFactor = [_cursor displayScaleFactor];
-    
-    CGFloat pointsToCapture = (120.0 / _zoomLevel) + (_scaleFactor > 1 ? 2 : 0);
-    CGFloat pointsToAverage = ((_apertureSize * 2) + 1) * (8.0 / (_zoomLevel * _scaleFactor));
-
+    CGFloat pointsToCapture = (120.0 / _zoomLevel) + (1 + 1); // Pad with 1 pixel on each side
     CGFloat captureOffset = floor(pointsToCapture / 2.0);
-    CGFloat averageOffset = ((pointsToCapture - pointsToAverage) / 2.0);
 
     _screenBounds = CGRectMake(-captureOffset, -captureOffset, pointsToCapture, pointsToCapture);
-    _apertureRect = CGRectMake( averageOffset,  averageOffset, pointsToAverage, pointsToAverage);
+}
 
-    [self _updateImage];
+
+- (void) _updateOffsetAndCaptureRect
+{
+    CGPoint location = [_cursor location];
+    CGPoint locationToUse = CGPointMake(floor(location.x), floor(location.y));
+    
+    _offset = CGPointMake(location.x - locationToUse.x, location.y - locationToUse.y);
+
+    _captureRect = _screenBounds;
+    _captureRect.origin.x += locationToUse.x;
+    _captureRect.origin.y += locationToUse.y;
+}
+
+
+- (void) _updateScaleFactor
+{
+    _scaleFactor = [_cursor displayScaleFactor];
+    _hasMixedScaleFactors = NO;
+
+    uint32_t count = 0;
+    CGError  err   = kCGErrorSuccess;
+    CGDirectDisplayID *displays = NULL;
+
+    err = CGGetOnlineDisplayList(0, NULL, &count);
+    if (!err && (count > 1)) {
+        displays = alloca(sizeof(CGDirectDisplayID) * count);
+        err = CGGetDisplaysWithRect(_captureRect, count, displays, &count);
+    }
+
+    if (!err && (count > 1)) {
+        NSInteger existingScaleFactor = -1;
+        for (NSInteger i = 0; i < count; i++) {
+            NSInteger scaleFactor = (NSInteger) CFDictionaryGetValue(_displayToScaleFactorMap, (void *)displays[i]);
+
+            if (existingScaleFactor < 0) {
+                existingScaleFactor = scaleFactor;
+
+            } else if (scaleFactor != existingScaleFactor) {
+                _hasMixedScaleFactors = YES;
+                break;
+            }
+        }
+    }
+}
+
+
+- (void) _updateAperture
+{
+    CGFloat pointsToAverage = ((_apertureSize * 2) + 1) * (8.0 / (_zoomLevel * _scaleFactor));
+    CGFloat averageOffset = ((_screenBounds.size.width - pointsToAverage) / 2.0);
+
+    _apertureRect = CGRectMake( averageOffset,  averageOffset, pointsToAverage, pointsToAverage);
 }
 
 
@@ -198,7 +263,9 @@
 - (void) mouseCursorMovedToDisplay:(CGDirectDisplayID)display
 {
     [self _updateColorProfile];
-    [self _updateAperture];
+    [self _updateScaleFactor];
+    [self _updateOffsetAndCaptureRect];
+    [self _updateImage];
 }
 
 
@@ -213,6 +280,31 @@
 
 - (void) update
 {
+    if (!_displayToScaleFactorMap) {
+        _displayToScaleFactorMap = CFDictionaryCreateMutable(NULL, 0, NULL, NULL);
+    }
+
+    _canHaveMixedScaleFactors = NO;
+    CFDictionaryRemoveAllValues(_displayToScaleFactorMap);
+
+    NSInteger existingScaleFactor = -1;
+
+    for (NSScreen *screen in [NSScreen screens]) {
+        NSInteger screenNumber = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] integerValue];
+        NSInteger scaleFactor  = (NSInteger)[screen backingScaleFactor];
+        
+        if (existingScaleFactor < 0) {
+            existingScaleFactor = scaleFactor;
+        } else if (scaleFactor != existingScaleFactor) {
+            _canHaveMixedScaleFactors = YES;
+        }
+        
+        CFDictionarySetValue(_displayToScaleFactorMap, (void *)screenNumber, (void *)scaleFactor);
+    }
+
+    [self _updateScreenBounds];
+    [self _updateOffsetAndCaptureRect];
+    [self _updateScaleFactor];
     [self _updateAperture];
     [self _updateColorProfile];
     [self _updateImage];
@@ -334,6 +426,7 @@
     if (_apertureSize != apertureSize) {
         _apertureSize = apertureSize;
         [self _updateAperture];
+        [self _updateImage];
     }
 }
 
@@ -347,6 +440,7 @@
     if (_zoomLevel != zoomLevel) {
         _zoomLevel = zoomLevel;
         [self _updateAperture];
+        [self _updateImage];
     }
 }
 

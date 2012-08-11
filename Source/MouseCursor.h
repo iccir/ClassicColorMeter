@@ -21,6 +21,7 @@
 - (void) addListener:(id<MouseCursorListener>)listener;
 - (void) removeListener:(id<MouseCursorListener>)listener;
 
+- (void) update;
 
 @property (nonatomic, assign) CGPoint location;
 
