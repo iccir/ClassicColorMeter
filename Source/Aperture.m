@@ -439,6 +439,9 @@
 
     if (_zoomLevel != zoomLevel) {
         _zoomLevel = zoomLevel;
+        
+        [self _updateScreenBounds];
+        [self _updateOffsetAndCaptureRect];
         [self _updateAperture];
         [self _updateImage];
     }
