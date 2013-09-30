@@ -25,7 +25,9 @@
 #import "Util.h"
 
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ColorAction) {
+    UnknownColorAction          = -1,
+
     CopyColorAsColor            = 0,
 
     CopyColorAsText             = 1,
@@ -36,7 +38,7 @@ typedef enum : NSInteger {
     CopyColorAsHexColorSnippet  = 5,
     CopyColorAsRGBColorSnippet  = 6,
     CopyColorAsRGBAColorSnippet = 7
-} ColorAction;
+};
 
 
 
@@ -1068,7 +1070,7 @@ typedef enum : NSInteger {
     Preferences *preferences = [Preferences sharedInstance];
     BOOL yn = NO;
 
-    ColorAction colorAction = -1;
+    ColorAction colorAction = UnknownColorAction;
 
     if ([[preferences holdColorShortcut] isEqual:shortcut]) {
         [self holdColor:self];
@@ -1098,7 +1100,7 @@ typedef enum : NSInteger {
         colorAction = CopyColorAsRGBAColorSnippet;
     }
 
-    if (colorAction != -1) {
+    if (colorAction != UnknownColorAction) {
         NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
         
         id<NSPasteboardWriting> writer = [self _pasteboardWriterForColorAction:colorAction];

@@ -101,7 +101,19 @@
         }
     }
 
-    _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
+    BOOL needsAirplayWorkaround = CGCursorIsDrawnInFramebuffer();
+    if (needsAirplayWorkaround) {
+        CGWindowID cursorWindowID = [_cursor windowIDForSoftwareCursor];
+        
+        if (cursorWindowID != kCGNullWindowID) {
+            _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionOnScreenBelowWindow, cursorWindowID, imageOption);
+        } else {
+            _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
+        }
+        
+    } else {
+        _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
+    }
 
     [_delegate aperture:self didUpdateImage:_image];
 
@@ -149,7 +161,7 @@
     if (!err && (count > 1)) {
         NSInteger existingScaleFactor = -1;
         for (NSInteger i = 0; i < count; i++) {
-            NSInteger scaleFactor = (NSInteger) CFDictionaryGetValue(_displayToScaleFactorMap, (void *)displays[i]);
+            NSInteger scaleFactor = (NSInteger) CFDictionaryGetValue(_displayToScaleFactorMap, displays[i]);
 
             if (existingScaleFactor < 0) {
                 existingScaleFactor = scaleFactor;

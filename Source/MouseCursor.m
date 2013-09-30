@@ -120,6 +120,29 @@
 }
 
 
+- (CGWindowID) windowIDForSoftwareCursor
+{
+    CFArrayRef descriptionList = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID);
+    CGWindowID result = kCGNullWindowID;
+
+    CFIndex count = CFArrayGetCount(descriptionList);
+    for (CFIndex i = 0; i < count; i++) {
+        NSDictionary *description = (__bridge NSDictionary *)CFArrayGetValueAtIndex(descriptionList, i);
+
+        CGWindowLevel cursorLevel = CGWindowLevelForKey(kCGCursorWindowLevelKey);
+        CGWindowLevel windowLevel = [[description objectForKey:(id)kCGWindowLayer] intValue];
+        
+        if (cursorLevel == windowLevel) {
+            result = [[description objectForKey:(id)kCGWindowNumber] intValue];
+            break;
+        }
+    }
+    
+    CFRelease(descriptionList);
+    
+    return result;
+}
+
 - (void) movePositionByXDelta:(CGFloat)xDelta yDelta:(CGFloat)yDelta
 {
     if (_displayScaleFactor != 1.0) {

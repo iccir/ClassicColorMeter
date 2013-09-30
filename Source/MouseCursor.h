@@ -29,6 +29,8 @@
 @property (nonatomic, assign, getter=isXLocked) BOOL xLocked;
 @property (nonatomic, assign, getter=isYLocked) BOOL yLocked;
 
+- (CGWindowID) windowIDForSoftwareCursor;
+
 // On a Retina display and in pixel selection mode
 @property (nonatomic, assign) BOOL inRetinaPixelMode;
 
