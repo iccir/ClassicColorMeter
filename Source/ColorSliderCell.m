@@ -42,45 +42,34 @@
 
 - (void) drawBarInside:(NSRect)aRect flipped:(BOOL)flipped
 {
-    static CGFloat const sXInset = 3;
-    static CGFloat const sYInset = 5;
-
-    NSImage *leftCap  = [NSImage imageNamed:@"slider_cover_leftcap"];
-    NSImage *center   = [NSImage imageNamed:@"slider_cover_center"];
-    NSImage *rightCap = [NSImage imageNamed:@"slider_cover_rightcap"];
+//    static CGFloat const sXInset = 3;
+//    static CGFloat const sYInset = 5;
 
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 
-    CGFloat xRadius   = ((aRect.size.width  / 2.0) - sXInset);
-    CGFloat yRadius   = ((aRect.size.height / 2.0) - sYInset);
+    CGFloat xRadius   = aRect.size.width  / 2.0;
+    CGFloat yRadius   = aRect.size.height / 2.0;
     CGFloat minRadius = MIN(xRadius, yRadius);
     
-    CGRect barRect = CGRectInset(aRect, sXInset, sYInset);
-    CGRect shadowRect = barRect;
-    shadowRect.origin.y += 1.5;
-
-    CGRect coverRect = barRect;
-    coverRect.size.height = [center size].height;
-
     CGContextSaveGState(context);
-    {
-        NSBezierPath *eraserPath = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(barRect, -1, 2) xRadius:minRadius yRadius:minRadius];
-        BOOL isKey = [[[self controlView] window] isKeyWindow];
-        [[NSColor colorWithDeviceWhite:(isKey ? 0.8 : 0.9) alpha:1.0] set];
-        [eraserPath fill];
+    CGContextSaveGState(context);
 
-        CGContextSaveGState(context);
-        {
-            NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:barRect xRadius:minRadius yRadius:minRadius];
-            [barPath addClip];
-            
-            [self _drawColorBackgroundInRect:aRect context:context];
-        }
-        CGContextRestoreGState(context);
+    NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:aRect xRadius:minRadius yRadius:minRadius];
 
-        NSDrawThreePartImage(coverRect, leftCap, center, rightCap, NO, NSCompositeSourceOver, 1.0, YES);
-    }
+
+    CGContextSetStrokeColorWithColor(context, [[NSColor colorWithCalibratedWhite:0 alpha:0.5] CGColor]);
+    [barPath stroke];
+
     CGContextRestoreGState(context);
+
+    [barPath addClip];
+    
+    [self _drawColorBackgroundInRect:aRect context:context];
+
+    CGContextRestoreGState(context);
+
+
+
 }
 
 - (void) drawKnob:(NSRect)rect

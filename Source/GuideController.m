@@ -130,8 +130,6 @@
 
     [_horizontalView setImage:horizontalImage];
     [_verticalView   setImage:verticalImage];
-    
-    [[verticalImage TIFFRepresentation] writeToFile:@"/tmp/ver.tiff" atomically:YES];
 }
 
 

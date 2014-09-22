@@ -191,7 +191,9 @@ static void sConvertColor(Color *inColor, CFStringRef profileName, float *outFlo
         float input[3]  = { red, green, blue };
         float output[3] = { 0.0, 0.0, 0.0 };
 
-        ColorSyncTransformConvert(transform, 1, 1, &output[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, &input[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, NULL);
+        if (!ColorSyncTransformConvert(transform, 1, 1, &output[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, &input[0], kColorSync32BitFloat, kColorSyncByteOrderDefault, 12, NULL)) {
+            NSLog(@"ColorSyncTransformConvert failed");
+        }
 
         *outFloat0 = output[0];
         *outFloat1 = output[1];

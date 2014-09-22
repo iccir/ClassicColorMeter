@@ -47,40 +47,10 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     BOOL drawArrow = (_arrowRect.size.width > 0) && _drawsArrow;
     
-    if (drawArrow) {
-        CGContextSaveGState(context);
-        
-        CGImageRef cgImage = CreateImageMask(frame.size, 1, ^(CGContextRef context) {
-            CGRect bounds = frame;
-            bounds.origin = CGPointZero;
-
-            CGFloat startLocation = (frame.size.width - 17.0) / frame.size.width;
-            CGFloat endLocation   = (frame.size.width - 11.0) / frame.size.width;
-            
-            NSGradient *g = [[NSGradient alloc] initWithColorsAndLocations:
-                [NSColor whiteColor], 0.0,
-                [NSColor whiteColor], startLocation,
-                [NSColor darkGrayColor], endLocation,
-                nil];
-                
-            [g drawInRect:bounds angle:0];
-        });
-        
-        CGContextClipToMask(context, frame, cgImage);        
-        
-        CGImageRelease(cgImage);
-    }
-    
     NSRect rect = [super drawTitle:title withFrame:frame inView:controlView];
     
     if (drawArrow) {
-        CGContextRestoreGState(context);
         CGContextSaveGState(context);
-
-        NSShadow *shadow = [[NSShadow alloc] init];
-        [shadow setShadowOffset:NSMakeSize(0, -1)];
-        [shadow setShadowBlurRadius:1.0];
-        [shadow set];
 
         NSBezierPath *path = sGetArrowPath(_arrowRect);
         [[NSColor whiteColor] set];

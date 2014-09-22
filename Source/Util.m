@@ -101,49 +101,49 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
 NSString *ColorModeGetName(ColorMode mode)
 {
     if (mode == ColorMode_RGB_Percentage) {
-        return NSLocalizedString(@"RGB, percentage", @"RGB %");
+        return NSLocalizedString(@"RGB, percentage", nil);
 
     } else if (mode == ColorMode_RGB_Value_8) {
-        return NSLocalizedString(@"RGB, actual value, 8-bit", @"RGB, actual value, 8-bit");
+        return NSLocalizedString(@"RGB, decimal, 8-bit", nil);
 
     } else if (mode == ColorMode_RGB_Value_16) {
-        return NSLocalizedString(@"RGB, actual value, 16-bit", @"RGB, actual value, 16-bit");
+        return NSLocalizedString(@"RGB, decimal, 16-bit", nil);
 
     } else if (mode == ColorMode_RGB_HexValue_8) {
-        return NSLocalizedString(@"RGB, hex value, 8-bit", @"RGB, hex, 8-bit");
+        return NSLocalizedString(@"RGB, hex, 8-bit", nil);
 
     } else if (mode == ColorMode_RGB_HexValue_16) {
-        return NSLocalizedString(@"RGB, hex value, 16-bit", @"RGB, hex, 16-bit");
+        return NSLocalizedString(@"RGB, hex, 16-bit", nil);
 
     } else if (mode == ColorMode_YPbPr_601) {
-        return NSLocalizedString(@"Y'PrPb ITU-R BT.601", @"Y'PrPb 601");
+        return NSLocalizedString(@"Y'PrPb ITU-R BT.601", nil);
     
     } else if (mode == ColorMode_YPbPr_709) {
-        return NSLocalizedString(@"Y'PrPb ITU-R BT.709", @"Y'PrPb 709");
+        return NSLocalizedString(@"Y'PrPb ITU-R BT.709", nil);
 
     } else if (mode == ColorMode_YCbCr_601) {
-        return NSLocalizedString(@"Y'CbCr ITU-R BT.601", @"Y'CbCr 601");
+        return NSLocalizedString(@"Y'CbCr ITU-R BT.601", nil);
 
     } else if (mode == ColorMode_YCbCr_709) {
-        return NSLocalizedString(@"Y'CbCr ITU-R BT.709", @"Y'CbCr 709");
+        return NSLocalizedString(@"Y'CbCr ITU-R BT.709", nil);
 
     } else if (mode == ColorMode_CIE_1931) {
-        return NSLocalizedString(@"CIE 1931", @"CIE 1931");
+        return NSLocalizedString(@"CIE 1931", nil);
 
     } else if (mode == ColorMode_CIE_1976) {
-        return NSLocalizedString(@"CIE 1976", @"CIE 1976");
+        return NSLocalizedString(@"CIE 1976", nil);
 
     } else if (mode == ColorMode_CIE_Lab) {
-        return NSLocalizedString(@"CIE L*a*b*", @"CIE L*a*b*");
+        return NSLocalizedString(@"CIE L*a*b*", nil);
 
     } else if (mode == ColorMode_Tristimulus) {
-        return NSLocalizedString(@"Tristimulus", @"Tristimulus");
+        return NSLocalizedString(@"Tristimulus", nil);
 
     } else if (mode == ColorMode_HSB) {
-        return NSLocalizedString(@"HSB", @"HSB");
+        return NSLocalizedString(@"HSB", nil);
 
     } else if (mode == ColorMode_HSL) {
-        return NSLocalizedString(@"HSL", @"HSL");
+        return NSLocalizedString(@"HSL", nil);
     }
 
     return @"";
@@ -261,7 +261,7 @@ CGImageRef CreateImageMask(CGSize size, CGFloat scale, void (^callback)(CGContex
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
 
     if (colorSpace && width > 0 && height > 0) {
-        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width, colorSpace, 0 | kCGImageAlphaNone);
     
         if (context) {
             CGContextTranslateCTM(context, 0, height);
@@ -294,7 +294,7 @@ CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
     if (colorSpace && width > 0 && height > 0) {
-        CGBitmapInfo bitmapInfo = (opaque ? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst);
+        CGBitmapInfo bitmapInfo = 0 | (opaque ? kCGImageAlphaNoneSkipFirst : kCGImageAlphaPremultipliedFirst);
         CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width * 4, colorSpace, bitmapInfo);
     
         if (context) {

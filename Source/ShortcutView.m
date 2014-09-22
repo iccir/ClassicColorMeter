@@ -26,15 +26,6 @@
 @end
 
 
-static NSGradient *sMakeGradient(CGFloat gray1, CGFloat gray2, CGFloat location1, CGFloat location2)
-{
-    NSColor *color1 = [NSColor colorWithDeviceWhite:gray1 alpha:1.0];
-    NSColor *color2 = [NSColor colorWithDeviceWhite:gray2 alpha:1.0];
-
-    return [[NSGradient alloc] initWithColorsAndLocations:color1, location1, color2, location2, nil];
-}
-
-
 static NSBezierPath *sMakeRoundedPath(CGRect rect)
 {
     CGFloat halfWidth  = rect.size.width / 2.0;
@@ -47,14 +38,6 @@ static NSBezierPath *sMakeRoundedPath(CGRect rect)
 
 static NSImage *sMakeClearIcon(BOOL isPressed)
 {
-    NSGradient *gradient = nil;
-
-    if (isPressed) {
-        gradient = sMakeGradient(0.66, 0.5, 0.0, 1.0);
-    } else {
-        gradient = sMakeGradient(0.75, 0.66, 0.0, 1.0);
-    }
-
     NSImage *result = [[NSImage alloc] initWithSize:NSMakeSize(14.0, 14.0)];
 
     [result lockFocus];
@@ -63,7 +46,14 @@ static NSImage *sMakeClearIcon(BOOL isPressed)
     NSSize      size     = [template size];
 
     NSRect toRect = NSMakeRect(0.0, 0.0, 14.0, 14.0);
-    [gradient drawInBezierPath:[NSBezierPath bezierPathWithRect:toRect] angle:-90];
+
+    if (isPressed) {
+        [[NSColor colorWithCalibratedWhite:0 alpha:0.5] set];
+    } else {
+        [[NSColor colorWithCalibratedWhite:0 alpha:0.33] set];
+    }
+
+    [[NSBezierPath bezierPathWithRect:toRect] fill];
     [template drawInRect:toRect fromRect:NSMakeRect(0, 0, size.width, size.height) operation:NSCompositeDestinationIn fraction:1.0];
 
     [result unlockFocus];
@@ -290,8 +280,8 @@ static NSImage *sGetClearIcon()
     // Draw subtle background gradient
     //
     {
-        NSGradient *gradient = sMakeGradient(0.8, 1.0, 0.0, 0.33);
-        [gradient drawInBezierPath:boundsPath angle:-90.0];
+        [[NSColor whiteColor] set];
+        [boundsPath fill];
     }
 
 
@@ -306,7 +296,7 @@ static NSImage *sGetClearIcon()
             image = sGetPressedClearIcon();
         }
 
-        [image compositeToPoint:clearImageRect.origin operation:NSCompositeSourceOver];
+        [image drawInRect:clearImageRect];
     }
 
     

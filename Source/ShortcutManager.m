@@ -49,7 +49,7 @@ static id sSharedInstance = nil;
 - (id) init
 {
     if ((self = [super init])) {
-        _listeners               = [NSHashTable hashTableWithWeakObjects];
+        _listeners               = [NSHashTable weakObjectsHashTable];
         _shortcutIDToRefMap      = [[NSMutableDictionary alloc] init];
         _shortcutIDToShortcutMap = [[NSMutableDictionary alloc] init];
     }

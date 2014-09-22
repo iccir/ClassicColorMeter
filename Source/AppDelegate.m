@@ -11,7 +11,6 @@
 
 #import "Aperture.h"
 #import "ColorSliderCell.h"
-#import "EtchingView.h"
 #import "GuideController.h"
 #import "MouseCursor.h"
 #import "Preferences.h"
@@ -124,27 +123,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     [o_rightContainer setHidden:YES];
 
-    void (^addEtching)(NSView *, CGFloat, CGFloat, CGFloat, CGFloat) = ^(NSView *host, CGFloat aD, CGFloat aL, CGFloat iD, CGFloat iL) {
-        NSRect frame = [host frame];
-        
-        frame.size.height = 2.0;
-        frame.origin.y   -= 1.0;
-        
-        EtchingView *etching = [[EtchingView alloc] initWithFrame:frame];
-        [etching setActiveDarkOpacity:aD]; 
-        [etching setActiveLightOpacity:aL]; 
-        [etching setInactiveDarkOpacity:iD]; 
-        [etching setInactiveLightOpacity:iL]; 
-        
-        [[host superview] addSubview:etching positioned:NSWindowAbove relativeTo:host];
-    };
-    
-    addEtching(o_value1,      0.10, 0.33, 0.0, 0.1);
-    addEtching(o_value2,      0.12, 0.33, 0.0, 0.1);
-    addEtching(o_value3,      0.15, 0.33, 0.0, 0.1);
-    addEtching(o_resultView,  0.0,  0.33, 0.0, 0.1);
-    addEtching(o_previewView, 0.0,  0.33, 0.0, 0.1);
-    
     NSMenu *menu = [o_colorModePopUp menu];
     void (^addMenu)(ColorMode) = ^(ColorMode mode) {
         NSString   *title = ColorModeGetName(mode);
@@ -188,12 +166,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [o_window setContentBorderThickness:172.0 forEdge:NSMaxYEdge];
     [o_window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
     [o_window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
-
-    [[o_apertureSizeLabel cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[o_holdingLabel      cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[o_label1            cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[o_label2            cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[o_label3            cell] setBackgroundStyle:NSBackgroundStyleRaised];
 
     [self _setupHoldAnimation];
 

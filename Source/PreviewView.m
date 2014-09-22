@@ -47,7 +47,7 @@
  
     if (!_backgroundImage) _backgroundImage = [NSImage imageNamed:@"background"];
     [_backgroundImage drawAtPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0, 0, 120, 120) operation:NSCompositeSourceOver fraction:1.0];
-          
+
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;
 
@@ -157,9 +157,18 @@
         CGContextStrokeRect(context, CGRectInset(apertureRect, 0.5, 0.5));
     }
 
-    CGRect strokeRect = NSInsetRect(bounds, 0.5, 0.5);
-    CGContextSetGrayStrokeColor(context, 0.0, 0.5);
-    CGContextStrokeRect(context, strokeRect);
+    if ([[self window] backingScaleFactor] > 1) {
+        CGRect strokeRect = NSInsetRect(bounds, 0.25, 0.25);
+        CGContextSetLineWidth(context, 0.5);
+        CGContextSetGrayStrokeColor(context, 0.0, 0.33);
+        CGContextStrokeRect(context, strokeRect);
+    } else {
+        CGRect strokeRect = NSInsetRect(bounds, 0.5, 0.5);
+        CGContextSetLineWidth(context, 0.25);
+        CGContextSetGrayStrokeColor(context, 0.0, 0.33);
+        CGContextStrokeRect(context, strokeRect);
+    }
+    
 
     CGContextRestoreGState(context);
 }

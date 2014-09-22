@@ -106,6 +106,7 @@ static CGFloat sDistanceForDrag = 10.0;
     [snapshot setFrame:startingFrame];
     [snapshot setContents:GetSnapshotImageForView(self)];
     [snapshot setMagnificationFilter:kCAFilterNearest];
+    [snapshot setContentsScale:[[self window] backingScaleFactor]];
 
     [contentView setWantsLayer:YES];
     [[contentView layer] addSublayer:snapshot];
@@ -146,8 +147,17 @@ static CGFloat sDistanceForDrag = 10.0;
     CGContextFillRect(context, bounds);
     
     if (_drawsBorder) {
-        CGContextSetGrayStrokeColor(context, 0.0, 0.5);
-        CGContextStrokeRect(context, NSInsetRect(bounds, 0.5, 0.5));
+        CGContextSetGrayStrokeColor(context, 0.0, 0.33);
+
+        if ([[self window] backingScaleFactor] > 1) {
+            CGRect strokeRect = NSInsetRect(bounds, 0.25, 0.25);
+            CGContextSetLineWidth(context, 0.5);
+            CGContextStrokeRect(context, strokeRect);
+        } else {
+            CGRect strokeRect = NSInsetRect(bounds, 0.5, 0.5);
+            CGContextSetLineWidth(context, 0.25);
+            CGContextStrokeRect(context, strokeRect);
+        }
     }
 
     CGContextRestoreGState(context);
