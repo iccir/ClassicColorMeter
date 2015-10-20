@@ -59,7 +59,7 @@ static NSString * const sUsesSystemClippedValues       = @"UsesSystemClippedValu
 static NSString * const sHighlightsSystemClippedValues = @"HighlightsSystemClippedValues";
 static NSString * const sColorForSystemClippedValues   = @"ColorForSystemClippedValues";
 
-static NSString * const sDefaultNSColorSnippetTemplate   = @"[NSColor colorWithDeviceRed:(0x$RHEX / 255.0) green:(0x$GHEX / 255.0) blue:(0x$BHEX / 255.0) alpha:1.0]";
+static NSString * const sDefaultNSColorSnippetTemplate   = @"[NSColor colorWithSRGBRed:(0x$RHEX / 255.0) green:(0x$GHEX / 255.0) blue:(0x$BHEX / 255.0) alpha:1.0]";
 static NSString * const sDefaultUIColorSnippetTemplate   = @"[UIColor colorWithRed:(0x$RHEX / 255.0) green:(0x$GHEX / 255.0) blue:(0x$BHEX / 255.0) alpha:1.0]";
 static NSString * const sDefaultHexColorSnippetTemplate  = @"#$RHEX$GHEX$BHEX";
 static NSString * const sDefaultRGBColorSnippetTemplate  = @"rgb($RN255, $GN255, $BN255)";
@@ -99,9 +99,9 @@ static void sRegisterDefaults(void)
         [defaults setObject:sGetDataForColor(color) forKey:key];
     };
 
-    i( sColorModeKey,         0 );
-    i( sHoldColorModeKey,     ColorMode_HSB );
-    i( sColorProfileTypeKey,  0 );
+    i( sColorModeKey,         ColorMode_RGB_HexValue_8     );
+    i( sHoldColorModeKey,     ColorMode_HSB                );
+    i( sColorProfileTypeKey,  ColorConversionDisplayInSRGB );
     i( sZoomLevelKey,         8 );
     i( sApertureSizeKey,      0 );
     i( sApertureColorKey,     3 );

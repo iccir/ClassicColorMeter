@@ -42,7 +42,7 @@
 
 - (void) drawRect:(NSRect)dirtyRect
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     CGContextSaveGState(context);
  
     if (!_backgroundImage) _backgroundImage = [NSImage imageNamed:@"background"];

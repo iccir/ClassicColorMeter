@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ColorComponent) {
     ColorComponentNone,
 
     ColorComponentRed,
@@ -21,23 +21,23 @@ typedef enum : NSInteger {
     
     ColorComponentSaturationHSL,
     ColorComponentLightness
-} ColorComponent;
+};
 
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ColorStringColor) {
     ColorStringColorNormal,
     ColorStringColorClipped,
     ColorStringColorSystemClipped
-} ColorStringColor;
+};
 
 
-enum {
+typedef NS_OPTIONS(NSUInteger, ColorStringOptions) {
     ColorStringUsesLowercaseHex  = 1 << 0,
     ColorStringUsesPoundPrefix   = 1 << 1,
     ColorStringUsesClippedValues = 1 << 2,
     ColorStringUsesSystemClippedValues = 1 << 3
 };
-typedef NSUInteger ColorStringOptions;
+
 
 @class ColorTransform;
 
@@ -58,7 +58,11 @@ typedef NSUInteger ColorStringOptions;
 - (void) setFloatValue:(float)value forComponent:(ColorComponent)component;
 - (float) floatValueForComponent:(ColorComponent)component;
 
-- (void) setRed:(float)red green:(float)green blue:(float)blue transform:(ColorSyncTransformRef)profile;
+- (void) setRawRed: (float) red
+          rawGreen: (float) green
+           rawBlue: (float) blue 
+         transform: (ColorSyncTransformRef) transform
+        colorSpace: (CGColorSpaceRef) colorSpace;
 
 - (void) setRed:(float)red green:(float)green blue:(float)blue;
 - (void) setHue:(float)hue saturation:(float)saturation brightness:(float)brightness;
@@ -82,5 +86,6 @@ typedef NSUInteger ColorStringOptions;
 @property (nonatomic, readonly) float lightness;     // 0%        -> 100%
 
 @property (nonatomic, copy, readonly) NSColor *NSColor;
+@property (nonatomic, readonly) CGColorSpaceRef colorSpace;
 
 @end

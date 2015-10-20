@@ -19,6 +19,7 @@
 @implementation Aperture {
     CFMutableDictionaryRef _displayToScaleFactorMap;
     ColorSyncTransformRef  _colorSyncTransform;
+    CGColorSpaceRef        _targetColorSpace;
     ColorConversion        _colorConversion;
     NSTimeInterval         _lastUpdateTimeInterval;
     CGRect                 _screenBounds;
@@ -62,6 +63,11 @@
         CFRelease(_colorSyncTransform);
         _colorSyncTransform = NULL;
     }
+
+    if (_targetColorSpace) {
+        CFRelease(_targetColorSpace);
+        _targetColorSpace = NULL;
+    }
 }
 
 
@@ -101,7 +107,11 @@
         }
     }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     BOOL needsAirplayWorkaround = CGCursorIsDrawnInFramebuffer();
+#pragma clang diagnostic pop
+
     if (needsAirplayWorkaround) {
         CGWindowID cursorWindowID = [_cursor windowIDForSoftwareCursor];
         
@@ -161,7 +171,8 @@
     if (!err && (count > 1)) {
         NSInteger existingScaleFactor = -1;
         for (NSInteger i = 0; i < count; i++) {
-            NSInteger scaleFactor = (NSInteger) CFDictionaryGetValue(_displayToScaleFactorMap, displays[i]);
+            NSInteger display     = displays[i];
+            NSInteger scaleFactor = (NSInteger) CFDictionaryGetValue(_displayToScaleFactorMap, (const void *)display);
 
             if (existingScaleFactor < 0) {
                 existingScaleFactor = scaleFactor;
@@ -196,17 +207,26 @@
         _colorSyncTransform = NULL;
     }
 
+    if (_targetColorSpace) {
+        CFRelease(_targetColorSpace);
+        _targetColorSpace = NULL;
+    }
+
     if (_colorConversion == ColorConversionDisplayInSRGB) {
         toProfile = ColorSyncProfileCreateWithName(kColorSyncSRGBProfile);
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
 
     } else if (_colorConversion == ColorConversionDisplayInAdobeRGB) {
         toProfile = ColorSyncProfileCreateWithName(kColorSyncAdobeRGB1998Profile);
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceAdobeRGB1998);
 
     } else if (_colorConversion == ColorConversionDisplayInGenericRGB) {
         toProfile = ColorSyncProfileCreateWithName(kColorSyncGenericRGBProfile);
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 
     } else if ((displayID != mainID) && (_colorConversion == ColorConversionConvertToMainDisplay)) {
         toProfile = ColorSyncProfileCreateWithDisplayID(mainID);
+        _targetColorSpace = CGColorSpaceCreateWithPlatformColorSpace(toProfile);
     }
     
     // Create _colorSyncTransform
@@ -230,30 +250,43 @@
 
     // Update profile name
     {
-        NSString *name = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(fromProfile));
-        if (![name length]) name = NSLocalizedString(@"Display", @"");
+        NSString *displayString    = NSLocalizedString(@"Display",     nil);
+        NSString *sRGBString       = NSLocalizedString(@"sRGB",        nil);
+        NSString *genericRGBString = NSLocalizedString(@"Generic RGB", nil);
+        NSString *adobeRGBString   = NSLocalizedString(@"Adobe RGB",   nil);
+        NSString *mainString       = NSLocalizedString(@"Main",        nil);
+    
+        NSString *fromName = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(fromProfile));
+        if (![fromName length]) fromName = displayString;
 
-        NSMutableArray *profiles = [NSMutableArray array];
+        NSMutableArray *shortProfiles = [NSMutableArray array];
+        NSMutableArray *longProfiles  = [NSMutableArray array];
 
-        [profiles addObject:name];
+        [shortProfiles addObject:displayString];
+        [longProfiles  addObject:fromName];
 
         if (_colorConversion == ColorConversionDisplayInSRGB) {
-            [profiles addObject:NSLocalizedString(@"sRGB", @"")];
+            [shortProfiles addObject:sRGBString];
+            [longProfiles  addObject:sRGBString];
 
         } else if (_colorConversion == ColorConversionDisplayInGenericRGB) {
-            [profiles addObject:NSLocalizedString(@"Generic RGB", @"")];
+            [shortProfiles addObject:genericRGBString];
+            [longProfiles  addObject:genericRGBString];
 
         } else if (_colorConversion == ColorConversionDisplayInAdobeRGB) {
-            [profiles addObject:NSLocalizedString(@"Adobe RGB", @"")];
+            [shortProfiles addObject:adobeRGBString];
+            [longProfiles  addObject:adobeRGBString];
 
         } else if (toProfile) {
             NSString *toName = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(toProfile));
-            if (![toName length]) toName = NSLocalizedString(@"Display", @"");
+            if (![toName length]) toName = mainString;
 
-            [profiles addObject:toName];
+            [shortProfiles addObject:mainString];
+            [longProfiles  addObject:toName];
         }
 
-        _colorProfileLabel = [profiles componentsJoinedByString:GetArrowJoinerString()];
+        _shortColorProfileLabel = [shortProfiles componentsJoinedByString:GetArrowJoinerString()];
+        _longColorProfileLabel  = [longProfiles  componentsJoinedByString:GetArrowJoinerString()];
     }
 
     if (fromProfile) CFRelease(fromProfile);
@@ -360,7 +393,7 @@
         size_t       height     = CGImageGetHeight(_image);
         CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little;
 
-        CGColorSpaceRef space   = CGColorSpaceCreateDeviceRGB();
+        CGColorSpaceRef space   = CGImageGetColorSpace(_image);
         CGContextRef    context = space ? CGBitmapContextCreate(NULL, width, height, 8, 4 * width, space, bitmapInfo) : NULL;
 
         if (context) {
@@ -373,7 +406,6 @@
             alphaInfo   = kCGImageAlphaLast;
         }
         
-        CGColorSpaceRelease(space);
         CGContextRelease(context);
     }
     
@@ -416,10 +448,11 @@
             }
         }
 
-        [color setRed: ((totalR / totalSamples) / 255.0)
-                green: ((totalG / totalSamples) / 255.0)
-                 blue: ((totalB / totalSamples) / 255.0)
-            transform: _colorSyncTransform];
+        [color setRawRed: ((totalR / totalSamples) / 255.0)
+                rawGreen: ((totalG / totalSamples) / 255.0)
+                 rawBlue: ((totalB / totalSamples) / 255.0)
+               transform: _colorSyncTransform
+              colorSpace: _targetColorSpace ? _targetColorSpace : CGImageGetColorSpace(_image)];
     }
 
 

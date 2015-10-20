@@ -123,7 +123,8 @@
 - (CGWindowID) windowIDForSoftwareCursor
 {
     CFArrayRef descriptionList = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID);
-    CGWindowID result = kCGNullWindowID;
+    CGWindowID result         = kCGNullWindowID;
+    CGWindowID resultWithName = kCGNullWindowID;
 
     CFIndex count = CFArrayGetCount(descriptionList);
     for (CFIndex i = 0; i < count; i++) {
@@ -133,14 +134,20 @@
         CGWindowLevel windowLevel = [[description objectForKey:(id)kCGWindowLayer] intValue];
         
         if (cursorLevel == windowLevel) {
-            result = [[description objectForKey:(id)kCGWindowNumber] intValue];
-            break;
+            NSString *name = [description objectForKey:(id)kCGWindowName];
+
+            if ([name isEqualToString:@"Cursor"]) {
+                result = [[description objectForKey:(id)kCGWindowNumber] intValue];
+                break;
+            } else {
+                result = [[description objectForKey:(id)kCGWindowNumber] intValue];
+            }
         }
     }
     
     CFRelease(descriptionList);
     
-    return result;
+    return resultWithName ? resultWithName : result;
 }
 
 - (void) movePositionByXDelta:(CGFloat)xDelta yDelta:(CGFloat)yDelta

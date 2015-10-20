@@ -9,7 +9,7 @@
 #import "Util.h"
 
 #import <ApplicationServices/ApplicationServices.h>
-
+#import <QuartzCore/QuartzCore.h>
 
 NSString * const ProductSiteURLString = @"http://iccir.com/projects/classic-color-meter";
 NSString * const FeedbackURLString    = @"http://iccir.com/projects/classic-color-meter/feedback";
@@ -95,58 +95,6 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
     }
     
     return result;
-}
-
-
-NSString *ColorModeGetName(ColorMode mode)
-{
-    if (mode == ColorMode_RGB_Percentage) {
-        return NSLocalizedString(@"RGB, percentage", nil);
-
-    } else if (mode == ColorMode_RGB_Value_8) {
-        return NSLocalizedString(@"RGB, decimal, 8-bit", nil);
-
-    } else if (mode == ColorMode_RGB_Value_16) {
-        return NSLocalizedString(@"RGB, decimal, 16-bit", nil);
-
-    } else if (mode == ColorMode_RGB_HexValue_8) {
-        return NSLocalizedString(@"RGB, hex, 8-bit", nil);
-
-    } else if (mode == ColorMode_RGB_HexValue_16) {
-        return NSLocalizedString(@"RGB, hex, 16-bit", nil);
-
-    } else if (mode == ColorMode_YPbPr_601) {
-        return NSLocalizedString(@"Y'PrPb ITU-R BT.601", nil);
-    
-    } else if (mode == ColorMode_YPbPr_709) {
-        return NSLocalizedString(@"Y'PrPb ITU-R BT.709", nil);
-
-    } else if (mode == ColorMode_YCbCr_601) {
-        return NSLocalizedString(@"Y'CbCr ITU-R BT.601", nil);
-
-    } else if (mode == ColorMode_YCbCr_709) {
-        return NSLocalizedString(@"Y'CbCr ITU-R BT.709", nil);
-
-    } else if (mode == ColorMode_CIE_1931) {
-        return NSLocalizedString(@"CIE 1931", nil);
-
-    } else if (mode == ColorMode_CIE_1976) {
-        return NSLocalizedString(@"CIE 1976", nil);
-
-    } else if (mode == ColorMode_CIE_Lab) {
-        return NSLocalizedString(@"CIE L*a*b*", nil);
-
-    } else if (mode == ColorMode_Tristimulus) {
-        return NSLocalizedString(@"Tristimulus", nil);
-
-    } else if (mode == ColorMode_HSB) {
-        return NSLocalizedString(@"HSB", nil);
-
-    } else if (mode == ColorMode_HSL) {
-        return NSLocalizedString(@"HSL", nil);
-    }
-
-    return @"";
 }
 
 
@@ -252,39 +200,6 @@ CGContextRef CreateBitmapContext(CGSize size, BOOL opaque, CGFloat scale)
 }
 
 
-CGImageRef CreateImageMask(CGSize size, CGFloat scale, void (^callback)(CGContextRef))
-{
-    size_t width  = size.width * scale;
-    size_t height = size.height * scale;
-
-    CGImageRef      cgImage    = NULL;
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-
-    if (colorSpace && width > 0 && height > 0) {
-        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, width, colorSpace, 0 | kCGImageAlphaNone);
-    
-        if (context) {
-            CGContextTranslateCTM(context, 0, height);
-            CGContextScaleCTM(context, scale, -scale);
-
-            NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
-
-            callback(context);
-            
-            [NSGraphicsContext setCurrentContext:savedContext];
-
-            cgImage = CGBitmapContextCreateImage(context);
-            CFRelease(context);
-        }
-    }
-
-    CGColorSpaceRelease(colorSpace);
-
-    return cgImage;
-}
-
-
 CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)(CGContextRef))
 {
     size_t width  = size.width * scale;
@@ -302,7 +217,7 @@ CGImageRef CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^callback)
             CGContextScaleCTM(context, scale, -scale);
 
             NSGraphicsContext *savedContext = [NSGraphicsContext currentContext];
-            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context flipped:YES]];
+            [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
 
             callback(context);
             
@@ -323,4 +238,53 @@ NSString *GetArrowJoinerString()
 {
     return [NSString stringWithFormat:@" %C ", (unsigned short)0x279D];
 }
+
+
+void DoPopOutAnimation(NSView *view)
+{
+    CGRect  bounds          = [view bounds];
+    CGRect  boundsInBase    = [view convertRect:bounds toView:nil];
+    CGRect  boundsInScreen  = [[view window] convertRectToScreen:boundsInBase];
+    
+    CGRect  fakeWindowFrame = boundsInScreen;
+    fakeWindowFrame.origin.x -= (boundsInScreen.size.width  * 0.5);
+    fakeWindowFrame.origin.y -= (boundsInScreen.size.height * 0.5);
+    fakeWindowFrame.size.width  *= 2;
+    fakeWindowFrame.size.height *= 2;
+
+    NSWindow *fakeWindow  = [[NSWindow alloc] initWithContentRect:fakeWindowFrame styleMask:0 backing:NSBackingStoreBuffered defer:NO];
+    NSView   *contentView = [fakeWindow contentView]; 
+
+    [fakeWindow setOpaque:NO];
+    [fakeWindow setBackgroundColor:[NSColor clearColor]];
+
+    CALayer *snapshot = [CALayer layer];
+    
+    [snapshot setFrame:[contentView bounds]];
+    [snapshot setTransform:CATransform3DMakeScale(0.5, 0.5, 1)];
+    [snapshot setContents:GetSnapshotImageForView(view)];
+    [snapshot setContentsScale:[[view window] backingScaleFactor]];
+    [snapshot setMagnificationFilter:kCAFilterNearest];
+
+    [contentView setWantsLayer:YES];
+    [[contentView layer] addSublayer:snapshot];
+    
+    [[view window] addChildWindow:fakeWindow ordered:NSWindowAbove];
+    [fakeWindow orderFront:nil];
+    
+    [CATransaction flush];
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:0.35];
+    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+    
+    [CATransaction setCompletionBlock:^{
+        [[view window] removeChildWindow:fakeWindow];
+    }];
+
+    [snapshot setTransform:CATransform3DMakeScale(0.8, 0.8, 1)];
+    [snapshot setOpacity:0.0];
+
+    [CATransaction commit];
+}
+
 

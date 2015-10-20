@@ -20,15 +20,6 @@ static CGFloat sDistanceForDrag = 10.0;
 
 @implementation ResultView
 
-- (void) dealloc
-{
-    if (_colorSpace) {
-        CFRelease(_colorSpace);
-        _colorSpace = NULL;
-    }
-}
-
-
 - (BOOL) isOpaque
 {
     return YES;
@@ -82,64 +73,18 @@ static CGFloat sDistanceForDrag = 10.0;
 }
 
 
-- (void) doPopOutAnimation
-{
-    CGRect  bounds          = [self bounds];
-    CGRect  boundsInBase    = [self convertRect:bounds toView:nil];
-    CGRect  boundsInScreen  = [[self window] convertRectToScreen:boundsInBase];
-
-    CGFloat halfWidth       = boundsInBase.size.width  * 0.25;
-    CGFloat halfHeight      = boundsInBase.size.height * 0.25;
-    CGRect  fakeWindowFrame = CGRectInset(boundsInScreen, -halfWidth, -halfHeight);
-
-    CGRect  startingFrame   = CGRectMake(halfWidth, halfHeight, bounds.size.width, bounds.size.height);
-    CGRect  endingFrame     = CGRectMake(0, 0, fakeWindowFrame.size.width, fakeWindowFrame.size.height);
-    
-    NSWindow *fakeWindow  = [[NSWindow alloc] initWithContentRect:fakeWindowFrame styleMask:0 backing:0 defer:NO];
-    NSView   *contentView = [fakeWindow contentView]; 
-
-    [fakeWindow setOpaque:NO];
-    [fakeWindow setBackgroundColor:[NSColor clearColor]];
-
-    CALayer *snapshot = [CALayer layer];
-    
-    [snapshot setFrame:startingFrame];
-    [snapshot setContents:GetSnapshotImageForView(self)];
-    [snapshot setMagnificationFilter:kCAFilterNearest];
-    [snapshot setContentsScale:[[self window] backingScaleFactor]];
-
-    [contentView setWantsLayer:YES];
-    [[contentView layer] addSublayer:snapshot];
-    
-    [[self window] addChildWindow:fakeWindow ordered:NSWindowAbove];
-    [fakeWindow orderFront:self];
-    
-    [CATransaction begin];
-    [CATransaction setAnimationDuration:0.35];
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-    
-    [CATransaction setCompletionBlock:^{
-        [[self window] removeChildWindow:fakeWindow];
-    }];
-
-    [snapshot setFrame:endingFrame];
-    [snapshot setOpacity:0.0];
-
-    [CATransaction commit];
-
-}
-
-
 - (void) drawRect:(NSRect)dirtyRect
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     CGContextSaveGState(context);
 
     NSRect bounds = [self bounds];
 
-    if (_colorSpace) {
-        CGContextSetFillColorSpace(context, _colorSpace);
-        CGContextSetStrokeColorSpace(context, _colorSpace);
+    CGColorSpaceRef colorSpace = [_color colorSpace];
+    
+    if (colorSpace) {
+        CGContextSetFillColorSpace(context, colorSpace);
+        CGContextSetStrokeColorSpace(context, colorSpace);
     }
 
     CGFloat components[4] = { [_color red], [_color green], [_color blue], 1.0 };
@@ -161,18 +106,6 @@ static CGFloat sDistanceForDrag = 10.0;
     }
 
     CGContextRestoreGState(context);
-}
-
-
-- (void) setColorSpace:(CGColorSpaceRef)colorSpace
-{
-    if (_colorSpace != colorSpace) {
-        CGColorSpaceRelease(_colorSpace);
-        _colorSpace = colorSpace;
-        CGColorSpaceRetain(_colorSpace);
-
-        [self setNeedsDisplay:YES];
-    }
 }
 
 

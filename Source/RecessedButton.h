@@ -14,5 +14,5 @@
 
 
 @interface RecessedButton : NSButton
-- (void) doPopOutAnimation;
+@property (nonatomic, copy) NSString *shortTitle;
 @end

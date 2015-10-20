@@ -41,8 +41,16 @@
     result->_saturationHSB = _saturationHSB;
     result->_brightness    = _brightness;
     result->_lightness     = _lightness;
+    result->_colorSpace    = CGColorSpaceRetain(_colorSpace);
 
     return result;
+}
+
+
+- (void) dealloc
+{
+    CGColorSpaceRelease(_colorSpace);
+    _colorSpace = NULL;
 }
 
 
@@ -645,7 +653,7 @@ static void sMakeStrings(
 #pragma mark Public Methods
 
 - (void) getComponentsForMode: (ColorMode) mode
-                      options: (NSUInteger) options
+                      options: (ColorStringOptions) options
                        colors: (ColorStringColor[3]) colors
                       strings: (NSString * __autoreleasing [3]) strings
 {
@@ -653,7 +661,7 @@ static void sMakeStrings(
 }
 
 
-- (NSString *) clipboardStringForMode:(ColorMode)mode options:(NSUInteger)options
+- (NSString *) clipboardStringForMode:(ColorMode)mode options:(ColorStringOptions)options
 {
     NSString *result;
     sMakeStrings(self, mode, options, &result, NULL, NULL);
@@ -661,7 +669,7 @@ static void sMakeStrings(
 }
 
 
-- (NSString *) codeSnippetForTemplate:(NSString *)template options:(NSUInteger)options
+- (NSString *) codeSnippetForTemplate:(NSString *)template options:(ColorStringOptions)options
 {
     NSMutableString *result = [template mutableCopy];
 
@@ -808,15 +816,24 @@ static void sMakeStrings(
 }
 
 
-- (void) setRed:(float)red green:(float)green blue:(float)blue transform:(ColorSyncTransformRef)transform
+- (void) setRawRed: (float) rawRed
+          rawGreen: (float) rawGreen
+           rawBlue: (float) rawBlue 
+         transform: (ColorSyncTransformRef) transform
+        colorSpace: (CGColorSpaceRef) colorSpace
 {
     float src[3];
     float dst[3];
 
     _rawValid = NO;
-    _rawRed   = _red   = src[0] = red;
-    _rawGreen = _green = src[1] = green;
-    _rawBlue  = _blue  = src[2] = blue;
+    _rawRed   = _red   = src[0] = rawRed;
+    _rawGreen = _green = src[1] = rawGreen;
+    _rawBlue  = _blue  = src[2] = rawBlue;
+    
+    if (_colorSpace != colorSpace) {
+        CGColorSpaceRelease(_colorSpace);
+        _colorSpace = CGColorSpaceRetain(colorSpace);
+    }
 
     if (transform && ColorSyncTransformConvert(transform, 1, 1,
         &dst, kColorSync32BitFloat, 0, 12,

@@ -42,22 +42,22 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
     _arrowRect.origin.y = floor(NSMidY(frame) - (_arrowRect.size.height / 2.0));
 }
 
+
 - (NSRect) drawTitle:(NSAttributedString*)title withFrame:(NSRect)frame inView:(NSView*)controlView
 {
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     BOOL drawArrow = (_arrowRect.size.width > 0) && _drawsArrow;
+    
+    CGSize titleSize = [title size];
+    if (titleSize.width > (frame.size.width - 16)) {
+        NSMutableAttributedString *mutableTitle = [title mutableCopy];
+        [[mutableTitle mutableString] setString:[(id)[self controlView] shortTitle]];
+        title = mutableTitle;
+    }
     
     NSRect rect = [super drawTitle:title withFrame:frame inView:controlView];
     
     if (drawArrow) {
-        CGContextSaveGState(context);
-
-        NSBezierPath *path = sGetArrowPath(_arrowRect);
-        [[NSColor whiteColor] set];
-        [path fill];
-        
-        CGContextRestoreGState(context);    
-        
+        [sGetArrowPath(_arrowRect) fill];
         _arrowRect = CGRectZero;
     }
     
@@ -92,50 +92,12 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
 }
 
 
-- (void) doPopOutAnimation
+- (void) setShortTitle:(NSString *)shortTitle
 {
-    CGRect  bounds          = [self bounds];
-    CGRect  boundsInBase    = [self convertRect:bounds toView:nil];
-    CGRect  boundsInScreen  = [[self window] convertRectToScreen:boundsInBase];
-
-    CGFloat halfWidth       = boundsInBase.size.width  * 0.25;
-    CGFloat halfHeight      = boundsInBase.size.height * 0.25;
-    CGRect  fakeWindowFrame = CGRectInset(boundsInScreen, -halfWidth, -halfHeight);
-
-    CGRect  startingFrame   = CGRectMake(halfWidth, halfHeight, bounds.size.width, bounds.size.height);
-    CGRect  endingFrame     = CGRectMake(0, 0, fakeWindowFrame.size.width, fakeWindowFrame.size.height);
-    
-    NSWindow *fakeWindow  = [[NSWindow alloc] initWithContentRect:fakeWindowFrame styleMask:0 backing:0 defer:NO];
-    NSView   *contentView = [fakeWindow contentView]; 
-
-    [fakeWindow setOpaque:NO];
-    [fakeWindow setBackgroundColor:[NSColor clearColor]];
-
-    CALayer *snapshot = [CALayer layer];
-    
-    [snapshot setFrame:startingFrame];
-    [snapshot setContents:GetSnapshotImageForView(self)];
-    [snapshot setMagnificationFilter:kCAFilterNearest];
-
-    [contentView setWantsLayer:YES];
-    [[contentView layer] addSublayer:snapshot];
-    
-    [[self window] addChildWindow:fakeWindow ordered:NSWindowAbove];
-    [fakeWindow orderFront:self];
-    
-    [CATransaction begin];
-    [CATransaction setAnimationDuration:0.35];
-    [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-    
-    [CATransaction setCompletionBlock:^{
-        [[self window] removeChildWindow:fakeWindow];
-    }];
-
-    [snapshot setFrame:endingFrame];
-    [snapshot setOpacity:0.0];
-
-    [CATransaction commit];
+    if (_shortTitle != shortTitle) {
+        _shortTitle = shortTitle;
+        [self setNeedsDisplay];
+    }
 }
-
 
 @end

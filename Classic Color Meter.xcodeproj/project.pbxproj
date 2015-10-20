@@ -31,6 +31,8 @@
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
+		55F709C01B0021520029405B /* RecorderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F709BF1B0021520029405B /* RecorderController.m */; };
+		55F709C31B0021A90029405B /* Recorder.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F709C11B0021A90029405B /* Recorder.xib */; };
 		55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FD8BCD13E2134200446286 /* PreferencesController.m */; };
 		55FD8BD113E2145800446286 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55FD8BCF13E2145800446286 /* Preferences.xib */; };
 /* End PBXBuildFile section */
@@ -82,6 +84,9 @@
 		55E67D8813CFC3000040DFDE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		55E67DC613D38E950040DFDE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Classic Color Meter.entitlements"; sourceTree = "<group>"; };
+		55F709BE1B0021520029405B /* RecorderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecorderController.h; path = Source/RecorderController.h; sourceTree = "<group>"; };
+		55F709BF1B0021520029405B /* RecorderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecorderController.m; path = Source/RecorderController.m; sourceTree = "<group>"; };
+		55F709C21B0021A90029405B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Recorder.xib; sourceTree = SOURCE_ROOT; };
 		55FD8BCC13E2134200446286 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Source/PreferencesController.h; sourceTree = "<group>"; };
 		55FD8BCD13E2134200446286 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = "<group>"; };
 		55FD8BD013E2145800446286 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Preferences.xib; sourceTree = SOURCE_ROOT; };
@@ -144,6 +149,8 @@
 				55FD8BCD13E2134200446286 /* PreferencesController.m */,
 				55234B6314217C6900D10B8C /* SnippetsController.h */,
 				55234B6414217C6900D10B8C /* SnippetsController.m */,
+				55F709BE1B0021520029405B /* RecorderController.h */,
+				55F709BF1B0021520029405B /* RecorderController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -217,6 +224,7 @@
 				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
 				55FD8BCF13E2145800446286 /* Preferences.xib */,
 				55234B6614217D5700D10B8C /* Snippets.xib */,
+				55F709C11B0021A90029405B /* Recorder.xib */,
 			);
 			name = Resources;
 			path = ColorMeter;
@@ -229,6 +237,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55E67D9D13CFC3000040DFDE /* Build configuration list for PBXNativeTarget "Classic Color Meter" */;
 			buildPhases = (
+				552EDB851BA513FD0031CB4E /* run rchook */,
 				55E67D7B13CFC3000040DFDE /* Sources */,
 				55E67D7C13CFC3000040DFDE /* Frameworks */,
 				55E67D7D13CFC3000040DFDE /* Resources */,
@@ -252,6 +261,11 @@
 				TargetAttributes = {
 					55E67D7E13CFC3000040DFDE = {
 						DevelopmentTeam = XXXXXXXXXX;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -278,6 +292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
+				55F709C31B0021A90029405B /* Recorder.xib in Resources */,
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
 				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
@@ -286,6 +301,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		552EDB851BA513FD0031CB4E /* run rchook */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "run rchook";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "which rchook\nif [ $? -eq 0 ]; then\n    rchook xcode-build-phase\n    exit $?\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		55E67D7B13CFC3000040DFDE /* Sources */ = {
@@ -305,6 +337,7 @@
 				55234B4D1420323B00D10B8C /* Shortcut.m in Sources */,
 				55234B501420325A00D10B8C /* ShortcutManager.m in Sources */,
 				55234B6514217C6900D10B8C /* SnippetsController.m in Sources */,
+				55F709C01B0021520029405B /* RecorderController.m in Sources */,
 				55D569641422B01100F7B77B /* RecessedButton.m in Sources */,
 				5563391A158AB033007FE0A6 /* MouseCursor.m in Sources */,
 				556356C0158AC929005FD42E /* Aperture.m in Sources */,
@@ -337,6 +370,14 @@
 				558444CA13D3CA3E006C6F51 /* en */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		55F709C11B0021A90029405B /* Recorder.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55F709C21B0021A90029405B /* en */,
+			);
+			name = Recorder.xib;
 			sourceTree = "<group>";
 		};
 		55FD8BCF13E2145800446286 /* Preferences.xib */ = {
@@ -383,7 +424,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Classic Color Meter";
 				SDKROOT = macosx;
@@ -417,7 +458,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "Classic Color Meter";
 				SDKROOT = macosx;
 			};
@@ -428,12 +469,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -451,7 +492,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

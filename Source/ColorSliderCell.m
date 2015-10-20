@@ -26,13 +26,22 @@
     
     if (component != ColorComponentNone) {
         Color *color = [_color copy];
+
+        CGColorSpaceRef colorSpace = [color colorSpace];
+        if (colorSpace) {
+            CGContextSetFillColorSpace(context, colorSpace);
+        }
     
         while (rect.origin.x <= maxX) {
             float percent = (rect.origin.x - inRect.origin.x) / inRect.size.width;
 
             [color setFloatValue:percent forComponent:component];
 
-            CGContextSetRGBFillColor(context, [color red], [color green], [color blue], 1.0);
+            float r, g, b;
+            [color getRed:&r green:&g blue:&b];
+            
+            CGFloat components[4] = { r, g, b, 1.0 };
+            CGContextSetFillColor(context, components);
             CGContextFillRect(context, rect);
             rect.origin.x += 1.0;
         }
@@ -45,7 +54,7 @@
 //    static CGFloat const sXInset = 3;
 //    static CGFloat const sYInset = 5;
 
-    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     CGFloat xRadius   = aRect.size.width  / 2.0;
     CGFloat yRadius   = aRect.size.height / 2.0;
@@ -55,7 +64,6 @@
     CGContextSaveGState(context);
 
     NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:aRect xRadius:minRadius yRadius:minRadius];
-
 
     CGContextSetStrokeColorWithColor(context, [[NSColor colorWithCalibratedWhite:0 alpha:0.5] CGColor]);
     [barPath stroke];
@@ -67,9 +75,6 @@
     [self _drawColorBackgroundInRect:aRect context:context];
 
     CGContextRestoreGState(context);
-
-
-
 }
 
 - (void) drawKnob:(NSRect)rect

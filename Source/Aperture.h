@@ -29,7 +29,8 @@
 @property (nonatomic, assign) BOOL updatesContinuously;
 @property (nonatomic, assign) ColorConversion colorConversion;
 
-@property (nonatomic, readonly) NSString *colorProfileLabel;
+@property (nonatomic, readonly) NSString *longColorProfileLabel;
+@property (nonatomic, readonly) NSString *shortColorProfileLabel;
 
 @end
 

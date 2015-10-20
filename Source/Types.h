@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ApertureColor) {
     ApertureColorBlack,
     ApertureColorGrey,
     ApertureColorWhite,
     ApertureColorBlackAndWhite
-} ApertureColor;
+};
 
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ColorConversion) {
     ColorConversionNone = 0,
 
     ColorConversionConvertToMainDisplay  = 4,
@@ -24,10 +24,10 @@ typedef enum : NSInteger {
     ColorConversionDisplayInSRGB         = 1,
     ColorConversionDisplayInGenericRGB   = 2,
     ColorConversionDisplayInAdobeRGB     = 3
-} ColorConversion;
+};
 
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, ColorMode) {
     ColorMode_RGB_Percentage,
 
     ColorMode_RGB_Value_8,
@@ -48,5 +48,5 @@ typedef enum : NSInteger {
     
     ColorMode_HSB,
     ColorMode_HSL
-} ColorMode;
+};
 

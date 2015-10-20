@@ -13,10 +13,6 @@
 
 @interface ResultView : NSView
 
-- (void) doPopOutAnimation;
-
-@property (nonatomic /*retain*/) CGColorSpaceRef colorSpace;
-
 @property (nonatomic, strong) Color *color;
 @property (nonatomic, weak) id<ResultViewDelegate> delegate;
 @property (nonatomic, assign, getter=isClickEnabled) BOOL clickEnabled;
