@@ -20,6 +20,7 @@
 #import "ResultView.h"
 #import "Shortcut.h"
 #import "ShortcutManager.h"
+#import "MiniWindowController.h"
 #import "SnippetsController.h"
 #import "RecorderController.h"
 #import "Util.h"
@@ -86,6 +87,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 @property (nonatomic, strong) IBOutlet NSView        *middleContainer;
 @property (nonatomic, strong) IBOutlet NSView        *rightContainer;
 
+@property (nonatomic, strong) IBOutlet NSMenuItem    *p3MenuItem;
+@property (nonatomic, strong) IBOutlet NSMenuItem    *rommRGBMenuItem;
+
 @property (nonatomic, strong) IBOutlet NSPopUpButton *colorModePopUp;
 @property (nonatomic, strong) IBOutlet NSSlider      *apertureSizeSlider;
 @property (nonatomic, strong) IBOutlet PreviewView   *previewView;
@@ -128,10 +132,11 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSImage        *_leftViewImage;
     NSImage        *_middleViewImage;
     NSImage        *_rightViewImage;
-    
+        
     PreferencesController *_preferencesController;
     SnippetsController    *_snippetsController;
     RecorderController    *_recorderController;
+    MiniWindowController  *_miniWindowController;
 
     MouseCursor           *_cursor;
     Aperture              *_aperture;
@@ -140,6 +145,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     BOOL           _isHoldingColor;
     Color         *_color;
+    
+    BOOL _isTerminating;
     
     // Cached prefs
     ColorMode        _colorMode;
@@ -167,12 +174,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [(ColorSliderCell *)[[self slider3] cell] setColor:_color];
 
     if ([NSFont respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        CGFloat  pointSize      = [[[self label1] font] pointSize];
+        CGFloat  pointSize      = [[[self value1] font] pointSize];
         NSFont  *monospacedFont = [NSFont monospacedDigitSystemFontOfSize:pointSize weight:NSFontWeightRegular];
 
-        [[self label1] setFont:monospacedFont];
-        [[self label2] setFont:monospacedFont];
-        [[self label3] setFont:monospacedFont];
+        [[self value1] setFont:monospacedFont];
+        [[self value2] setFont:monospacedFont];
+        [[self value3] setFont:monospacedFont];
     }
 
     [[self resultView] setColor:_color];
@@ -217,6 +224,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification        object:nil];
     
+   
     NSWindow *window = [self window];
     NSRect frame = [window frame];
     frame.size.width = 316;
@@ -234,9 +242,25 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [_aperture update];
     
     [[self resultView] setDrawsBorder:YES];
+        
+    if (!kCGColorSpaceDisplayP3) {
+        [[self p3MenuItem] setHidden:YES];
+    }
+    
+    if (!kCGColorSpaceROMMRGB) {
+        [[self rommRGBMenuItem] setHidden:YES];
+    }
     
     [window makeKeyAndOrderFront:self];
     [window selectPreviousKeyView:self];
+
+    if ([[Preferences sharedInstance] showsMiniWindow]) {
+        [self toggleMiniWindow:self];
+    }
+
+    if ([[Preferences sharedInstance] showsColorWindow]) {
+        [_colorWindow orderFront:nil];
+    }
 }
 
 
@@ -292,6 +316,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     } else if (action == @selector(toggleFloatWindow:)) {
         [menuItem setState:[[Preferences sharedInstance] floatWindow]];
 
+    } else if (action == @selector(toggleMiniWindow:)) {
+        [menuItem setState:[[_miniWindowController window] isVisible]];
+
     } else if (action == @selector(showSnippets:) || action == @selector(showRecorder:)) {
         NSUInteger flags     = [NSEvent modifierFlags];
         NSUInteger mask      = NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask;
@@ -318,10 +345,21 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
+{
+    _isTerminating = YES;
+    return NSTerminateNow;
+}   
+
+
 - (void) windowWillClose:(NSNotification *)note
 {
-    if ([note object] == [self window]) {
+    id object = [note object];
+
+    if (object == [self window]) {
         [NSApp terminate:self];
+    } else if (object == _colorWindow && !_isTerminating) {
+        [[Preferences sharedInstance] setShowsColorWindow:NO];
     }
 }
 
@@ -430,6 +468,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         [[self label2] setStringValue:[labels objectAtIndex:1]];
         [[self label3] setStringValue:[labels objectAtIndex:2]];
     }
+    
+    [_miniWindowController updateColorMode:colorMode];
 }
 
 
@@ -513,13 +553,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     NSString * __autoreleasing strings[3];
     ColorStringColor colors[3];
-
     [_color getComponentsForMode:colorMode options:_colorStringOptions colors:colors strings:strings];
 
     if (strings[0]) [value1 setStringValue:strings[0]];
     if (strings[1]) [value2 setStringValue:strings[1]];
     if (strings[2]) [value3 setStringValue:strings[2]];
-    
+
     BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHue(colorMode)) && _isHoldingColor;
 
     if (isEditable) {
@@ -538,6 +577,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [value1 setEditable:isEditable];
     [value2 setEditable:isEditable];
     [value3 setEditable:isEditable];
+    
+    [_miniWindowController updateColor:_color options:_colorStringOptions];
 }
 
 
@@ -703,7 +744,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
             longLabel  = [longLabel  stringByAppendingFormat:@"%@%@", GetArrowJoinerString(), NSLocalizedString(@"Lab", nil)];
         } else if (ColorModeIsXYZ(_colorMode)) {
             shortLabel = [shortLabel stringByAppendingFormat:@"%@%@", GetArrowJoinerString(), NSLocalizedString(@"XYZ", nil)];
-            longLabel  = [longLabel stringByAppendingFormat:@"%@%@", GetArrowJoinerString(), NSLocalizedString(@"XYZ", nil)];
+            longLabel  = [longLabel stringByAppendingFormat:@"%@%@",  GetArrowJoinerString(), NSLocalizedString(@"XYZ", nil)];
         }
 
         [[self profileButton] setTitle:longLabel];
@@ -1007,9 +1048,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Animation
-
 - (void) _animateSnapshotsIfNeeded
 {
     NSView *leftContainer   = [self leftContainer];
@@ -1261,6 +1299,18 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) toggleMiniWindow:(id)sender
+{
+    if (!_miniWindowController) {
+        _miniWindowController = [[MiniWindowController alloc] init];
+        [_miniWindowController updateColorMode:[self _currentColorMode]];
+        [_miniWindowController updateColor:_color options:_colorStringOptions];
+    }
+    
+    [_miniWindowController toggle];
+}
+
+
 - (IBAction) showPreferences:(id)sender
 {
     if (!_preferencesController) {
@@ -1359,6 +1409,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 - (IBAction) showColorWindow:(id)sender
 {
     [[self colorWindow] makeKeyAndOrderFront:self];
+    [[Preferences sharedInstance] setShowsColorWindow:YES];
 }
 
 

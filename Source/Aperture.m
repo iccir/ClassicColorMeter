@@ -224,6 +224,14 @@
         toProfile = ColorSyncProfileCreateWithName(kColorSyncGenericRGBProfile);
         _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 
+    } else if (kColorSyncDisplayP3Profile && kCGColorSpaceDisplayP3 && (_colorConversion == ColorConversionDisplayInP3)) {
+        toProfile = ColorSyncProfileCreateWithName(kColorSyncDisplayP3Profile);
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceDisplayP3);
+        
+    } else if (kColorSyncROMMRGBProfile && kCGColorSpaceROMMRGB && (_colorConversion == ColorConversionDisplayInROMMRGB)) {
+        toProfile = ColorSyncProfileCreateWithName(kColorSyncROMMRGBProfile);
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceROMMRGB);
+
     } else if ((displayID != mainID) && (_colorConversion == ColorConversionConvertToMainDisplay)) {
         toProfile = ColorSyncProfileCreateWithDisplayID(mainID);
         _targetColorSpace = CGColorSpaceCreateWithPlatformColorSpace(toProfile);
@@ -252,8 +260,10 @@
     {
         NSString *displayString    = NSLocalizedString(@"Display",     nil);
         NSString *sRGBString       = NSLocalizedString(@"sRGB",        nil);
+        NSString *sP3String        = NSLocalizedString(@"Display P3",  nil);
         NSString *genericRGBString = NSLocalizedString(@"Generic RGB", nil);
         NSString *adobeRGBString   = NSLocalizedString(@"Adobe RGB",   nil);
+        NSString *rommRGBString    = NSLocalizedString(@"ROMM RGB",    nil);
         NSString *mainString       = NSLocalizedString(@"Main",        nil);
     
         NSString *fromName = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(fromProfile));
@@ -269,6 +279,10 @@
             [shortProfiles addObject:sRGBString];
             [longProfiles  addObject:sRGBString];
 
+        } else if (_colorConversion == ColorConversionDisplayInP3) {
+            [shortProfiles addObject:sP3String];
+            [longProfiles  addObject:sP3String];
+
         } else if (_colorConversion == ColorConversionDisplayInGenericRGB) {
             [shortProfiles addObject:genericRGBString];
             [longProfiles  addObject:genericRGBString];
@@ -276,6 +290,10 @@
         } else if (_colorConversion == ColorConversionDisplayInAdobeRGB) {
             [shortProfiles addObject:adobeRGBString];
             [longProfiles  addObject:adobeRGBString];
+
+        } else if (_colorConversion == ColorConversionDisplayInROMMRGB) {
+            [shortProfiles addObject:rommRGBString];
+            [longProfiles  addObject:rommRGBString];
 
         } else if (toProfile) {
             NSString *toName = CFBridgingRelease(ColorSyncProfileCopyDescriptionString(toProfile));

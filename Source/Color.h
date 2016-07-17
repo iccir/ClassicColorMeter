@@ -32,10 +32,11 @@ typedef NS_ENUM(NSInteger, ColorStringColor) {
 
 
 typedef NS_OPTIONS(NSUInteger, ColorStringOptions) {
-    ColorStringUsesLowercaseHex  = 1 << 0,
-    ColorStringUsesPoundPrefix   = 1 << 1,
-    ColorStringUsesClippedValues = 1 << 2,
-    ColorStringUsesSystemClippedValues = 1 << 3
+    ColorStringUsesLowercaseHex        = 1 << 0,
+    ColorStringUsesPoundPrefix         = 1 << 1,
+    ColorStringUsesClippedValues       = 1 << 2,
+    ColorStringUsesSystemClippedValues = 1 << 3,
+    ColorStringForMiniWindow           = 1 << 4
 };
 
 

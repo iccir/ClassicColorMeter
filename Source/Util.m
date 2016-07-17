@@ -98,6 +98,60 @@ float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NS
 }
 
 
+NSArray *ColorModeGetLongestStrings(ColorMode mode)
+{
+    __block NSArray *result = nil;
+    
+    void (^f)(NSString *, NSString *, NSString *) = ^(NSString *s0, NSString *s1, NSString *s2) {
+        result = [NSArray arrayWithObjects:s0, s1, s2, nil];
+    };
+
+    switch (mode) {
+    case ColorMode_RGB_Percentage:
+        f( @"99.9%", @"99.9%", @"99.9%"); 
+        break;
+    
+    case ColorMode_RGB_Value_8:
+        f( @"255", @"255", @"255"); 
+        break;
+
+    case ColorMode_RGB_Value_16:
+        f( @"65535", @"65535", @"65535"); 
+        break;
+
+    case ColorMode_RGB_HexValue_8:
+        f( @"CC", @"CC", @"CC"); 
+        break;
+
+    case ColorMode_RGB_HexValue_16:
+        f( @"CCCC", @"CCCC", @"CCCC"); 
+        break;
+
+    case ColorMode_YPbPr_601:
+    case ColorMode_YPbPr_709:
+    case ColorMode_YCbCr_601:
+    case ColorMode_YCbCr_709:
+    case ColorMode_CIE_1931:
+    case ColorMode_CIE_1976:
+    case ColorMode_Tristimulus:
+        f( @"-100.000", @"-100.000", @"-100.000" );
+        break;
+
+    case ColorMode_CIE_Lab:
+        f( @"100.0", @"-86.2", @"-107.9" );
+        break;
+        
+    case ColorMode_HSB:
+    case ColorMode_HSL:
+        f( @"360", @"100", @"100" );
+        break;
+    }
+
+    return result;
+}
+
+
+
 NSArray *ColorModeGetComponentLabels(ColorMode mode)
 {
     __block NSArray *result = nil;

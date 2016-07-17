@@ -23,7 +23,9 @@ typedef NS_ENUM(NSInteger, ColorConversion) {
 
     ColorConversionDisplayInSRGB         = 1,
     ColorConversionDisplayInGenericRGB   = 2,
-    ColorConversionDisplayInAdobeRGB     = 3
+    ColorConversionDisplayInAdobeRGB     = 3,
+    ColorConversionDisplayInROMMRGB      = 4,
+    ColorConversionDisplayInP3           = 5
 };
 
 

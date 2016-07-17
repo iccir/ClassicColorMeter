@@ -51,6 +51,9 @@ static NSString * const sShowsLockGuidesKey         = @"ShowsLockGuides";
 static NSString * const sUsesDifferentColorSpaceInHoldColor = @"UsesDifferentColorSpaceInHoldColor";
 static NSString * const sUsesMainColorSpaceForCopyAsText    = @"UsesMainColorSpaceForCopyAsText";
 
+static NSString * const sShowsColorWindow = @"ShowsColorWindow";
+static NSString * const sShowsMiniWindow  = @"ShowsMiniWindow";
+
 static NSString * const sUsesMyClippedValues           = @"UsesMyClippedValues";
 static NSString * const sHighlightsMyClippedValues     = @"HighlightsMyClippedValues";
 static NSString * const sColorForMyClippedValues       = @"ColorForMyClippedValues";
@@ -136,6 +139,9 @@ static void sRegisterDefaults(void)
     
     b( sUsesDifferentColorSpaceInHoldColor, NO  );
     b( sUsesMainColorSpaceForCopyAsText,    YES );
+
+    b( sShowsMiniWindow,  NO );
+    b( sShowsColorWindow, NO );
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
@@ -208,6 +214,9 @@ static void sRegisterDefaults(void)
         [self addObserver:self forKeyPath:@"showsHoldLabels"          options:0 context:NULL];
         [self addObserver:self forKeyPath:@"showsLockGuides"          options:0 context:NULL];
         [self addObserver:self forKeyPath:@"usesPoundPrefix"          options:0 context:NULL];
+
+        [self addObserver:self forKeyPath:@"showsColorWindow"         options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"showsMiniWindow"          options:0 context:NULL];
 
         [self addObserver:self forKeyPath:@"usesDifferentColorSpaceInHoldColor" options:0 context:NULL];
         [self addObserver:self forKeyPath:@"usesMainColorSpaceForCopyAsText"    options:0 context:NULL];
@@ -309,6 +318,9 @@ static void sRegisterDefaults(void)
     _usesLowercaseHex      = loadBoolean( sUsesLowercaseHexKey      );
     _usesPoundPrefix       = loadBoolean( sUsesPoundPrefixKey       );
     _showsHoldColorSliders = loadBoolean( sShowsHoldColorSlidersKey );
+
+    _showsColorWindow = loadBoolean( sShowsColorWindow );
+    _showsMiniWindow  = loadBoolean( sShowsMiniWindow  );
                   
     _usesDifferentColorSpaceInHoldColor = loadBoolean( sUsesDifferentColorSpaceInHoldColor );
     _usesMainColorSpaceForCopyAsText    = loadBoolean( sUsesMainColorSpaceForCopyAsText    );
@@ -387,6 +399,8 @@ static void sRegisterDefaults(void)
     saveBoolean( _showsHoldLabels,          sShowsHoldLabelsKey         );
     saveBoolean( _showsLockGuides,          sShowsLockGuidesKey         );
     saveBoolean( _showsHoldColorSliders,    sShowsHoldColorSlidersKey   );
+    saveBoolean( _showsColorWindow,         sShowsColorWindow           );
+    saveBoolean( _showsMiniWindow,          sShowsMiniWindow            );
 
     saveBoolean( _usesDifferentColorSpaceInHoldColor, sUsesDifferentColorSpaceInHoldColor );
     saveBoolean( _usesMainColorSpaceForCopyAsText,    sUsesMainColorSpaceForCopyAsText    );

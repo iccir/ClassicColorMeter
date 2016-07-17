@@ -28,6 +28,8 @@
 		558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558444C713D3CA3E006C6F51 /* InfoPlist.strings */; };
 		558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558444C913D3CA3E006C6F51 /* MainMenu.xib */; };
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
+		55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */; };
+		55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */; };
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
@@ -76,6 +78,9 @@
 		558444C813D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		558444CA13D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		55BC2E1D1D3B7B4400B15C1A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MiniWindow.xib; sourceTree = SOURCE_ROOT; };
+		55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MiniWindowController.m; path = Source/MiniWindowController.m; sourceTree = "<group>"; };
+		55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiniWindowController.h; path = Source/MiniWindowController.h; sourceTree = "<group>"; };
 		55D569621422B01000F7B77B /* RecessedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecessedButton.h; path = Source/RecessedButton.h; sourceTree = "<group>"; };
 		55D569631422B01000F7B77B /* RecessedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecessedButton.m; path = Source/RecessedButton.m; sourceTree = "<group>"; };
 		55E67D7F13CFC3000040DFDE /* Classic Color Meter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Classic Color Meter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				550F240C13E3838F0026A060 /* ColorSliderCell.h */,
+				558444A713D3C9CE006C6F51 /* Util.m */,
 				550F240D13E3838F0026A060 /* ColorSliderCell.m */,
 				558444AE13D3C9CE006C6F51 /* PreviewView.h */,
 				558444AF13D3C9CE006C6F51 /* PreviewView.m */,
@@ -145,6 +151,8 @@
 				557EFF59158F0D6C0081CC6A /* GuideController.m */,
 				558444A213D3C9CE006C6F51 /* AppDelegate.h */,
 				558444A313D3C9CE006C6F51 /* AppDelegate.m */,
+				55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */,
+				55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */,
 				55FD8BCC13E2134200446286 /* PreferencesController.h */,
 				55FD8BCD13E2134200446286 /* PreferencesController.m */,
 				55234B6314217C6900D10B8C /* SnippetsController.h */,
@@ -170,7 +178,6 @@
 				55234B4B1420323B00D10B8C /* Shortcut.h */,
 				55234B4C1420323B00D10B8C /* Shortcut.m */,
 				558444A613D3C9CE006C6F51 /* Util.h */,
-				558444A713D3C9CE006C6F51 /* Util.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -225,6 +232,7 @@
 				55FD8BCF13E2145800446286 /* Preferences.xib */,
 				55234B6614217D5700D10B8C /* Snippets.xib */,
 				55F709C11B0021A90029405B /* Recorder.xib */,
+				55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */,
 			);
 			name = Resources;
 			path = ColorMeter;
@@ -261,6 +269,7 @@
 				TargetAttributes = {
 					55E67D7E13CFC3000040DFDE = {
 						DevelopmentTeam = XXXXXXXXXX;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -292,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
+				55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */,
 				55F709C31B0021A90029405B /* Recorder.xib in Resources */,
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
@@ -340,6 +350,7 @@
 				55F709C01B0021520029405B /* RecorderController.m in Sources */,
 				55D569641422B01100F7B77B /* RecessedButton.m in Sources */,
 				5563391A158AB033007FE0A6 /* MouseCursor.m in Sources */,
+				55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */,
 				556356C0158AC929005FD42E /* Aperture.m in Sources */,
 				557EFF5A158F0D6C0081CC6A /* GuideController.m in Sources */,
 			);
@@ -370,6 +381,14 @@
 				558444CA13D3CA3E006C6F51 /* en */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				55BC2E1D1D3B7B4400B15C1A /* en */,
+			);
+			name = MiniWindow.xib;
 			sourceTree = "<group>";
 		};
 		55F709C11B0021A90029405B /* Recorder.xib */ = {
@@ -469,9 +488,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -486,8 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;

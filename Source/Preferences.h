@@ -66,4 +66,7 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL usesDifferentColorSpaceInHoldColor;
 @property (nonatomic) BOOL usesMainColorSpaceForCopyAsText;
 
+@property (nonatomic) BOOL showsColorWindow;
+@property (nonatomic) BOOL showsMiniWindow;
+
 @end

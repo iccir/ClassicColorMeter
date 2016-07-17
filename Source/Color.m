@@ -215,6 +215,36 @@ static void sConvertColor(Color *inColor, CFStringRef profileName, float *outFlo
 }
 
 
+static NSString *sApplyFilter(NSString *inString)
+{
+    NSUInteger length = [inString length];
+    unichar buffer[10];
+        
+    if (length < 10) {
+        [inString getCharacters:buffer range:NSMakeRange(0, length)];
+        
+        if (buffer[0] == '-' &&
+            buffer[1] == '0' &&
+            buffer[2] == '.' &&
+            buffer[3] == '0')
+        {
+            BOOL allZero = YES;
+            
+            for (NSInteger i = 3; i < length; i++) {
+                allZero = allZero && (buffer[i] == '0');
+                if (!allZero) break;
+            }
+
+            if (allZero) {
+                return [inString substringFromIndex:1];
+            }
+        }
+    }
+    
+    return inString;
+}
+
+
 static void sMakeStrings(
     Color *color,
     ColorMode mode,
@@ -236,6 +266,7 @@ static void sMakeStrings(
     BOOL usesPoundPrefix   = (options & ColorStringUsesPoundPrefix) > 0;
     BOOL usesClipped       = (options & ColorStringUsesClippedValues) > 0;
     BOOL usesSystemClipped = (options & ColorStringUsesSystemClippedValues) > 0;
+    BOOL forMiniWindow     = (options & ColorStringForMiniWindow) > 0;
     
     BOOL clipped1 = NO;
     BOOL clipped2 = NO;
@@ -424,10 +455,12 @@ static void sMakeStrings(
         float a = 0.0;
         float b = 0.0;
         sConvertColor(color, kColorSyncGenericLabProfile, &l, &a, &b);
+
+        NSString *format = forMiniWindow ? @"%0.01lf" : @"%0.03lf";
         
-        value1    = [NSString stringWithFormat:@"%0.03lf", (l * 100.0)];
-        value2    = [NSString stringWithFormat:@"%0.03lf", (a * 256.0) - 128.0];
-        value3    = [NSString stringWithFormat:@"%0.03lf", (b * 256.0) - 128.0];
+        value1 = [NSString stringWithFormat:format, (l * 100.0)];
+        value2 = [NSString stringWithFormat:format, (a * 256.0) - 128.0];
+        value3 = [NSString stringWithFormat:format, (b * 256.0) - 128.0];
 
     } else if ((mode == ColorMode_HSB) || (mode == ColorMode_HSL)) {
         float f1, f2, f3;
@@ -454,10 +487,14 @@ static void sMakeStrings(
         value2 = [NSString stringWithFormat:@"%ld", s];
         value3 = [NSString stringWithFormat:@"%ld", bl];
     }
+        
+    value1 = sApplyFilter(value1);
+    value2 = sApplyFilter(value2);
+    value3 = sApplyFilter(value3);
     
     if (!clipboard) {
         clipboard = [NSString stringWithFormat:@"%@\t%@\t%@", value1, value2, value3];
-    }
+    }   
 
     if (outString) {
         outString[0] = value1;

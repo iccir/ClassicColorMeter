@@ -17,7 +17,9 @@ extern NSString * const AppStoreURLString;
 extern BOOL      ColorModeIsRGB(ColorMode mode);
 extern BOOL      ColorModeIsHue(ColorMode mode);
 extern BOOL      ColorModeIsXYZ(ColorMode mode);
-extern NSArray  *ColorModeGetComponentLabels(ColorMode mode);
+
+extern NSArray *ColorModeGetComponentLabels(ColorMode mode);
+extern NSArray *ColorModeGetLongestStrings(ColorMode mode);
 
 extern float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NSString *string);
 

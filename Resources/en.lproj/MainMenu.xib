@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1070" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <deployment version="101000" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -25,10 +25,12 @@
                 <outlet property="label3" destination="626" id="630"/>
                 <outlet property="leftContainer" destination="709" id="712"/>
                 <outlet property="middleContainer" destination="711" id="713"/>
+                <outlet property="p3MenuItem" destination="NJS-an-a51" id="HYn-cV-VvX"/>
                 <outlet property="previewView" destination="591" id="592"/>
                 <outlet property="profileButton" destination="867" id="869"/>
                 <outlet property="resultView" destination="613" id="634"/>
                 <outlet property="rightContainer" destination="710" id="714"/>
+                <outlet property="rommRGBMenuItem" destination="JPN-Oi-9Qz" id="01K-TI-Xyn"/>
                 <outlet property="slider1" destination="703" id="715"/>
                 <outlet property="slider2" destination="705" id="716"/>
                 <outlet property="slider3" destination="707" id="717"/>
@@ -256,6 +258,12 @@
                                     <action selector="showColorWindow:" target="494" id="944"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Mini Window" id="Zvh-RW-FTc">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleMiniWindow:" target="494" id="hzT-4o-iJ6"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="936"/>
                             <menuItem title="Float Window" keyEquivalent="f" id="653">
                                 <connections>
@@ -320,7 +328,6 @@
                             <slider toolTip="Adjust the aperture size" verticalHuggingPriority="750" id="549">
                                 <rect key="frame" x="0.0" y="5" width="120" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="7" tickMarkPosition="below" numberOfTickMarks="8" allowsTickMarkValuesOnly="YES" sliderType="linear" id="550"/>
                                 <connections>
                                     <action selector="changeApertureSize:" target="494" id="611"/>
@@ -329,10 +336,8 @@
                             <customView id="591" customClass="PreviewView">
                                 <rect key="frame" x="0.0" y="28" width="120" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                             </customView>
                         </subviews>
-                        <animations/>
                     </customView>
                     <customView id="710">
                         <rect key="frame" x="316" y="2" width="120" height="146"/>
@@ -341,7 +346,6 @@
                             <slider verticalHuggingPriority="750" id="705">
                                 <rect key="frame" x="-2" y="60" width="124" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="706" customClass="ColorSliderCell"/>
                                 <connections>
                                     <action selector="updateComponent:" target="494" id="719"/>
@@ -350,7 +354,6 @@
                             <slider verticalHuggingPriority="750" id="707">
                                 <rect key="frame" x="-2" y="26" width="124" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="708" customClass="ColorSliderCell"/>
                                 <connections>
                                     <action selector="updateComponent:" target="494" id="720"/>
@@ -359,7 +362,6 @@
                             <slider verticalHuggingPriority="750" id="703">
                                 <rect key="frame" x="-2" y="94" width="124" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="704" customClass="ColorSliderCell"/>
                                 <connections>
                                     <action selector="updateComponent:" target="494" id="718"/>
@@ -368,7 +370,6 @@
                             <button verticalHuggingPriority="750" id="870" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="2" width="120" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt; &gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="871" customClass="RecessedButtonCell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
@@ -380,7 +381,6 @@
                             <button verticalHuggingPriority="750" id="872" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="125" width="120" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt; &gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="873" customClass="RecessedButtonCell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
@@ -390,7 +390,6 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <animations/>
                     </customView>
                     <customView id="711">
                         <rect key="frame" x="132" y="2" width="178" height="146"/>
@@ -399,7 +398,6 @@
                             <popUpButton verticalHuggingPriority="750" id="536">
                                 <rect key="frame" x="-2" y="122" width="183" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="537">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -412,12 +410,10 @@
                             <customView id="613" customClass="ResultView">
                                 <rect key="frame" x="0.0" y="26" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                             </customView>
                             <textField verticalHuggingPriority="750" id="616">
                                 <rect key="frame" x="118" y="94" width="60" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="617">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -430,7 +426,6 @@
                             <textField verticalHuggingPriority="750" id="622">
                                 <rect key="frame" x="87" y="96" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="X" id="623">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -440,7 +435,6 @@
                             <textField verticalHuggingPriority="750" id="624">
                                 <rect key="frame" x="87" y="62" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Y" id="625">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -450,7 +444,6 @@
                             <textField verticalHuggingPriority="750" id="618">
                                 <rect key="frame" x="118" y="60" width="60" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="619">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -463,7 +456,6 @@
                             <textField verticalHuggingPriority="750" id="620">
                                 <rect key="frame" x="118" y="26" width="60" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="621">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -476,7 +468,6 @@
                             <textField verticalHuggingPriority="750" id="626">
                                 <rect key="frame" x="87" y="28" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Z" id="627">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -486,7 +477,6 @@
                             <textField hidden="YES" verticalHuggingPriority="750" id="930">
                                 <rect key="frame" x="-3" y="5" width="184" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" id="931">
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -496,7 +486,6 @@
                             <button verticalHuggingPriority="750" id="867" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="2" width="178" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <animations/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="868" customClass="RecessedButtonCell">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="smallSystem"/>
@@ -506,10 +495,8 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <animations/>
                     </customView>
                 </subviews>
-                <animations/>
             </view>
             <connections>
                 <outlet property="delegate" destination="494" id="687"/>
@@ -518,10 +505,16 @@
         <customObject id="420" customClass="NSFontManager"/>
         <menu id="885" userLabel="Profile Menu">
             <items>
-                <menuItem title="Display in sRGB" tag="1" id="887">
+                <menuItem title="Show as sRGB" tag="1" id="887">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="changeColorConversionValue:" target="494" id="901"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show as Display P3" tag="5" id="NJS-an-a51">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeColorConversionValue:" target="494" id="EFr-Jc-oKo"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="953"/>
@@ -538,22 +531,29 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="889"/>
-                <menuItem title="Display in Generic RGB" tag="2" id="888">
+                <menuItem title="Show as Generic RGB" tag="2" id="888">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="changeColorConversionValue:" target="494" id="902"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Display in Adobe RGB" tag="3" id="890">
+                <menuItem title="Show as Adobe RGB" tag="3" id="890">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="changeColorConversionValue:" target="494" id="903"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show as ROMM RGB" tag="4" id="JPN-Oi-9Qz">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeColorConversionValue:" target="494" id="r1P-0h-jv6"/>
                     </connections>
                 </menuItem>
             </items>
             <connections>
                 <outlet property="delegate" destination="494" id="908"/>
             </connections>
+            <point key="canvasLocation" x="1035" y="281.5"/>
         </menu>
         <window title="Color Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="ColorWindow" animationBehavior="default" id="937">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -568,11 +568,13 @@
                     <customView id="941" customClass="ResultView">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <animations/>
                     </customView>
                 </subviews>
-                <animations/>
             </view>
+            <connections>
+                <outlet property="delegate" destination="494" id="8DC-wK-hCe"/>
+            </connections>
+            <point key="canvasLocation" x="863" y="-202"/>
         </window>
     </objects>
 </document>
