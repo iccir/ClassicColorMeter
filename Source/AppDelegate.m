@@ -243,11 +243,11 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     [[self resultView] setDrawsBorder:YES];
         
-    if (!kCGColorSpaceDisplayP3) {
+    if (!GetColorSpaceDisplayP3()) {
         [[self p3MenuItem] setHidden:YES];
     }
     
-    if (!kCGColorSpaceROMMRGB) {
+    if (!GetColorSpaceROMMRGB()) {
         [[self rommRGBMenuItem] setHidden:YES];
     }
     
@@ -661,7 +661,18 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [_aperture setZoomLevel:[preferences zoomLevel]];
     [_aperture setUpdatesContinuously:[preferences updatesContinuously]];
     [_aperture setApertureSize:apertureSize];
-    [_aperture setColorConversion:[preferences colorConversion]];
+
+    ColorConversion colorConversion = [preferences colorConversion];
+    ColorMode colorMode = [preferences colorMode];
+    
+    if (ColorModeIsXYZ(colorMode) || colorMode == ColorMode_CIE_Lab) {
+        colorConversion = ColorConversionNone;
+        [_profileButton setEnabled:NO];
+    } else {
+        [_profileButton setEnabled:YES];
+    }
+
+    [_aperture setColorConversion:colorConversion];
 
     NSMutableArray *shortcuts = [NSMutableArray array];
     if ([preferences showApplicationShortcut]) {

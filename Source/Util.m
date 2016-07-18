@@ -11,10 +11,38 @@
 #import <ApplicationServices/ApplicationServices.h>
 #import <QuartzCore/QuartzCore.h>
 
+#include <dlfcn.h>
+
+
 NSString * const ProductSiteURLString = @"http://iccir.com/projects/classic-color-meter";
 NSString * const FeedbackURLString    = @"http://iccir.com/projects/classic-color-meter/feedback";
 NSString * const ConversionsURLString = @"http://iccir.com/articles/osx-color-conversions";
 NSString * const AppStoreURLString    = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
+
+
+CFStringRef sColorSpaceDisplayP3 = NULL;
+CFStringRef sColorSpaceROMMRGB   = NULL;
+
+CFStringRef GetColorSpaceDisplayP3()
+{
+    if (!sColorSpaceDisplayP3) {
+        CFStringRef *location = dlsym(RTLD_NEXT, "kCGColorSpaceDisplayP3");
+        if (location) sColorSpaceDisplayP3 = *location;
+    }
+    
+    return sColorSpaceDisplayP3;
+}
+
+
+CFStringRef GetColorSpaceROMMRGB()
+{
+    if (!sColorSpaceROMMRGB) {
+        CFStringRef *location = dlsym(RTLD_NEXT, "kCGColorSpaceROMMRGB");
+        if (location) sColorSpaceROMMRGB = *location;
+    }
+    
+    return sColorSpaceROMMRGB;
+}
 
 
 BOOL ColorModeIsRGB(ColorMode mode)

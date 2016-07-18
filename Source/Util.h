@@ -13,7 +13,10 @@ extern NSString * const ConversionsURLString;
 extern NSString * const FeedbackURLString;
 extern NSString * const AppStoreURLString;
 
-
+// Xcode 7 and earlier had incorrect availability macros for these two
+extern CFStringRef GetColorSpaceDisplayP3(void);
+extern CFStringRef GetColorSpaceROMMRGB(void);
+  
 extern BOOL      ColorModeIsRGB(ColorMode mode);
 extern BOOL      ColorModeIsHue(ColorMode mode);
 extern BOOL      ColorModeIsXYZ(ColorMode mode);
