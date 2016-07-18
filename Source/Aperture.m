@@ -224,12 +224,12 @@
         toProfile = ColorSyncProfileCreateWithName(kColorSyncGenericRGBProfile);
         _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 
-    } else if (kColorSyncDisplayP3Profile && kCGColorSpaceDisplayP3 && (_colorConversion == ColorConversionDisplayInP3)) {
-        toProfile = ColorSyncProfileCreateWithName(kColorSyncDisplayP3Profile);
+    } else if (kCGColorSpaceDisplayP3 && (_colorConversion == ColorConversionDisplayInP3)) {
+        toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.DisplayP3"));
         _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceDisplayP3);
         
-    } else if (kColorSyncROMMRGBProfile && kCGColorSpaceROMMRGB && (_colorConversion == ColorConversionDisplayInROMMRGB)) {
-        toProfile = ColorSyncProfileCreateWithName(kColorSyncROMMRGBProfile);
+    } else if (kCGColorSpaceROMMRGB && (_colorConversion == ColorConversionDisplayInROMMRGB)) {
+        toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.ROMMRGB"));
         _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceROMMRGB);
 
     } else if ((displayID != mainID) && (_colorConversion == ColorConversionConvertToMainDisplay)) {
