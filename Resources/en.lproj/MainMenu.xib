@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16A320" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="101000" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10116"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -543,7 +543,7 @@
                         <action selector="changeColorConversionValue:" target="494" id="903"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Show as ROMM RGB" tag="4" id="JPN-Oi-9Qz">
+                <menuItem title="Show as ROMM RGB" tag="6" id="JPN-Oi-9Qz">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="changeColorConversionValue:" target="494" id="r1P-0h-jv6"/>

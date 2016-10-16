@@ -19,13 +19,12 @@ typedef NS_ENUM(NSInteger, ApertureColor) {
 typedef NS_ENUM(NSInteger, ColorConversion) {
     ColorConversionNone = 0,
 
-    ColorConversionConvertToMainDisplay  = 4,
-
     ColorConversionDisplayInSRGB         = 1,
     ColorConversionDisplayInGenericRGB   = 2,
     ColorConversionDisplayInAdobeRGB     = 3,
-    ColorConversionDisplayInROMMRGB      = 4,
-    ColorConversionDisplayInP3           = 5
+    ColorConversionConvertToMainDisplay  = 4,
+    ColorConversionDisplayInP3           = 5,
+    ColorConversionDisplayInROMMRGB      = 6
 };
 
 
