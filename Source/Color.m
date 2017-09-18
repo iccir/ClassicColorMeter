@@ -220,7 +220,7 @@ static NSString *sApplyFilter(NSString *inString)
     NSUInteger length = [inString length];
     unichar buffer[10];
         
-    if (length < 10) {
+    if (length < 10 && length > 3) {
         [inString getCharacters:buffer range:NSMakeRange(0, length)];
         
         if (buffer[0] == '-' &&

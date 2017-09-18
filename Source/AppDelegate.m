@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 };
 
 
-@interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, NSMenuDelegate, NSDraggingSource>
+@interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, CALayerDelegate, NSMenuDelegate, NSDraggingSource>
 
 - (IBAction) changeColorMode:(id)sender;
 - (IBAction) changeApertureSize:(id)sender;
@@ -1486,6 +1486,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
         if (!_isHoldingColor) {
             [self holdColor:nil];
+        } else {
+            [self _updateSliders];
+            [self _updateHoldLabels];
         }
         
     } else {

@@ -49,9 +49,13 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
     
     CGSize titleSize = [title size];
     if (titleSize.width > (frame.size.width - 16)) {
-        NSMutableAttributedString *mutableTitle = [title mutableCopy];
-        [[mutableTitle mutableString] setString:[(id)[self controlView] shortTitle]];
-        title = mutableTitle;
+        NSString *shortTitle = [(id)[self controlView] shortTitle];
+        
+        if (shortTitle) {
+            NSMutableAttributedString *mutableTitle = [title mutableCopy];
+            [[mutableTitle mutableString] setString:shortTitle];
+            title = mutableTitle;
+        }
     }
     
     NSRect rect = [super drawTitle:title withFrame:frame inView:controlView];
