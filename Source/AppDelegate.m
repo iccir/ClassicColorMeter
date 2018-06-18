@@ -548,7 +548,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
             return [preferences colorForSystemClippedValues];
         }
         
-        return [NSColor blackColor];
+        return [NSColor textColor];
     };
 
     NSString * __autoreleasing strings[3];
@@ -562,7 +562,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     BOOL isEditable = (ColorModeIsRGB(colorMode) || ColorModeIsHue(colorMode)) && _isHoldingColor;
 
     if (isEditable) {
-        NSColor *black = [NSColor blackColor];
+        NSColor *black = [NSColor textColor];
 
         [value1 setTextColor:black];
         [value2 setTextColor:black];
@@ -1084,7 +1084,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
 
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0.3];
         CGFloat xOffset  = showSliders ? -126.0 : 0.0;
 

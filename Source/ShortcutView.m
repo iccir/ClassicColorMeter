@@ -47,10 +47,12 @@ static NSImage *sMakeClearIcon(BOOL isPressed)
 
     NSRect toRect = NSMakeRect(0.0, 0.0, 14.0, 14.0);
 
+    NSColor *textColor = [NSColor textColor];
+
     if (isPressed) {
-        [[NSColor colorWithCalibratedWhite:0 alpha:0.5] set];
+        [[textColor colorWithAlphaComponent:0.5] set];
     } else {
-        [[NSColor colorWithCalibratedWhite:0 alpha:0.33] set];
+        [[textColor colorWithAlphaComponent:0.33] set];
     }
 
     [[NSBezierPath bezierPathWithRect:toRect] fill];
@@ -235,6 +237,23 @@ static NSImage *sGetClearIcon()
 }
 
 
+- (CGRect) focusRingMaskBounds
+{
+    return [self bounds];
+}
+
+
+- (void) drawFocusRingMask
+{
+    CGRect bounds = [self bounds];
+    bounds = CGRectInset(bounds, 1, 1);
+
+    NSBezierPath *boundsPath = sMakeRoundedPath(bounds);
+
+    [boundsPath fill];
+}
+
+
 #pragma mark - Accessors
 
 - (void) setShortcut:(Shortcut *)shortcut
@@ -274,10 +293,24 @@ static NSImage *sGetClearIcon()
 
     NSBezierPath *boundsPath = sMakeRoundedPath(cellFrame);
     
+    NSColor *backgroundColor = [NSColor controlBackgroundColor];
+    NSColor *foregroundColor = [NSColor textColor];
+
+    if (@available(macOS 10.14, *)) {
+        NSAppearance *effectiveAppearance = [controlView effectiveAppearance];
+        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
+       
+        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
+
+        if ([bestMatch isEqualToString:NSAppearanceNameDarkAqua]) {
+            backgroundColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.05];
+        }
+    }
+    
     // Draw background
     //
-    {
-        [[NSColor whiteColor] set];
+    if (backgroundColor) {
+        [backgroundColor set];
         [boundsPath fill];
     }
 
@@ -303,7 +336,6 @@ static NSImage *sGetClearIcon()
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         NSString *stringToDraw = nil;
         NSRect stringRect = cellFrame;
-        NSColor *color = [NSColor blackColor];
         CGFloat fontSize = 13.0;
 
         stringRect.size.width = maxX - cellFrame.origin.x;
@@ -322,43 +354,21 @@ static NSImage *sGetClearIcon()
             }
 
             fontSize = 11.0;
-            color = [NSColor colorWithDeviceWhite:0.5 alpha:1.0];
+            foregroundColor = [foregroundColor colorWithAlphaComponent:0.5];
             stringRect = NSInsetRect(stringRect, 3, 4);
         }
 
-        NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-            [NSFont systemFontOfSize:fontSize], NSFontAttributeName,
-            style, NSParagraphStyleAttributeName,
-            color, NSForegroundColorAttributeName,
-            nil];
-
-        [stringToDraw drawInRect:stringRect withAttributes:attributes];
+        [stringToDraw drawInRect:stringRect withAttributes:@{
+            NSFontAttributeName: [NSFont systemFontOfSize:fontSize],
+            NSParagraphStyleAttributeName: style,
+            NSForegroundColorAttributeName: foregroundColor
+        }];
     }
-
-
-    // Draw focus ring if necessary
-    //
-    if ([self showsFirstResponder]) {
-        [NSGraphicsContext saveGraphicsState];
-
-         NSSetFocusRingStyle(NSFocusRingOnly);
-        [[NSColor whiteColor] set];
-        [boundsPath fill];
-
-        [NSGraphicsContext restoreGraphicsState];
-    }
-
 
     // Apply stroke
     {
         NSBezierPath *path = sMakeRoundedPath(NSInsetRect(cellFrame, 0.5, 0.5));
-        
-        if ([self showsFirstResponder]) {
-            [[NSColor colorWithCalibratedWhite:0.0 alpha:0.15] set];
-        } else {
-            [[NSColor colorWithCalibratedWhite:0.0 alpha:0.33] set];
-        }
-
+        [[foregroundColor colorWithAlphaComponent:0.33] set];
         [path stroke];
     }
 }
