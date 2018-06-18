@@ -36,11 +36,9 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) BOOL     usesMyClippedValues;
 @property (nonatomic) BOOL     highlightsMyClippedValues;
-@property (nonatomic) NSColor *colorForMyClippedValues;
 
 @property (nonatomic) BOOL     usesSystemClippedValues;
 @property (nonatomic) BOOL     highlightsSystemClippedValues;
-@property (nonatomic) NSColor *colorForSystemClippedValues;
 
 @property (nonatomic) Shortcut *showApplicationShortcut;
 @property (nonatomic) Shortcut *holdColorShortcut;

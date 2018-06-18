@@ -293,19 +293,8 @@ static NSImage *sGetClearIcon()
 
     NSBezierPath *boundsPath = sMakeRoundedPath(cellFrame);
     
-    NSColor *backgroundColor = [NSColor controlBackgroundColor];
+    NSColor *backgroundColor = [NSColor colorNamed:@"FieldBackground"];
     NSColor *foregroundColor = [NSColor textColor];
-
-    if (@available(macOS 10.14, *)) {
-        NSAppearance *effectiveAppearance = [controlView effectiveAppearance];
-        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
-       
-        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
-
-        if ([bestMatch isEqualToString:NSAppearanceNameDarkAqua]) {
-            backgroundColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.05];
-        }
-    }
     
     // Draw background
     //

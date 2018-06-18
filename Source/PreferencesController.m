@@ -46,11 +46,9 @@
 @property (nonatomic, weak) IBOutlet NSButton      *usesMainColorSpaceForCopyAsTextButton;
 
 @property (nonatomic, weak) IBOutlet NSButton      *enableSystemClippedColorButton;
-@property (nonatomic, weak) IBOutlet NSColorWell   *systemClippedColorWell;
 @property (nonatomic, weak) IBOutlet NSButton      *useSystemClippedValueButton;
 
 @property (nonatomic, weak) IBOutlet NSButton      *enableMyClippedColorButton;
-@property (nonatomic, weak) IBOutlet NSColorWell   *myClippedColorWell;
 @property (nonatomic, weak) IBOutlet NSButton      *useMyClippedValueButton;
 
 @property (nonatomic, weak) IBOutlet NSButton      *restoreDisplayInSRGBButton;
@@ -184,16 +182,12 @@
     [_arrowKeysButton       setState:[preferences arrowKeysEnabled]];
     [_showLockGuidesButton  setState:[preferences showsLockGuides]];
 
-    [_showsHoldColorSlidersButton              setState:[preferences showsHoldColorSliders]];
+    [_showsHoldColorSlidersButton    setState:[preferences showsHoldColorSliders]];
 
     [_enableSystemClippedColorButton setState: highlightsSystemClippedValues];
-    [_systemClippedColorWell       setEnabled: highlightsSystemClippedValues];
-    [_systemClippedColorWell         setColor: [preferences colorForSystemClippedValues]];
     [_useSystemClippedValueButton    setState: [preferences usesSystemClippedValues]];
 
     [_enableMyClippedColorButton setState: highlightsMyClippedValues];
-    [_myClippedColorWell       setEnabled: highlightsMyClippedValues];
-    [_myClippedColorWell         setColor: [preferences colorForMyClippedValues]];
     [_useMyClippedValueButton    setState: ![preferences usesMyClippedValues]];
 
     BOOL usesDifferentColorSpaceInHoldColor = [preferences usesDifferentColorSpaceInHoldColor];
@@ -332,17 +326,12 @@
     } else if (sender == _enableSystemClippedColorButton) {
         [preferences setHighlightsSystemClippedValues:([sender state] == NSControlStateValueOn)];
 
-    } else if (sender == _systemClippedColorWell) {
-        [preferences setColorForSystemClippedValues:[sender color]];
-
     } else if (sender == _useSystemClippedValueButton) {
         [preferences setUsesSystemClippedValues:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _enableMyClippedColorButton) {
         [preferences setHighlightsMyClippedValues:([sender state] == NSControlStateValueOn)];
 
-    } else if (sender == _myClippedColorWell) {
-        [preferences setColorForMyClippedValues:[sender color]];
 
     } else if (sender == _useMyClippedValueButton) {
         [preferences setUsesMyClippedValues:([sender state] != NSControlStateValueOn)];

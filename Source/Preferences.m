@@ -69,17 +69,6 @@ static NSString * const sDefaultRGBColorSnippetTemplate  = @"rgb($RN255, $GN255,
 static NSString * const sDefaultRGBAColorSnippetTemplate = @"rgba($RN255, $GN255, $BN255, 1.0)";
 
 
-static NSData *sGetDataForColor(NSColor *color)
-{
-    if (!color) return nil;
-
-    NSMutableData *data = [NSMutableData data];
-    NSArchiver *encoder = [[NSArchiver alloc] initForWritingWithMutableData:data];
-    [encoder encodeRootObject:color];
-    return data;
-}
-
-
 static void sRegisterDefaults(void)
 {
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
@@ -96,10 +85,6 @@ static void sRegisterDefaults(void)
     void (^b)(NSString *, BOOL) = ^(NSString *key, BOOL yn) {
         NSNumber *number = [NSNumber numberWithBool:yn];
         [defaults setObject:number forKey:key];
-    };
-
-    void (^c)(NSString *, NSColor *) = ^(NSString *key, NSColor *color) {
-        [defaults setObject:sGetDataForColor(color) forKey:key];
     };
 
     i( sColorModeKey,         ColorMode_RGB_HexValue_8     );
@@ -134,8 +119,6 @@ static void sRegisterDefaults(void)
     b( sHighlightsSystemClippedValues, YES );
     b( sUsesMyClippedValues,           YES );
     b( sUsesSystemClippedValues,       YES );
-    c( sColorForMyClippedValues,     [NSColor redColor]);
-    c( sColorForSystemClippedValues, [NSColor blueColor]);
     
     b( sUsesDifferentColorSpaceInHoldColor, NO  );
     b( sUsesMainColorSpaceForCopyAsText,    YES );
@@ -243,23 +226,6 @@ static void sRegisterDefaults(void)
         return loadObjectOfClass([NSString class], key);
     };
 
-    NSColor *(^loadColor)(NSString *) = ^(NSString *key) {
-        NSColor *result = nil;
-        
-        @try {
-            NSData *data = loadObjectOfClass([NSData class], key);
-            if (!data) return result;
-
-            NSUnarchiver *unarchiver = [[NSUnarchiver alloc] initForReadingWithData:data];
-            if (!unarchiver) return result;
-            
-            result = [unarchiver decodeObject];
-
-        } @catch (NSException *e) { }
-
-        return result;
-    };
-
     Shortcut *(^loadShortcut)(NSString *) = ^(NSString *key) {
         NSString *preferencesString = [defaults objectForKey:key];
         Shortcut *shortcut          = nil;
@@ -301,11 +267,9 @@ static void sRegisterDefaults(void)
 
     _usesMyClippedValues           = loadBoolean( sUsesMyClippedValues       );
     _highlightsMyClippedValues     = loadBoolean( sHighlightsMyClippedValues );
-    _colorForMyClippedValues       = loadColor(   sColorForMyClippedValues   );
 
     _usesSystemClippedValues       = loadBoolean( sUsesSystemClippedValues       );
     _highlightsSystemClippedValues = loadBoolean( sHighlightsSystemClippedValues );
-    _colorForSystemClippedValues   = loadColor(   sColorForSystemClippedValues   );
 
     _updatesContinuously   = loadBoolean( sUpdatesContinuouslyKey   );
     _floatWindow           = loadBoolean( sFloatWindowKey           );
@@ -343,10 +307,6 @@ static void sRegisterDefaults(void)
         }
     };
 
-    void (^saveColor)(NSColor *, NSString *) = ^(NSColor *c, NSString *key) {
-        saveObject(sGetDataForColor(c), key);
-    };
-
     void (^saveShortcut)(Shortcut *, NSString *) = ^(Shortcut *s, NSString *key) {
         saveObject([s preferencesString], key);
     };
@@ -382,11 +342,9 @@ static void sRegisterDefaults(void)
 
     saveBoolean( _usesMyClippedValues,           sUsesMyClippedValues       );
     saveBoolean( _highlightsMyClippedValues,     sHighlightsMyClippedValues );
-    saveColor(   _colorForMyClippedValues,       sColorForMyClippedValues   );
 
     saveBoolean( _usesSystemClippedValues,       sUsesSystemClippedValues       );
     saveBoolean( _highlightsSystemClippedValues, sHighlightsSystemClippedValues );
-    saveColor(   _colorForSystemClippedValues,   sColorForSystemClippedValues   );
 
     saveBoolean( _updatesContinuously,      sUpdatesContinuouslyKey     );
     saveBoolean( _floatWindow,              sFloatWindowKey             );

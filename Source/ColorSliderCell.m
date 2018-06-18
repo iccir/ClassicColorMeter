@@ -64,7 +64,9 @@
 
     NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:aRect xRadius:minRadius yRadius:minRadius];
 
-    CGContextSetStrokeColorWithColor(context, [[NSColor colorWithCalibratedWhite:0 alpha:0.5] CGColor]);
+    NSColor *foregroundColor = [NSColor textColor];
+
+    CGContextSetStrokeColorWithColor(context, [[foregroundColor colorWithAlphaComponent:0.5] CGColor]);
     [barPath stroke];
 
     CGContextRestoreGState(context);

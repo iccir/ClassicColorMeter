@@ -542,10 +542,10 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     NSColor *(^getColorForColor)(ColorStringColor) = ^(ColorStringColor color) {
         if (color == ColorStringColorClipped && [preferences highlightsMyClippedValues]) {
-            return [preferences colorForMyClippedValues];
+            return [NSColor colorNamed:@"MyClipped"];
 
         } else if (color == ColorStringColorSystemClipped && [preferences highlightsSystemClippedValues]) {
-            return [preferences colorForSystemClippedValues];
+            return [NSColor colorNamed:@"SystemClipped"];
         }
         
         return [NSColor textColor];
