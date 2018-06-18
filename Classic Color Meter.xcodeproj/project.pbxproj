@@ -15,7 +15,7 @@
 		55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55234B5514203AB800D10B8C /* Carbon.framework */; };
 		55234B6514217C6900D10B8C /* SnippetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B6414217C6900D10B8C /* SnippetsController.m */; };
 		55234B6814217D5700D10B8C /* Snippets.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55234B6614217D5700D10B8C /* Snippets.xib */; };
-		5537D76E19CFD00600DE8117 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76D19CFD00600DE8117 /* Images.xcassets */; };
+		5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76D19CFD00600DE8117 /* Assets.xcassets */; };
 		5563391A158AB033007FE0A6 /* MouseCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55633919158AB033007FE0A6 /* MouseCursor.m */; };
 		556356C0158AC929005FD42E /* Aperture.m in Sources */ = {isa = PBXBuildFile; fileRef = 556356BF158AC929005FD42E /* Aperture.m */; };
 		557EFF5A158F0D6C0081CC6A /* GuideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557EFF59158F0D6C0081CC6A /* GuideController.m */; };
@@ -55,7 +55,7 @@
 		55234B6414217C6900D10B8C /* SnippetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SnippetsController.m; path = Source/SnippetsController.m; sourceTree = "<group>"; };
 		55234B6714217D5700D10B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Snippets.xib; sourceTree = SOURCE_ROOT; };
 		552B411D13D4FB30000EB55C /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = Source/Types.h; sourceTree = "<group>"; };
-		5537D76D19CFD00600DE8117 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		5537D76D19CFD00600DE8117 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		55633918158AB033007FE0A6 /* MouseCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseCursor.h; path = Source/MouseCursor.h; sourceTree = "<group>"; };
 		55633919158AB033007FE0A6 /* MouseCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MouseCursor.m; path = Source/MouseCursor.m; sourceTree = "<group>"; };
 		556356BE158AC929005FD42E /* Aperture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Aperture.h; path = Source/Aperture.h; sourceTree = "<group>"; };
@@ -225,7 +225,7 @@
 		55E67D8913CFC3000040DFDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5537D76D19CFD00600DE8117 /* Images.xcassets */,
+				5537D76D19CFD00600DE8117 /* Assets.xcassets */,
 				558444C713D3CA3E006C6F51 /* InfoPlist.strings */,
 				558444BE13D3CA27006C6F51 /* Info.plist */,
 				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
@@ -305,7 +305,7 @@
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
 				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
-				5537D76E19CFD00600DE8117 /* Images.xcassets in Resources */,
+				5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
