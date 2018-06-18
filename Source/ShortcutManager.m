@@ -14,9 +14,9 @@
 static id sSharedInstance = nil;
 
 @interface ShortcutManager ()
-@property (nonatomic, strong) NSHashTable *listeners;
-@property (nonatomic, strong) NSMutableDictionary *shortcutIDToRefMap;
-@property (nonatomic, strong) NSMutableDictionary *shortcutIDToShortcutMap;
+@property (nonatomic) NSHashTable *listeners;
+@property (nonatomic) NSMutableDictionary *shortcutIDToRefMap;
+@property (nonatomic) NSMutableDictionary *shortcutIDToShortcutMap;
 @end
 
 
@@ -132,10 +132,10 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
     [self _unregisterShortcutIDAsNumber:shortcutIDAsNumber];
 
     UInt32 flags = 0;
-    if (modifierFlags & NSControlKeyMask  )  flags |= controlKey;
-    if (modifierFlags & NSCommandKeyMask  )  flags |= cmdKey;
-    if (modifierFlags & NSShiftKeyMask    )  flags |= shiftKey;
-    if (modifierFlags & NSAlternateKeyMask)  flags |= optionKey;
+    if ( modifierFlags & NSEventModifierFlagControl )  flags |= controlKey;
+    if ( modifierFlags & NSEventModifierFlagCommand )  flags |= cmdKey;
+    if ( modifierFlags & NSEventModifierFlagShift   )  flags |= shiftKey;
+    if ( modifierFlags & NSEventModifierFlagOption  )  flags |= optionKey;
 
 	if (RegisterEventHotKey(keyCode, flags, eventKeyID, GetEventDispatcherTarget(), 0, &hotKeyRef) == noErr) {
         [_shortcutIDToRefMap setObject:[NSValue valueWithPointer:hotKeyRef] forKey:shortcutIDAsNumber];

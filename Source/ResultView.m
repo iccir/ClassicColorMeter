@@ -13,8 +13,8 @@
 static CGFloat sDistanceForDrag = 10.0;
 
 @interface ResultView ()
-@property (nonatomic, assign) CGPoint mouseDownLocation;
-@property (nonatomic, assign, getter=isInDrag) BOOL inDrag;
+@property (nonatomic) CGPoint mouseDownLocation;
+@property (nonatomic, getter=isInDrag) BOOL inDrag;
 @end
 
 

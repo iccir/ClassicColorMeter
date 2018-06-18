@@ -20,8 +20,8 @@
 
 - (NSRect) rectOfClearIconForFrame:(NSRect)frame;
 
-@property (nonatomic, strong) Shortcut *shortcut;
-@property (nonatomic, assign, getter=isMouseDownInClearIcon) BOOL mouseDownInClearIcon;
+@property (nonatomic) Shortcut *shortcut;
+@property (nonatomic, getter=isMouseDownInClearIcon) BOOL mouseDownInClearIcon;
 
 @end
 
@@ -54,7 +54,7 @@ static NSImage *sMakeClearIcon(BOOL isPressed)
     }
 
     [[NSBezierPath bezierPathWithRect:toRect] fill];
-    [template drawInRect:toRect fromRect:NSMakeRect(0, 0, size.width, size.height) operation:NSCompositeDestinationIn fraction:1.0];
+    [template drawInRect:toRect fromRect:NSMakeRect(0, 0, size.width, size.height) operation:NSCompositingOperationDestinationIn fraction:1.0];
 
     [result unlockFocus];
     
@@ -145,7 +145,7 @@ static NSImage *sGetClearIcon()
     NSEvent     *event     = [NSApp currentEvent];
     NSEventType  eventType = [event type];
 
-    if ((eventType == NSLeftMouseDown) || (eventType == NSRightMouseDown)) {
+    if ((eventType == NSEventTypeLeftMouseDown) || (eventType == NSEventTypeRightMouseDown)) {
         if ([self _isEventForClearIcon:event]) {
             return NO;
         }
@@ -207,7 +207,7 @@ static NSImage *sGetClearIcon()
         return NO;
     }
 
-    NSUInteger mask          = (NSControlKeyMask | NSShiftKeyMask | NSAlternateKeyMask | NSCommandKeyMask | NSFunctionKeyMask);
+    NSUInteger mask          = (NSEventModifierFlagControl | NSEventModifierFlagShift | NSEventModifierFlagOption | NSEventModifierFlagCommand | NSEventModifierFlagFunction);
     NSUInteger modifierFlags = [theEvent modifierFlags] & mask;
     NSString  *characters    = [theEvent characters];
     unichar    c             = [characters length] ? [characters characterAtIndex:0] : 0;
@@ -224,7 +224,7 @@ static NSImage *sGetClearIcon()
             return [super performKeyEquivalent:theEvent];
         }
         
-    } else if ((modifierFlags == NSShiftKeyMask) && (c == NSBackTabCharacter || c == NSTabCharacter)) {
+    } else if ((modifierFlags == NSEventModifierFlagShift) && (c == NSBackTabCharacter || c == NSTabCharacter)) {
         return [super performKeyEquivalent:theEvent];
         
 	} else {
@@ -311,7 +311,7 @@ static NSImage *sGetClearIcon()
 
         stringRect.size.width = maxX - cellFrame.origin.x;
 
-        [style setAlignment:NSCenterTextAlignment];
+        [style setAlignment:NSTextAlignmentCenter];
 
         if (_shortcut) {
             stringToDraw = [_shortcut displayString];

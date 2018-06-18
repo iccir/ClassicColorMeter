@@ -48,7 +48,7 @@
         _lines = nil;
         
         [panel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-            if (result == NSFileHandlingPanelOKButton) {
+            if (result == NSModalResponseOK) {
                 NSError *error = nil;
                 [contents writeToURL:[panel URL] atomically:YES encoding:NSUTF8StringEncoding error:&error];
             }

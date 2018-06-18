@@ -12,6 +12,6 @@
 
 @interface ShortcutView : NSControl 
 
-@property (nonatomic, strong) Shortcut *shortcut;
+@property (nonatomic) Shortcut *shortcut;
 
 @end

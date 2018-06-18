@@ -23,7 +23,7 @@
 @property (nonatomic, readonly) NSUInteger modifierFlags;
 @property (nonatomic, readonly) unsigned short keyCode;
 
-@property (nonatomic, strong, readonly) NSString *preferencesString;
-@property (nonatomic, strong, readonly) NSString *displayString;
+@property (nonatomic, readonly) NSString *preferencesString;
+@property (nonatomic, readonly) NSString *displayString;
 
 @end

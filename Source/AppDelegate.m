@@ -190,7 +190,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     [[self rightContainer] setHidden:YES];
 
-    [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *inEvent) {
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^(NSEvent *inEvent) {
         return [self _handleLocalEvent:inEvent];
     }];
 
@@ -285,12 +285,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         BOOL xLocked = [_cursor isXLocked];
         BOOL yLocked = [_cursor isYLocked];
 
-        NSInteger state = NSOffState;
+        NSInteger state = NSControlStateValueOff;
 
         if (xLocked && yLocked) {
-            state = NSOnState;
+            state = NSControlStateValueOn;
         } else if (xLocked || yLocked) {
-            state = NSMixedState;
+            state = NSControlStateValueMixed;
         }
 
         [menuItem setState:state];
@@ -321,7 +321,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     } else if (action == @selector(showSnippets:) || action == @selector(showRecorder:)) {
         NSUInteger flags     = [NSEvent modifierFlags];
-        NSUInteger mask      = NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask;
+        NSUInteger mask      = NSEventModifierFlagControl | NSEventModifierFlagCommand | NSEventModifierFlagOption;
         BOOL       isVisible = ((flags & mask) == mask);
          
         [menuItem setHidden:!isVisible];
@@ -785,13 +785,13 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     NSEventType type = [event type];
 
-    if (type == NSKeyDown) {
+    if (type == NSEventTypeKeyDown) {
         NSUInteger modifierFlags = [event modifierFlags];
 
         id        firstResponder = [[self window] firstResponder];
         NSString *characters     = [event charactersIgnoringModifiers];
         unichar   c              = [characters length] ? [characters characterAtIndex:0] : 0; 
-        BOOL      isShift        = (modifierFlags & NSShiftKeyMask)   > 0;
+        BOOL      isShift        = (modifierFlags & NSEventModifierFlagShift)   > 0;
         BOOL      isLeftOrRight  = (c == NSLeftArrowFunctionKey) || (c == NSRightArrowFunctionKey);
         BOOL      isUpOrDown     = (c == NSUpArrowFunctionKey)   || (c == NSDownArrowFunctionKey);
         BOOL      isArrowKey     = isLeftOrRight || isUpOrDown;
@@ -1064,12 +1064,17 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSView *leftContainer   = [self leftContainer];
     NSView *middleContainer = [self middleContainer];
     NSView *rightContainer  = [self rightContainer];
+    NSView *layerContainer  = _layerContainer;
+
+    CALayer *leftSnapshot   = _leftSnapshot;
+    CALayer *middleSnapshot = _middleSnapshot;
+    CALayer *rightSnapshot  = _rightSnapshot;
 
     void (^setSnapshotsHidden)(BOOL) = ^(BOOL yn) {
         [leftContainer   setHidden:!yn];
         [middleContainer setHidden:!yn];
         [rightContainer  setHidden:!yn];
-        [_layerContainer   setHidden: yn];
+        [layerContainer  setHidden: yn];
     };
     
     void (^layout)(NSView *, CALayer *, CGFloat *) = ^(NSView *view, CALayer *layer, CGFloat *inOutX) {
@@ -1083,37 +1088,28 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     };
     
     BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
-    CGFloat xOffset  = showSliders ? -126.0 : 0.0;
 
-    NSDisableScreenUpdates();
-    {
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+        [context setDuration:0.3];
+        CGFloat xOffset  = showSliders ? -126.0 : 0.0;
+
         setSnapshotsHidden(NO);
 
-        [CATransaction setAnimationDuration:0.3];
-        [CATransaction setCompletionBlock:^{
-            NSDisableScreenUpdates();
+        [leftSnapshot   setContents:GetSnapshotImageForView(leftContainer)];
+        [middleSnapshot setContents:GetSnapshotImageForView(middleContainer)];
+        [rightSnapshot  setContents:GetSnapshotImageForView(rightContainer)];
 
-            setSnapshotsHidden(YES);
-            [rightContainer setHidden:!_isHoldingColor];
-            [[self window] displayIfNeeded];
+        layout(leftContainer,   leftSnapshot,   &xOffset);
+        layout(middleContainer, middleSnapshot, &xOffset);
+        layout(rightContainer,  rightSnapshot,  &xOffset);
 
-            NSEnableScreenUpdates();
-        }];
+        [leftSnapshot  setOpacity:showSliders ? 0.0 : 1.0];
+        [rightSnapshot setOpacity:showSliders ? 1.0 : 0.0];
 
-        [_leftSnapshot   setContents:GetSnapshotImageForView(leftContainer)];
-        [_middleSnapshot setContents:GetSnapshotImageForView(middleContainer)];
-        [_rightSnapshot  setContents:GetSnapshotImageForView(rightContainer)];
-
-        layout(leftContainer,   _leftSnapshot,   &xOffset);
-        layout(middleContainer, _middleSnapshot, &xOffset);
-        layout(rightContainer,  _rightSnapshot,  &xOffset);
-
-        [_leftSnapshot  setOpacity:showSliders ? 0.0 : 1.0];
-        [_rightSnapshot setOpacity:showSliders ? 1.0 : 0.0];
-
-        [[self window] displayIfNeeded];
-    }
-    NSEnableScreenUpdates();
+    } completionHandler:^{
+        setSnapshotsHidden(YES);
+        [rightContainer setHidden:!_isHoldingColor];
+    }];
 }
 
 
@@ -1440,7 +1436,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [savePanel setAllowedFileTypes:[NSArray arrayWithObject:(id)kUTTypeTIFF]];
     
     [savePanel beginSheetModalForWindow:[self window] completionHandler:^(NSInteger result) {
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             [[image TIFFRepresentation] writeToURL:[savePanel URL] atomically:YES];
         }
     }];

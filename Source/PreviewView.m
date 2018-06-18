@@ -11,7 +11,7 @@
 
 
 @interface PreviewView () <MouseCursorListener>
-@property (nonatomic, strong) NSDictionary *attributes;
+@property (nonatomic) NSDictionary *attributes;
 @end
 
 
@@ -46,7 +46,7 @@
     CGContextSaveGState(context);
  
     if (!_backgroundImage) _backgroundImage = [NSImage imageNamed:@"background"];
-    [_backgroundImage drawAtPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0, 0, 120, 120) operation:NSCompositeSourceOver fraction:1.0];
+    [_backgroundImage drawAtPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0, 0, 120, 120) operation:NSCompositingOperationSourceOver fraction:1.0];
 
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;

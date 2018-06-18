@@ -273,37 +273,37 @@
         [preferences setApertureColor:[sender selectedTag]];
 
     } else if (sender == _clickInSwatchButton) {
-        [preferences setClickInSwatchEnabled:([sender state] == NSOnState)];
+        [preferences setClickInSwatchEnabled:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _clickInSwatchPopUp) {
         [preferences setClickInSwatchAction:[sender selectedTag]];
     
     } else if (sender == _dragInSwatchButton) {
-        [preferences setDragInSwatchEnabled:([sender state] == NSOnState)];
+        [preferences setDragInSwatchEnabled:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _dragInSwatchPopUp) {
         [preferences setDragInSwatchAction:[sender selectedTag]];
 
     } else if (sender == _useLowercaseHexButton) {
-        [preferences setUsesLowercaseHex:([sender state] == NSOnState)];
+        [preferences setUsesLowercaseHex:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _usePoundPrefixButton) {
-        [preferences setUsesPoundPrefix:([sender state] == NSOnState)];
+        [preferences setUsesPoundPrefix:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _arrowKeysButton) {
-        [preferences setArrowKeysEnabled:([sender state] == NSOnState)];
+        [preferences setArrowKeysEnabled:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _showLockGuidesButton) {
-        [preferences setShowsLockGuides:([sender state] == NSOnState)];
+        [preferences setShowsLockGuides:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _showsHoldColorSlidersButton) {
-        [preferences setShowsHoldColorSliders:([sender state] == NSOnState)];
+        [preferences setShowsHoldColorSliders:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _usesDifferentColorSpaceInHoldColorButton) {
-        [preferences setUsesDifferentColorSpaceInHoldColor:([sender state] == NSOnState)];
+        [preferences setUsesDifferentColorSpaceInHoldColor:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _usesMainColorSpaceForCopyAsTextButton) {
-        [preferences setUsesMainColorSpaceForCopyAsText:([sender state] == NSOnState)];
+        [preferences setUsesMainColorSpaceForCopyAsText:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _showApplicationShortcutView) {
         [preferences setShowApplicationShortcut:[sender shortcut]];
@@ -330,22 +330,22 @@
         [preferences setRgbaColorSnippetShortcut:[sender shortcut]];
 
     } else if (sender == _enableSystemClippedColorButton) {
-        [preferences setHighlightsSystemClippedValues:([sender state] == NSOnState)];
+        [preferences setHighlightsSystemClippedValues:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _systemClippedColorWell) {
         [preferences setColorForSystemClippedValues:[sender color]];
 
     } else if (sender == _useSystemClippedValueButton) {
-        [preferences setUsesSystemClippedValues:([sender state] == NSOnState)];
+        [preferences setUsesSystemClippedValues:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _enableMyClippedColorButton) {
-        [preferences setHighlightsMyClippedValues:([sender state] == NSOnState)];
+        [preferences setHighlightsMyClippedValues:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _myClippedColorWell) {
         [preferences setColorForMyClippedValues:[sender color]];
 
     } else if (sender == _useMyClippedValueButton) {
-        [preferences setUsesMyClippedValues:([sender state] != NSOnState)];
+        [preferences setUsesMyClippedValues:([sender state] != NSControlStateValueOn)];
     }
 }
 

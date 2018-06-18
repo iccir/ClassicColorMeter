@@ -26,11 +26,11 @@
 - (id) init
 {
     if ((self = [super init])) {
-        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent *event) {
+        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskMouseMoved handler:^(NSEvent *event) {
             [self _handleMouseMoved];
         }];
 
-        _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent *event) {
+        _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskMouseMoved handler:^(NSEvent *event) {
             [self _handleMouseMoved];
             return event;
         }];

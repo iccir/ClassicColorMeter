@@ -11,7 +11,7 @@
 
 @interface PreviewView : NSView
 
-@property (nonatomic /*retain*/) CGImageRef image;
+@property (nonatomic /*strong*/) CGImageRef image;
 @property (nonatomic) CGPoint offset;
 @property (nonatomic) CGFloat imageScale;
 @property (nonatomic) CGRect apertureRect;
@@ -19,7 +19,7 @@
 @property (nonatomic) ApertureColor apertureColor;
 @property (nonatomic) NSInteger zoomLevel;
 
-@property (nonatomic, strong) NSString *statusText;
+@property (nonatomic) NSString *statusText;
 
 @property (nonatomic) BOOL showsLocation;
 

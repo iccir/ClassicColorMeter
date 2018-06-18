@@ -23,24 +23,24 @@
 
 - (void) update;
 
-@property (nonatomic, assign) CGPoint location;
+@property (nonatomic) CGPoint location;
 
 - (void) setXLocked:(BOOL)xLocked yLocked:(BOOL)yLocked;
-@property (nonatomic, assign, getter=isXLocked) BOOL xLocked;
-@property (nonatomic, assign, getter=isYLocked) BOOL yLocked;
+@property (nonatomic, getter=isXLocked) BOOL xLocked;
+@property (nonatomic, getter=isYLocked) BOOL yLocked;
 
 - (CGWindowID) windowIDForSoftwareCursor;
 
 // On a Retina display and in pixel selection mode
-@property (nonatomic, assign) BOOL inRetinaPixelMode;
+@property (nonatomic) BOOL inRetinaPixelMode;
 
-@property (nonatomic, assign, readonly) CGDirectDisplayID displayID;
-@property (nonatomic, retain, readonly) NSScreen *screen;
-@property (nonatomic, assign, readonly) CGFloat displayScaleFactor;
+@property (nonatomic, readonly) CGDirectDisplayID displayID;
+@property (nonatomic, readonly) NSScreen *screen;
+@property (nonatomic, readonly) CGFloat displayScaleFactor;
 
-@property (nonatomic, assign, readonly) CGPoint unflippedLocation;
-@property (nonatomic, assign, readonly) CGPoint realLocation;
-@property (nonatomic, assign, readonly) CGPoint realUnflippedLocation;
+@property (nonatomic, readonly) CGPoint unflippedLocation;
+@property (nonatomic, readonly) CGPoint realLocation;
+@property (nonatomic, readonly) CGPoint realUnflippedLocation;
 
 @end
 

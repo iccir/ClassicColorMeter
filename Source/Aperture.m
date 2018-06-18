@@ -11,8 +11,8 @@
 
 
 @interface Aperture () <MouseCursorListener>
-@property (nonatomic, strong) MouseCursor *cursor;
-@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic) MouseCursor *cursor;
+@property (nonatomic) NSTimer *timer;
 @end
 
 

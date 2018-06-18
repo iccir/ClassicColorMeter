@@ -11,8 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface RecessedButtonCell ()
-@property (nonatomic, assign) NSRect arrowRect;
-@property (nonatomic, assign) BOOL drawsArrow;
+@property (nonatomic) NSRect arrowRect;
+@property (nonatomic) BOOL drawsArrow;
 @end
 
 
@@ -100,7 +100,7 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
 {
     if (_shortTitle != shortTitle) {
         _shortTitle = shortTitle;
-        [self setNeedsDisplay];
+        [self setNeedsDisplay:YES];
     }
 }
 

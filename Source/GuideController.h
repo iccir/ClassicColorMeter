@@ -14,6 +14,6 @@
 
 - (void) update;
 
-@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 
 @end

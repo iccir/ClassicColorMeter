@@ -11,6 +11,6 @@ typedef void(^ColorSliderBarDrawingBlock)(Color *color, NSRect rect);
 @interface ColorSliderCell : NSSliderCell
 
 @property (nonatomic) ColorComponent component;
-@property (nonatomic, strong) Color *color;
+@property (nonatomic) Color *color;
 
 @end

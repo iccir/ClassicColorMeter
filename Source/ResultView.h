@@ -13,12 +13,12 @@
 
 @interface ResultView : NSView
 
-@property (nonatomic, strong) Color *color;
+@property (nonatomic) Color *color;
 @property (nonatomic, weak) id<ResultViewDelegate> delegate;
-@property (nonatomic, assign, getter=isClickEnabled) BOOL clickEnabled;
-@property (nonatomic, assign, getter=isDragEnabled)  BOOL dragEnabled;
+@property (nonatomic, getter=isClickEnabled) BOOL clickEnabled;
+@property (nonatomic, getter=isDragEnabled)  BOOL dragEnabled;
 
-@property (nonatomic, assign) BOOL drawsBorder;
+@property (nonatomic) BOOL drawsBorder;
 
 @end
 

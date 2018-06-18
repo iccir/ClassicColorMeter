@@ -140,8 +140,6 @@
     
     CGPoint location = [_cursor unflippedLocation];
 
-    NSDisableScreenUpdates();
-
     if ([_cursor isYLocked]) {
         [_horizontalWindow orderFront:self];
 
@@ -161,8 +159,6 @@
         [_verticalView   setFrameOrigin:CGPointMake(remainder, 0)];
         [_verticalWindow setFrame:CGRectMake(location.x - 1.0, screenFrame.origin.y, 3.0, screenFrame.size.height) display:YES];
     }
-    
-    NSEnableScreenUpdates();
 }
 
 

@@ -19,7 +19,7 @@
 
 @property (nonatomic, weak) id<ApertureDelegate> delegate;
 
-@property (nonatomic, readonly /*retain*/) CGImageRef image;
+@property (nonatomic, readonly /*strong*/) CGImageRef image;
 @property (nonatomic, readonly) CGPoint offset;
 @property (nonatomic, readonly) CGFloat scaleFactor;    // rect of image to display
 @property (nonatomic, readonly) CGRect apertureRect;    // rect of aperture
