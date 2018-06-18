@@ -8,8 +8,6 @@
 
 #import "Color.h"
 
-#pragma mark -
-#pragma mark Color Class
 
 @implementation Color {
     BOOL  _rawValid;
@@ -54,8 +52,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Static Functions
+#pragma mark - Static Functions
 
 static NSString *sGetHexString(NSString *format, long value)
 {
@@ -524,8 +521,7 @@ static void sMakeStrings(
 }
 
 
-#pragma mark -
-#pragma mark Private
+#pragma mark - Private
 
 - (void) _didChangeRGB
 {
@@ -686,8 +682,7 @@ static void sMakeStrings(
 }
 
 
-#pragma mark -
-#pragma mark Public Methods
+#pragma mark - Public Methods
 
 - (void) getComponentsForMode: (ColorMode) mode
                       options: (ColorStringOptions) options
@@ -943,8 +938,7 @@ static void sMakeStrings(
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (NSColor *) NSColor
 {

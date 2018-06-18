@@ -43,8 +43,7 @@ static id sSharedInstance = nil;
 }
 
 
-#pragma mark -
-#pragma mark Lifecycle
+#pragma mark - Lifecycle
 
 - (id) init
 {
@@ -66,8 +65,7 @@ static id sSharedInstance = nil;
 }
 
 
-#pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
 
 - (BOOL) _handleHotKeyID:(NSUInteger)keyID
 {
@@ -145,8 +143,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 }
 
 
-#pragma mark -
-#pragma mark Public Methods
+#pragma mark - Public Methods
 
 - (void) addListener:(id<ShortcutListener>)listener
 {
@@ -160,8 +157,7 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setShortcuts:(NSArray *)shortcuts
 {

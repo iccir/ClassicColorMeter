@@ -152,8 +152,7 @@ static CFStringRef *sKeyCodeToStringMap = nil;
 }
 
 
-#pragma mark -
-#pragma mark Lifecycle
+#pragma mark - Lifecycle
 
 - (id) initWithKeyCode:(unsigned short)keyCode modifierFlags:(NSUInteger)modifierFlags
 {
@@ -238,8 +237,7 @@ static CFStringRef *sKeyCodeToStringMap = nil;
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (NSUInteger) shortcutID
 {

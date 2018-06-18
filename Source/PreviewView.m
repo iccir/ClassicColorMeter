@@ -180,8 +180,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Mouse Cursor
+#pragma mark - Mouse Cursor
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
@@ -196,8 +195,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setZoomLevel:(NSInteger)zoomLevel
 {

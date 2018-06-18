@@ -94,8 +94,7 @@ static NSImage *sGetClearIcon()
 }
 
 
-#pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
 
 - (_ShortcutCell *) _shortcutCell
 {
@@ -119,8 +118,7 @@ static NSImage *sGetClearIcon()
 }
 
 
-#pragma mark -
-#pragma mark Superclass Overrides
+#pragma mark - Superclass Overrides
 
 - (BOOL) needsPanelToBecomeKey
 {
@@ -237,8 +235,7 @@ static NSImage *sGetClearIcon()
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setShortcut:(Shortcut *)shortcut
 {

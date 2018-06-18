@@ -617,9 +617,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Private Methods
-
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
     Preferences *preferences  = [Preferences sharedInstance];
@@ -852,8 +849,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Pasteboard / Dragging
+#pragma mark - Pasteboard / Dragging
 
 - (id<NSPasteboardWriting>) _pasteboardWriterForColorAction:(ColorAction)actionTag
 {
@@ -1025,8 +1021,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Animation
+#pragma mark - Animation
 
 - (void) _setupHoldAnimation
 {
@@ -1123,8 +1118,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark ResultViewDelegate
+#pragma mark - ResultViewDelegate
 
 - (void) resultViewClicked:(ResultView *)view
 {
@@ -1161,8 +1155,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Shortcuts
+#pragma mark - Shortcuts
 
 - (BOOL) performShortcut:(Shortcut *)shortcut
 {
@@ -1215,8 +1208,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark IBActions
+#pragma mark - IBActions
 
 - (IBAction) changeColorMode:(id)sender
 {
