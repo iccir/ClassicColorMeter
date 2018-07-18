@@ -44,43 +44,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 @interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, CALayerDelegate, NSMenuDelegate, NSDraggingSource>
 
-- (IBAction) changeColorMode:(id)sender;
-- (IBAction) changeApertureSize:(id)sender;
-
-- (IBAction) showPreferences:(id)sender;
-- (IBAction) showSnippets:(id)sender;
-- (IBAction) showRecorder:(id)sender;
-
-- (IBAction) changeColorConversionValue:(id)sender;
-- (IBAction) writeTopLabelValueToPasteboard:(id)sender;
-- (IBAction) writeBottomLabelValueToPasteboard:(id)sender;
-
-// View menu
-- (IBAction) lockPosition:(id)sender;
-- (IBAction) lockX:(id)sender;
-- (IBAction) lockY:(id)sender;
-- (IBAction) updateMagnification:(id)sender;
-- (IBAction) toggleContinuous:(id)sender;
-- (IBAction) toggleMouseLocation:(id)sender;
-- (IBAction) toggleFloatWindow:(id)sender;
-- (IBAction) copyImage:(id)sender;
-- (IBAction) saveImage:(id)sender;
-
-- (IBAction) showColorWindow:(id)sender;
-
-// Color menu
-- (IBAction) holdColor:(id)sender;
-- (IBAction) pasteTextAsColor:(id)sender;
-
-- (IBAction) performColorActionForSender:(id)sender;
-
-- (IBAction) updateComponent:(id)sender;
-
-- (IBAction) sendFeedback:(id)sender;
-- (IBAction) viewSite:(id)sender;
-- (IBAction) learnAboutConversion:(id)sender;
-- (IBAction) viewOnAppStore:(id)sender;
-
 @property (nonatomic, strong) IBOutlet NSWindow      *window;
 
 @property (nonatomic, strong) IBOutlet NSView        *leftContainer;
@@ -95,8 +58,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 @property (nonatomic, strong) IBOutlet PreviewView   *previewView;
 
 @property (nonatomic, strong) IBOutlet ResultView    *resultView;
-
-@property (nonatomic, strong) IBOutlet NSTextField   *apertureSizeLabel;
 
 @property (nonatomic, strong) IBOutlet NSTextField   *label1;
 @property (nonatomic, strong) IBOutlet NSTextField   *label2;
@@ -300,6 +261,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     } else if (action == @selector(lockY:)) {
         [menuItem setState:[_cursor isYLocked]];
+
+    } else if (action == @selector(changeApertureOutline:)) {
+        [menuItem setState:([menuItem tag] == [[Preferences sharedInstance] apertureOutline])];
         
     } else if (action == @selector(updateMagnification:)) {
         [menuItem setState:([menuItem tag] == [_aperture zoomLevel])];
@@ -650,7 +614,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     [apertureSlider setIntegerValue:apertureSize];
     [previewView setShowsLocation:[preferences showMouseCoordinates]];
-    [previewView setApertureColor:[preferences apertureColor]];
+    [previewView setApertureOutline:[preferences apertureOutline]];
     [previewView setZoomLevel:[preferences zoomLevel]];
 
     [resultView setClickEnabled:[preferences clickInSwatchEnabled]];
@@ -1230,6 +1194,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) changeApertureOutline:(id)sender
+{
+    [[Preferences sharedInstance] setApertureOutline:[sender tag]];
+}
+
+
 - (IBAction) changeApertureSize:(id)sender
 {
     [[Preferences sharedInstance] setApertureSize:[sender integerValue]];
@@ -1384,7 +1354,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 - (IBAction) updateMagnification:(id)sender
 {
     NSInteger tag = [sender tag];
-    [[Preferences sharedInstance] setZoomLevel:[sender tag]];
+    [[Preferences sharedInstance] setZoomLevel:tag];
     [_aperture setZoomLevel:tag];
 }
 

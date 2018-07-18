@@ -137,16 +137,16 @@
         apertureRect.origin.x += zoomedBounds.origin.x;
         apertureRect.origin.y += zoomedBounds.origin.y;
 
-        if (_apertureColor == ApertureColorBlack) {
+        if (_apertureOutline == ApertureOutlineBlack) {
             CGContextSetGrayStrokeColor(context, 0.0, 0.75);
 
-        } else if (_apertureColor == ApertureColorGrey) {
+        } else if (_apertureOutline == ApertureOutlineGrey) {
             CGContextSetGrayStrokeColor(context, 0.5, 0.8);
 
-        } else if (_apertureColor == ApertureColorWhite) {
+        } else if (_apertureOutline == ApertureOutlineWhite) {
             CGContextSetGrayStrokeColor(context, 1.0, 0.8);
 
-        } else if (_apertureColor == ApertureColorBlackAndWhite) {
+        } else if (_apertureOutline == ApertureOutlineBlackAndWhite) {
             CGRect innerRect = CGRectInset(apertureRect, 1.5, 1.5);
             CGContextSetGrayStrokeColor(context, 1.0, 0.66);
             CGContextStrokeRect(context, innerRect);
@@ -239,10 +239,10 @@
 }
 
 
-- (void) setApertureColor:(ApertureColor)apertureColor
+- (void) setApertureOutline:(ApertureOutline)apertureOutline
 {
-    if (_apertureColor != apertureColor) {
-        _apertureColor = apertureColor;
+    if (_apertureOutline != apertureOutline) {
+        _apertureOutline = apertureOutline;
         [self setNeedsDisplay:YES];
     }
 }

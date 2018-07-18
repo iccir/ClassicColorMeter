@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, ApertureColor) {
-    ApertureColorBlack,
-    ApertureColorGrey,
-    ApertureColorWhite,
-    ApertureColorBlackAndWhite
+typedef NS_ENUM(NSInteger, ApertureOutline) {
+    ApertureOutlineBlack,
+    ApertureOutlineGrey,
+    ApertureOutlineWhite,
+    ApertureOutlineBlackAndWhite
 };
 
 

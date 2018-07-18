@@ -28,8 +28,6 @@
 @property (nonatomic, weak) IBOutlet NSToolbarItem *conversionItem;
 @property (nonatomic, weak) IBOutlet NSToolbarItem *keyboardItem;
 
-@property (nonatomic, weak) IBOutlet NSPopUpButton *apertureColorPopUp;
-
 @property (nonatomic, weak) IBOutlet NSButton      *clickInSwatchButton;
 @property (nonatomic, weak) IBOutlet NSPopUpButton *clickInSwatchPopUp;
 
@@ -84,9 +82,6 @@
 - (void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    [_apertureColorPopUp setTarget:nil];
-    [_apertureColorPopUp setAction:NULL];
 
     [_clickInSwatchButton setTarget:nil];
     [_clickInSwatchButton setAction:NULL];
@@ -168,8 +163,6 @@
     BOOL dragInSwatchEnabled           = [preferences dragInSwatchEnabled];
     BOOL highlightsMyClippedValues     = [preferences highlightsMyClippedValues];
     BOOL highlightsSystemClippedValues = [preferences highlightsSystemClippedValues];
-
-    [_apertureColorPopUp selectItemWithTag:[preferences apertureColor]];
 
     [_clickInSwatchButton setState:clickInSwatchEnabled];
     [_clickInSwatchPopUp  selectItemWithTag:[preferences clickInSwatchAction]];
@@ -269,10 +262,7 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    if (sender == _apertureColorPopUp) {
-        [preferences setApertureColor:[sender selectedTag]];
-
-    } else if (sender == _clickInSwatchButton) {
+    if (sender == _clickInSwatchButton) {
         [preferences setClickInSwatchEnabled:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _clickInSwatchPopUp) {

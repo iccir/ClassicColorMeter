@@ -17,7 +17,7 @@ static NSString * const sHoldColorModeKey           = @"HoldColorMode";
 static NSString * const sColorProfileTypeKey        = @"ColorProfileType";
 static NSString * const sZoomLevelKey               = @"ZoomLevel";
 static NSString * const sApertureSizeKey            = @"ApertureSize";
-static NSString * const sApertureColorKey           = @"ApertureColor";
+static NSString * const sApertureOutlineKey         = @"ApertureOutline";
 static NSString * const sSwatchClickActionKey       = @"SwatchClickAction";
 static NSString * const sSwatchDragActionKey        = @"SwatchDragAction";
 
@@ -107,7 +107,7 @@ static void sRegisterDefaults(void)
     i( sColorProfileTypeKey,  ColorConversionDisplayInSRGB );
     i( sZoomLevelKey,         8 );
     i( sApertureSizeKey,      0 );
-    i( sApertureColorKey,     3 );
+    i( sApertureOutlineKey,   3 );
     i( sSwatchClickActionKey, 0 );
     i( sSwatchDragActionKey,  0 );
 
@@ -176,7 +176,7 @@ static void sRegisterDefaults(void)
         [self addObserver:self forKeyPath:@"holdColorMode"            options:0 context:NULL];
         [self addObserver:self forKeyPath:@"zoomLevel"                options:0 context:NULL];
         [self addObserver:self forKeyPath:@"apertureSize"             options:0 context:NULL];
-        [self addObserver:self forKeyPath:@"apertureColor"            options:0 context:NULL];
+        [self addObserver:self forKeyPath:@"apertureOutline"          options:0 context:NULL];
         [self addObserver:self forKeyPath:@"clickInSwatchAction"      options:0 context:NULL];
         [self addObserver:self forKeyPath:@"dragInSwatchAction"       options:0 context:NULL];
 
@@ -280,7 +280,7 @@ static void sRegisterDefaults(void)
     _colorConversion     = loadInteger( sColorProfileTypeKey  );
     _zoomLevel           = loadInteger( sZoomLevelKey         );
     _apertureSize        = loadInteger( sApertureSizeKey      );
-    _apertureColor       = loadInteger( sApertureColorKey     );
+    _apertureOutline     = loadInteger( sApertureOutlineKey   );
     _clickInSwatchAction = loadInteger( sSwatchClickActionKey );
     _dragInSwatchAction  = loadInteger( sSwatchDragActionKey  );
 
@@ -361,7 +361,7 @@ static void sRegisterDefaults(void)
 
     saveInteger( _zoomLevel,                sZoomLevelKey               );
     saveInteger( _apertureSize,             sApertureSizeKey            );
-    saveInteger( _apertureColor,            sApertureColorKey           );
+    saveInteger( _apertureOutline,          sApertureOutlineKey         );
     saveInteger( _clickInSwatchAction,      sSwatchClickActionKey       );
     saveInteger( _dragInSwatchAction,       sSwatchDragActionKey        );
 
