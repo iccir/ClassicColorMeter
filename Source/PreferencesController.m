@@ -37,7 +37,6 @@
 @property (nonatomic, weak) IBOutlet NSButton      *useLowercaseHexButton;
 @property (nonatomic, weak) IBOutlet NSButton      *usePoundPrefixButton;
 @property (nonatomic, weak) IBOutlet NSButton      *arrowKeysButton;
-@property (nonatomic, weak) IBOutlet NSButton      *showLockGuidesButton;
 
 @property (nonatomic, weak) IBOutlet NSButton      *showsHoldColorSlidersButton;
 @property (nonatomic, weak) IBOutlet NSButton      *usesDifferentColorSpaceInHoldColorButton;
@@ -100,9 +99,6 @@
 
     [_arrowKeysButton setTarget:nil];
     [_arrowKeysButton setAction:NULL];
-
-    [_showLockGuidesButton setTarget:nil];
-    [_showLockGuidesButton setAction:NULL];
 
     [_usePoundPrefixButton setTarget:nil];
     [_usePoundPrefixButton setAction:NULL];
@@ -175,7 +171,6 @@
     [_useLowercaseHexButton setState:[preferences usesLowercaseHex]];
     [_usePoundPrefixButton  setState:[preferences usesPoundPrefix]];
     [_arrowKeysButton       setState:[preferences arrowKeysEnabled]];
-    [_showLockGuidesButton  setState:[preferences showsLockGuides]];
 
     [_showsHoldColorSlidersButton              setState:[preferences showsHoldColorSliders]];
 
@@ -282,9 +277,6 @@
 
     } else if (sender == _arrowKeysButton) {
         [preferences setArrowKeysEnabled:([sender state] == NSControlStateValueOn)];
-
-    } else if (sender == _showLockGuidesButton) {
-        [preferences setShowsLockGuides:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _showsHoldColorSlidersButton) {
         [preferences setShowsHoldColorSliders:([sender state] == NSControlStateValueOn)];

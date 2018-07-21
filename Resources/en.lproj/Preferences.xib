@@ -266,7 +266,7 @@
                         <action selector="updatePreferences:" target="-2" id="113"/>
                     </connections>
                 </button>
-                <button id="326">
+                <button hidden="YES" id="326">
                     <rect key="frame" x="18" y="124" width="244" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show guides when locking position" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="327">
@@ -278,6 +278,7 @@
                     </connections>
                 </button>
             </subviews>
+            <point key="canvasLocation" x="-227" y="724"/>
         </customView>
         <customView id="252" userLabel="Keyboard Pane" colorLabel="IBBuiltInLabel-Red">
             <rect key="frame" x="0.0" y="0.0" width="368" height="333"/>

@@ -12,8 +12,7 @@
 
 @implementation ColorSliderCell
 
-#pragma mark -
-#pragma mark Drawing
+#pragma mark - Drawing
 
 - (void) _drawColorBackgroundInRect:(CGRect)inRect context:(CGContextRef)context
 {
@@ -77,6 +76,7 @@
     CGContextRestoreGState(context);
 }
 
+
 - (void) drawKnob:(NSRect)rect
 {
     if ([self isEnabled]) {
@@ -85,8 +85,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setComponent:(ColorComponent)component
 {

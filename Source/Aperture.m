@@ -71,8 +71,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
 
 - (void) _timerTick:(NSTimer *)timer
 {
@@ -322,8 +321,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Callbacks
+#pragma mark - Callbacks
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
@@ -346,8 +344,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Public Methods
+#pragma mark - Public Methods
 
 - (void) update
 {
@@ -489,8 +486,7 @@
 
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setApertureSize:(NSInteger)apertureSize
 {

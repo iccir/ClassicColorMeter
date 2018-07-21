@@ -11,13 +11,13 @@
 
 
 @interface PreviewView () <MouseCursorListener>
-@property (nonatomic) NSDictionary *attributes;
 @end
 
 
 @implementation PreviewView {
     NSImage *_backgroundImage;
 }
+
 
 - (void) awakeFromNib
 {
@@ -50,7 +50,35 @@
 
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;
+    
+    CGFloat scale = [[self window] backingScaleFactor];
+    CGFloat onePixel  = 1.0 / scale;
 
+    void (^drawTextBox)(NSString *, BOOL) = ^(NSString *text, BOOL onTop) {
+        NSDictionary *attributes = @{
+            NSFontAttributeName: [NSFont monospacedDigitSystemFontOfSize:12 weight:NSFontWeightMedium],
+            NSForegroundColorAttributeName: [NSColor whiteColor]
+        };
+        
+        CGRect textRect = [text boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:attributes];
+        CGRect boxRect  = CGRectMake(onePixel, onePixel, bounds.size.width - (onePixel * 2), textRect.size.height);
+
+        textRect.origin.x += round((bounds.size.width - textRect.size.width) / 2.0);
+
+        if (onTop) {
+            textRect.origin.y = (bounds.size.height - textRect.size.height) + 3;
+            boxRect.origin.y  = (bounds.size.height - textRect.size.height) - onePixel;
+            
+        } else {
+            textRect.origin.y = 4.0;
+        }
+
+        CGContextSetGrayFillColor(context, 0.0, 0.5);
+        CGContextFillRect(context, boxRect);
+
+        [text drawWithRect:textRect options:0 attributes:attributes];
+    };
+    
     if (_image) {
         CGContextSetInterpolationQuality(context, kCGInterpolationNone);
 
@@ -71,15 +99,6 @@
         CGContextDrawImage(context, zoomedImageBounds, _image);
     }
 
-    if (!_attributes && (_showsLocation || [_statusText length])) {
-        NSFont *font = [NSFont boldSystemFontOfSize:12.0];
-
-        _attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-            font, NSFontAttributeName,
-            [NSColor whiteColor], NSForegroundColorAttributeName,
-            nil];
-    }
-
     if (_showsLocation) {
         MouseCursor *cursor = [MouseCursor sharedInstance];
         CGPoint location = [cursor location];
@@ -91,36 +110,12 @@
             locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)location.x, (long)location.y];
         }
 
-        CGRect textRect = [locationString boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:_attributes];
-
-        {
-            CGRect boxRect  = CGRectMake(1.0, 1.0, bounds.size.width - 2.0, textRect.size.height);
-            
-            CGContextSetGrayFillColor(context, 0.0, 0.5);
-            CGContextFillRect(context, boxRect);
-        }
-
-        textRect.origin.x = (bounds.size.width - textRect.size.width) - 2.0;
-        textRect.origin.y = 4.0;
-        [locationString drawWithRect:textRect options:0 attributes:_attributes];
+        drawTextBox(locationString, NO);
     }
-
 
     if ([_statusText length]) {
-        CGRect textRect = [_statusText boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:_attributes];
-
-        {
-            CGRect boxRect  = CGRectMake(1.0, (bounds.size.height - textRect.size.height) - 1.0, bounds.size.width - 2.0, textRect.size.height);
-            
-            CGContextSetGrayFillColor(context, 0.0, 0.5);
-            CGContextFillRect(context, boxRect);
-        }
-
-        textRect.origin.x = (bounds.size.width - textRect.size.width) - 2.0;
-        textRect.origin.y = (bounds.size.height - textRect.size.height) + 3;
-        [_statusText drawWithRect:textRect options:0 attributes:_attributes];
+        drawTextBox(_statusText, YES);
     }
-
 
     // Draw aperture
     {
@@ -133,7 +128,6 @@
             apertureRect = CGRectInset(apertureRect, 1, 1);
         }
         
-
         apertureRect.origin.x += zoomedBounds.origin.x;
         apertureRect.origin.y += zoomedBounds.origin.y;
 
@@ -157,19 +151,11 @@
         CGContextStrokeRect(context, CGRectInset(apertureRect, 0.5, 0.5));
     }
 
-    if ([[self window] backingScaleFactor] > 1) {
-        CGRect strokeRect = NSInsetRect(bounds, 0.25, 0.25);
-        CGContextSetLineWidth(context, 0.5);
-        CGContextSetGrayStrokeColor(context, 0.0, 0.33);
-        CGContextStrokeRect(context, strokeRect);
-    } else {
-        CGRect strokeRect = NSInsetRect(bounds, 0.5, 0.5);
-        CGContextSetLineWidth(context, 0.25);
-        CGContextSetGrayStrokeColor(context, 0.0, 0.33);
-        CGContextStrokeRect(context, strokeRect);
-    }
+    CGRect strokeRect = NSInsetRect(bounds, onePixel / 2.0, onePixel / 2.0);
+    CGContextSetLineWidth(context, onePixel);
+    CGContextSetGrayStrokeColor(context, 0.0, 0.33);
+    CGContextStrokeRect(context, strokeRect);
     
-
     CGContextRestoreGState(context);
 }
 
@@ -180,8 +166,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Mouse Cursor
+#pragma mark - Mouse Cursor
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
@@ -196,8 +181,7 @@
 }
 
 
-#pragma mark -
-#pragma mark Accessors
+#pragma mark - Accessors
 
 - (void) setZoomLevel:(NSInteger)zoomLevel
 {

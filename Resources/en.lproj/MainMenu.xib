@@ -126,6 +126,12 @@
                                     <action selector="lockY:" target="494" id="575"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Show Lock Guides" id="iNl-19-1vj">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="toggleLockGuides:" target="494" id="3d7-Fr-Zxv"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="582"/>
                             <menuItem title="Magnification" id="584">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -532,6 +538,7 @@
             <connections>
                 <outlet property="delegate" destination="494" id="687"/>
             </connections>
+            <point key="canvasLocation" x="250" y="141"/>
         </window>
         <customObject id="420" customClass="NSFontManager"/>
         <menu id="885" userLabel="Profile Menu">
@@ -610,12 +617,12 @@
         <popUpButton hidden="YES" verticalHuggingPriority="750" id="qyh-fy-wwO">
             <rect key="frame" x="0.0" y="0.0" width="185" height="26"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <popUpButtonCell key="cell" type="push" title="Black and White" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="3" imageScaling="proportionallyDown" inset="2" id="ebS-P3-qOh">
+            <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="ebS-P3-qOh">
                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                 <font key="font" metaFont="menu"/>
                 <menu key="menu" title="OtherViews" id="kNd-iV-lVR">
                     <items>
-                        <menuItem title="Black and White" state="on" tag="3" id="CLE-2B-5vu"/>
+                        <menuItem title="Black and White" tag="3" id="CLE-2B-5vu"/>
                         <menuItem isSeparatorItem="YES" tag="-1" id="uOG-J8-GqI"/>
                         <menuItem title="Black" id="EAU-ic-dcP"/>
                         <menuItem title="Gray" tag="1" id="z21-KM-oUu"/>

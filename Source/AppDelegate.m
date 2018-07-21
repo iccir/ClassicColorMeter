@@ -262,6 +262,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     } else if (action == @selector(lockY:)) {
         [menuItem setState:[_cursor isYLocked]];
 
+    } else if (action == @selector(toggleLockGuides:)) {
+        [menuItem setState:[[Preferences sharedInstance] showsLockGuides]];
+
     } else if (action == @selector(changeApertureOutline:)) {
         [menuItem setState:([menuItem tag] == [[Preferences sharedInstance] apertureOutline])];
         
@@ -581,8 +584,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
 
 - (void) _handlePreferencesDidChange:(NSNotification *)note
 {
@@ -816,8 +818,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Pasteboard / Dragging
+#pragma mark - Pasteboard / Dragging
 
 - (id<NSPasteboardWriting>) _pasteboardWriterForColorAction:(ColorAction)actionTag
 {
@@ -989,8 +990,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Animation
+#pragma mark - Animation
 
 - (void) _setupHoldAnimation
 {
@@ -1087,8 +1087,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark ResultViewDelegate
+#pragma mark - ResultViewDelegate
 
 - (void) resultViewClicked:(ResultView *)view
 {
@@ -1125,8 +1124,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark Shortcuts
+#pragma mark - Shortcuts
 
 - (BOOL) performShortcut:(Shortcut *)shortcut
 {
@@ -1179,8 +1177,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-#pragma mark -
-#pragma mark IBActions
+#pragma mark - IBActions
 
 - (IBAction) changeColorMode:(id)sender
 {
@@ -1351,6 +1348,14 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) toggleLockGuides:(id)sender
+{
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL showsLockGuides = ![preferences showsLockGuides];
+    [preferences setShowsLockGuides:showsLockGuides];
+}
+
+
 - (IBAction) updateMagnification:(id)sender
 {
     NSInteger tag = [sender tag];
@@ -1460,7 +1465,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     } else {
         NSBeep();
     }
-
 }
 
 
