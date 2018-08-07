@@ -359,30 +359,34 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 - (void) _updateHoldLabels
 {
-    ColorMode mode      = [self _currentColorMode];
-    BOOL      lowercase = _usesLowercaseHex;
-    Color    *color     = _color;
+    ColorMode mode  = [self _currentColorMode];
+    Color    *color = _color;
 
-    long r = lroundf([color red]   * 255);
-    long g = lroundf([color green] * 255);
-    long b = lroundf([color blue]  * 255);
-
-    if      (r > 255) r = 255;
-    else if (r <   0) r = 0;
-    if      (g > 255) g = 255;
-    else if (g <   0) g = 0;
-    if      (b > 255) b = 255;
-    else if (b <   0) b = 0;
+    NSString *hexString = nil;
     
-    NSString *hexFormat = nil;
-    if (_usesPoundPrefix) {
-        hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
-    } else {
-        hexFormat = lowercase ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
+    // Calculate hexString
+    {
+        long r = lroundf([color red]   * 255);
+        long g = lroundf([color green] * 255);
+        long b = lroundf([color blue]  * 255);
+
+        if      (r > 255) r = 255;
+        else if (r <   0) r = 0;
+        if      (g > 255) g = 255;
+        else if (g <   0) g = 0;
+        if      (b > 255) b = 255;
+        else if (b <   0) b = 0;
+        
+        NSString *hexFormat = nil;
+        if (_usesPoundPrefix) {
+            hexFormat = _usesLowercaseHex ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
+        } else {
+            hexFormat = _usesLowercaseHex ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
+        }
+
+        hexString = [NSString stringWithFormat:hexFormat, r, g, b];
     }
 
-    NSString *hexString = [NSString stringWithFormat:hexFormat, r, g, b];
-    
     if (ColorModeIsRGB(mode)) {
         float f1, f2, f3;
         [color getHue:&f1 saturation:&f2 brightness:&f3];
@@ -833,8 +837,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         result = [_color NSColor];
 
     } else if (actionTag == CopyColorAsText) {
-        Preferences *preferences = [Preferences sharedInstance];
-
         ColorMode mode = _colorMode;
 
         if (_isHoldingColor && [preferences usesDifferentColorSpaceInHoldColor] && ![preferences usesMainColorSpaceForCopyAsText]) {
@@ -1053,7 +1055,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
 
-    [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0.3];
         CGFloat xOffset  = showSliders ? -126.0 : 0.0;
 

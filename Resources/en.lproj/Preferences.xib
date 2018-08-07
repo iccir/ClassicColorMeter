@@ -547,6 +547,68 @@
             </subviews>
             <point key="canvasLocation" x="485" y="660.5"/>
         </customView>
+        <customView id="c1u-Vt-SHg">
+            <rect key="frame" x="0.0" y="0.0" width="368" height="329"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button id="GpM-z0-4as">
+                    <rect key="frame" x="18" y="293" width="282" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Show legacy color spaces and conversions" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="egl-42-EtQ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="zeP-O2-wVp"/>
+                    </connections>
+                </button>
+                <button id="ahx-sa-S0w">
+                    <rect key="frame" x="18" y="59" width="341" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Show Luma/Chroma color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="QHe-25-zH4">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="yA9-0D-tdq"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" id="mb1-XM-52I">
+                    <rect key="frame" x="172" y="54" width="144" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Learn More" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8bX-SU-HeB">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="learnAboutConversion:" target="-2" id="KM6-9w-pzQ"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" id="zUF-jx-5vo">
+                    <rect key="frame" x="14" y="13" width="195" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Restore “Show as sRGB”" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2Zs-vz-GQL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="restoreDefaultSRGBMode:" target="-2" id="GR0-tf-nfx"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Tp7-IM-tV1">
+                    <rect key="frame" x="18" y="189" width="332" height="98"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="9Pg-3q-9Z1">
+                        <font key="font" metaFont="smallSystem"/>
+                        <string key="title">Modern versions of macOS automatically convert images and colors into the display's color space.  However, colors should always be specified in a standard color space, such as sRGB or Display P3.
+ It is recommended that you display all colors in sRGB and use Classic Color Meter with design software also in sRGB mode.</string>
+                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="147" y="920.5"/>
+        </customView>
     </objects>
     <resources>
         <image name="NSColorPanel" width="32" height="32"/>

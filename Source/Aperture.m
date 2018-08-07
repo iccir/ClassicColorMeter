@@ -412,12 +412,12 @@
         data = CGDataProviderCopyData(provider);
         
     } else {
-        size_t       width      = CGImageGetWidth(_image);
-        size_t       height     = CGImageGetHeight(_image);
-        CGBitmapInfo bitmapInfo = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little;
+        size_t       width        = CGImageGetWidth(_image);
+        size_t       height       = CGImageGetHeight(_image);
+        CGBitmapInfo toBitmapInfo = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Little;
 
         CGColorSpaceRef space   = CGImageGetColorSpace(_image);
-        CGContextRef    context = space ? CGBitmapContextCreate(NULL, width, height, 8, 4 * width, space, bitmapInfo) : NULL;
+        CGContextRef    context = space ? CGBitmapContextCreate(NULL, width, height, 8, 4 * width, space, toBitmapInfo) : NULL;
 
         if (context) {
             CGContextDrawImage(context, CGRectMake(0, 0, width, height), _image);
