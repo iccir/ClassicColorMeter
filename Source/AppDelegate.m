@@ -44,43 +44,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 @interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, CALayerDelegate, NSMenuDelegate, NSDraggingSource>
 
-- (IBAction) changeColorMode:(id)sender;
-- (IBAction) changeApertureSize:(id)sender;
-
-- (IBAction) showPreferences:(id)sender;
-- (IBAction) showSnippets:(id)sender;
-- (IBAction) showRecorder:(id)sender;
-
-- (IBAction) changeColorConversionValue:(id)sender;
-- (IBAction) writeTopLabelValueToPasteboard:(id)sender;
-- (IBAction) writeBottomLabelValueToPasteboard:(id)sender;
-
-// View menu
-- (IBAction) lockPosition:(id)sender;
-- (IBAction) lockX:(id)sender;
-- (IBAction) lockY:(id)sender;
-- (IBAction) updateMagnification:(id)sender;
-- (IBAction) toggleContinuous:(id)sender;
-- (IBAction) toggleMouseLocation:(id)sender;
-- (IBAction) toggleFloatWindow:(id)sender;
-- (IBAction) copyImage:(id)sender;
-- (IBAction) saveImage:(id)sender;
-
-- (IBAction) showColorWindow:(id)sender;
-
-// Color menu
-- (IBAction) holdColor:(id)sender;
-- (IBAction) pasteTextAsColor:(id)sender;
-
-- (IBAction) performColorActionForSender:(id)sender;
-
-- (IBAction) updateComponent:(id)sender;
-
-- (IBAction) sendFeedback:(id)sender;
-- (IBAction) viewSite:(id)sender;
-- (IBAction) learnAboutConversion:(id)sender;
-- (IBAction) viewOnAppStore:(id)sender;
-
 @property (nonatomic, strong) IBOutlet NSWindow      *window;
 
 @property (nonatomic, strong) IBOutlet NSView        *leftContainer;
@@ -95,8 +58,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 @property (nonatomic, strong) IBOutlet PreviewView   *previewView;
 
 @property (nonatomic, strong) IBOutlet ResultView    *resultView;
-
-@property (nonatomic, strong) IBOutlet NSTextField   *apertureSizeLabel;
 
 @property (nonatomic, strong) IBOutlet NSTextField   *label1;
 @property (nonatomic, strong) IBOutlet NSTextField   *label2;
@@ -300,6 +261,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     } else if (action == @selector(lockY:)) {
         [menuItem setState:[_cursor isYLocked]];
+
+    } else if (action == @selector(toggleLockGuides:)) {
+        [menuItem setState:[[Preferences sharedInstance] showsLockGuides]];
+
+    } else if (action == @selector(changeApertureOutline:)) {
+        [menuItem setState:([menuItem tag] == [[Preferences sharedInstance] apertureOutline])];
         
     } else if (action == @selector(updateMagnification:)) {
         [menuItem setState:([menuItem tag] == [_aperture zoomLevel])];
@@ -392,30 +359,34 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 - (void) _updateHoldLabels
 {
-    ColorMode mode      = [self _currentColorMode];
-    BOOL      lowercase = _usesLowercaseHex;
-    Color    *color     = _color;
+    ColorMode mode  = [self _currentColorMode];
+    Color    *color = _color;
 
-    long r = lroundf([color red]   * 255);
-    long g = lroundf([color green] * 255);
-    long b = lroundf([color blue]  * 255);
-
-    if      (r > 255) r = 255;
-    else if (r <   0) r = 0;
-    if      (g > 255) g = 255;
-    else if (g <   0) g = 0;
-    if      (b > 255) b = 255;
-    else if (b <   0) b = 0;
+    NSString *hexString = nil;
     
-    NSString *hexFormat = nil;
-    if (_usesPoundPrefix) {
-        hexFormat = lowercase ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
-    } else {
-        hexFormat = lowercase ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
+    // Calculate hexString
+    {
+        long r = lroundf([color red]   * 255);
+        long g = lroundf([color green] * 255);
+        long b = lroundf([color blue]  * 255);
+
+        if      (r > 255) r = 255;
+        else if (r <   0) r = 0;
+        if      (g > 255) g = 255;
+        else if (g <   0) g = 0;
+        if      (b > 255) b = 255;
+        else if (b <   0) b = 0;
+        
+        NSString *hexFormat = nil;
+        if (_usesPoundPrefix) {
+            hexFormat = _usesLowercaseHex ? @"#%02x%02x%02x" : @"#%02X%02X%02X";
+        } else {
+            hexFormat = _usesLowercaseHex ?  @"%02x%02x%02x" :  @"%02X%02X%02X";
+        }
+
+        hexString = [NSString stringWithFormat:hexFormat, r, g, b];
     }
 
-    NSString *hexString = [NSString stringWithFormat:hexFormat, r, g, b];
-    
     if (ColorModeIsRGB(mode)) {
         float f1, f2, f3;
         [color getHue:&f1 saturation:&f2 brightness:&f3];
@@ -647,7 +618,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     [apertureSlider setIntegerValue:apertureSize];
     [previewView setShowsLocation:[preferences showMouseCoordinates]];
-    [previewView setApertureColor:[preferences apertureColor]];
+    [previewView setApertureOutline:[preferences apertureOutline]];
     [previewView setZoomLevel:[preferences zoomLevel]];
 
     [resultView setClickEnabled:[preferences clickInSwatchEnabled]];
@@ -864,8 +835,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         result = [_color NSColor];
 
     } else if (actionTag == CopyColorAsText) {
-        Preferences *preferences = [Preferences sharedInstance];
-
         ColorMode mode = _colorMode;
 
         if (_isHoldingColor && [preferences usesDifferentColorSpaceInHoldColor] && ![preferences usesMainColorSpaceForCopyAsText]) {
@@ -1222,6 +1191,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) changeApertureOutline:(id)sender
+{
+    [[Preferences sharedInstance] setApertureOutline:[sender tag]];
+}
+
+
 - (IBAction) changeApertureSize:(id)sender
 {
     [[Preferences sharedInstance] setApertureSize:[sender integerValue]];
@@ -1373,10 +1348,18 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) toggleLockGuides:(id)sender
+{
+    Preferences *preferences = [Preferences sharedInstance];
+    BOOL showsLockGuides = ![preferences showsLockGuides];
+    [preferences setShowsLockGuides:showsLockGuides];
+}
+
+
 - (IBAction) updateMagnification:(id)sender
 {
     NSInteger tag = [sender tag];
-    [[Preferences sharedInstance] setZoomLevel:[sender tag]];
+    [[Preferences sharedInstance] setZoomLevel:tag];
     [_aperture setZoomLevel:tag];
 }
 
@@ -1482,7 +1465,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     } else {
         NSBeep();
     }
-
 }
 
 

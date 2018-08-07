@@ -78,6 +78,7 @@
     CGContextRestoreGState(context);
 }
 
+
 - (void) drawKnob:(NSRect)rect
 {
     if ([self isEnabled]) {

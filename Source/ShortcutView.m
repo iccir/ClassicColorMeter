@@ -303,7 +303,6 @@ static NSImage *sGetClearIcon()
         [boundsPath fill];
     }
 
-
     // Draw circle X
     //
     if (_shortcut) {
@@ -317,7 +316,6 @@ static NSImage *sGetClearIcon()
 
         [image drawInRect:clearImageRect];
     }
-
     
     // Draw text string
     //

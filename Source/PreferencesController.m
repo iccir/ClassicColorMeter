@@ -28,8 +28,6 @@
 @property (nonatomic, weak) IBOutlet NSToolbarItem *conversionItem;
 @property (nonatomic, weak) IBOutlet NSToolbarItem *keyboardItem;
 
-@property (nonatomic, weak) IBOutlet NSPopUpButton *apertureColorPopUp;
-
 @property (nonatomic, weak) IBOutlet NSButton      *clickInSwatchButton;
 @property (nonatomic, weak) IBOutlet NSPopUpButton *clickInSwatchPopUp;
 
@@ -39,7 +37,6 @@
 @property (nonatomic, weak) IBOutlet NSButton      *useLowercaseHexButton;
 @property (nonatomic, weak) IBOutlet NSButton      *usePoundPrefixButton;
 @property (nonatomic, weak) IBOutlet NSButton      *arrowKeysButton;
-@property (nonatomic, weak) IBOutlet NSButton      *showLockGuidesButton;
 
 @property (nonatomic, weak) IBOutlet NSButton      *showsHoldColorSlidersButton;
 @property (nonatomic, weak) IBOutlet NSButton      *usesDifferentColorSpaceInHoldColorButton;
@@ -83,9 +80,6 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    [_apertureColorPopUp setTarget:nil];
-    [_apertureColorPopUp setAction:NULL];
-
     [_clickInSwatchButton setTarget:nil];
     [_clickInSwatchButton setAction:NULL];
 
@@ -103,9 +97,6 @@
 
     [_arrowKeysButton setTarget:nil];
     [_arrowKeysButton setAction:NULL];
-
-    [_showLockGuidesButton setTarget:nil];
-    [_showLockGuidesButton setAction:NULL];
 
     [_usePoundPrefixButton setTarget:nil];
     [_usePoundPrefixButton setAction:NULL];
@@ -167,8 +158,6 @@
     BOOL highlightsMyClippedValues     = [preferences highlightsMyClippedValues];
     BOOL highlightsSystemClippedValues = [preferences highlightsSystemClippedValues];
 
-    [_apertureColorPopUp selectItemWithTag:[preferences apertureColor]];
-
     [_clickInSwatchButton setState:clickInSwatchEnabled];
     [_clickInSwatchPopUp  selectItemWithTag:[preferences clickInSwatchAction]];
     [_clickInSwatchPopUp  setEnabled:clickInSwatchEnabled];
@@ -180,7 +169,6 @@
     [_useLowercaseHexButton setState:[preferences usesLowercaseHex]];
     [_usePoundPrefixButton  setState:[preferences usesPoundPrefix]];
     [_arrowKeysButton       setState:[preferences arrowKeysEnabled]];
-    [_showLockGuidesButton  setState:[preferences showsLockGuides]];
 
     [_showsHoldColorSlidersButton    setState:[preferences showsHoldColorSliders]];
 
@@ -263,10 +251,7 @@
 {
     Preferences *preferences = [Preferences sharedInstance];
 
-    if (sender == _apertureColorPopUp) {
-        [preferences setApertureColor:[sender selectedTag]];
-
-    } else if (sender == _clickInSwatchButton) {
+    if (sender == _clickInSwatchButton) {
         [preferences setClickInSwatchEnabled:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _clickInSwatchPopUp) {
@@ -286,9 +271,6 @@
 
     } else if (sender == _arrowKeysButton) {
         [preferences setArrowKeysEnabled:([sender state] == NSControlStateValueOn)];
-
-    } else if (sender == _showLockGuidesButton) {
-        [preferences setShowsLockGuides:([sender state] == NSControlStateValueOn)];
 
     } else if (sender == _showsHoldColorSlidersButton) {
         [preferences setShowsHoldColorSliders:([sender state] == NSControlStateValueOn)];

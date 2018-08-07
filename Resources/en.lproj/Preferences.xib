@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14306.4"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -161,7 +161,7 @@
                         <action selector="updatePreferences:" target="-2" id="90"/>
                     </connections>
                 </button>
-                <popUpButton verticalHuggingPriority="750" id="13">
+                <popUpButton hidden="YES" verticalHuggingPriority="750" id="13">
                     <rect key="frame" x="166" y="286" width="185" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="14">
@@ -209,7 +209,7 @@
                         <action selector="updatePreferences:" target="-2" id="141"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="3">
+                <textField hidden="YES" verticalHuggingPriority="750" id="3">
                     <rect key="frame" x="9" y="292" width="155" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Aperture Color:" id="4">
@@ -264,7 +264,7 @@
                         <action selector="updatePreferences:" target="-2" id="113"/>
                     </connections>
                 </button>
-                <button id="326">
+                <button hidden="YES" id="326">
                     <rect key="frame" x="18" y="124" width="244" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show guides when locking position" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="327">
@@ -276,6 +276,7 @@
                     </connections>
                 </button>
             </subviews>
+            <point key="canvasLocation" x="-227" y="724"/>
         </customView>
         <customView id="252" userLabel="Keyboard Pane" colorLabel="IBBuiltInLabel-Red">
             <rect key="frame" x="0.0" y="0.0" width="368" height="333"/>
@@ -527,6 +528,68 @@
                 </button>
             </subviews>
             <point key="canvasLocation" x="574" y="675"/>
+        </customView>
+        <customView id="c1u-Vt-SHg">
+            <rect key="frame" x="0.0" y="0.0" width="368" height="329"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button id="GpM-z0-4as">
+                    <rect key="frame" x="18" y="293" width="282" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Show legacy color spaces and conversions" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="egl-42-EtQ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="zeP-O2-wVp"/>
+                    </connections>
+                </button>
+                <button id="ahx-sa-S0w">
+                    <rect key="frame" x="18" y="59" width="341" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Show Luma/Chroma color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="QHe-25-zH4">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="yA9-0D-tdq"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" id="mb1-XM-52I">
+                    <rect key="frame" x="172" y="54" width="144" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Learn More" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8bX-SU-HeB">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="learnAboutConversion:" target="-2" id="KM6-9w-pzQ"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" id="zUF-jx-5vo">
+                    <rect key="frame" x="14" y="13" width="195" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Restore “Show as sRGB”" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2Zs-vz-GQL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="restoreDefaultSRGBMode:" target="-2" id="GR0-tf-nfx"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Tp7-IM-tV1">
+                    <rect key="frame" x="18" y="189" width="332" height="98"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="9Pg-3q-9Z1">
+                        <font key="font" metaFont="smallSystem"/>
+                        <string key="title">Modern versions of macOS automatically convert images and colors into the display's color space.  However, colors should always be specified in a standard color space, such as sRGB or Display P3.
+ It is recommended that you display all colors in sRGB and use Classic Color Meter with design software also in sRGB mode.</string>
+                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="147" y="920.5"/>
         </customView>
     </objects>
     <resources>

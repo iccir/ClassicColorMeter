@@ -30,6 +30,13 @@
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
 		55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */; };
 		55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */; };
+		55C12AC421193C780096CBB3 /* ConfigProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */; };
+		55C12AC521193C780096CBB3 /* ConfigRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AAF21193C780096CBB3 /* ConfigRelease.xcconfig */; };
+		55C12AD621193C780096CBB3 /* ConfigDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */; };
+		55C12AD721193C780096CBB3 /* TargetCCM.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC221193C780096CBB3 /* TargetCCM.xcconfig */; };
+		55C12AD821193C780096CBB3 /* Base.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC321193C780096CBB3 /* Base.xcconfig */; };
+		55C12ADC21193D000096CBB3 /* CCM_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */; };
+		55C12ADE21193D000096CBB3 /* CCM_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */; };
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
@@ -81,6 +88,13 @@
 		55BC2E1D1D3B7B4400B15C1A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MiniWindow.xib; sourceTree = SOURCE_ROOT; };
 		55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MiniWindowController.m; path = Source/MiniWindowController.m; sourceTree = "<group>"; };
 		55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiniWindowController.h; path = Source/MiniWindowController.h; sourceTree = "<group>"; };
+		55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigProfile.xcconfig; sourceTree = "<group>"; };
+		55C12AAF21193C780096CBB3 /* ConfigRelease.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigRelease.xcconfig; sourceTree = "<group>"; };
+		55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigDebug.xcconfig; sourceTree = "<group>"; };
+		55C12AC221193C780096CBB3 /* TargetCCM.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TargetCCM.xcconfig; sourceTree = "<group>"; };
+		55C12AC321193C780096CBB3 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCM_Debug.xcconfig; sourceTree = "<group>"; };
+		55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCM_Release.xcconfig; sourceTree = "<group>"; };
 		55D569621422B01000F7B77B /* RecessedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecessedButton.h; path = Source/RecessedButton.h; sourceTree = "<group>"; };
 		55D569631422B01000F7B77B /* RecessedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecessedButton.m; path = Source/RecessedButton.m; sourceTree = "<group>"; };
 		55E67D7F13CFC3000040DFDE /* Classic Color Meter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Classic Color Meter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,9 +196,32 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		55C12AAD21193C780096CBB3 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */,
+				55C12AAF21193C780096CBB3 /* ConfigRelease.xcconfig */,
+				55C12AB121193C780096CBB3 /* Combined */,
+				55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */,
+				55C12AC221193C780096CBB3 /* TargetCCM.xcconfig */,
+				55C12AC321193C780096CBB3 /* Base.xcconfig */,
+			);
+			path = Config;
+			sourceTree = SOURCE_ROOT;
+		};
+		55C12AB121193C780096CBB3 /* Combined */ = {
+			isa = PBXGroup;
+			children = (
+				55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */,
+				55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */,
+			);
+			path = Combined;
+			sourceTree = "<group>";
+		};
 		55E67D7413CFC3000040DFDE = {
 			isa = PBXGroup;
 			children = (
+				55C12AAD21193C780096CBB3 /* Config */,
 				55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */,
 				5584449E13D3C8B4006C6F51 /* Source */,
 				55E67D8913CFC3000040DFDE /* Resources */,
@@ -302,10 +339,17 @@
 				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
 				55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */,
 				55F709C31B0021A90029405B /* Recorder.xib in Resources */,
+				55C12AC521193C780096CBB3 /* ConfigRelease.xcconfig in Resources */,
+				55C12AD721193C780096CBB3 /* TargetCCM.xcconfig in Resources */,
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
+				55C12ADE21193D000096CBB3 /* CCM_Release.xcconfig in Resources */,
+				55C12AC421193C780096CBB3 /* ConfigProfile.xcconfig in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
 				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
+				55C12ADC21193D000096CBB3 /* CCM_Debug.xcconfig in Resources */,
+				55C12AD621193C780096CBB3 /* ConfigDebug.xcconfig in Resources */,
 				5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */,
+				55C12AD821193C780096CBB3 /* Base.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,109 +456,30 @@
 		55E67D9B13CFC3000040DFDE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 115;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "Classic Color Meter";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		55E67D9C13CFC3000040DFDE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 115;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = "Classic Color Meter";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		55E67D9E13CFC3000040DFDE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XXXXXXXXXX;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				INFOPLIST_FILE = Resources/Info.plist;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		55E67D9F13CFC3000040DFDE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = "Classic Color Meter.entitlements";
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XXXXXXXXXX;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/Prefix.pch;
-				INFOPLIST_FILE = Resources/Info.plist;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

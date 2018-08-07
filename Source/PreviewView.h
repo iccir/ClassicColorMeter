@@ -16,7 +16,7 @@
 @property (nonatomic) CGFloat imageScale;
 @property (nonatomic) CGRect apertureRect;
 
-@property (nonatomic) ApertureColor apertureColor;
+@property (nonatomic) ApertureOutline apertureOutline;
 @property (nonatomic) NSInteger zoomLevel;
 
 @property (nonatomic) NSString *statusText;

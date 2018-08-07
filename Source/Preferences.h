@@ -24,7 +24,7 @@ extern NSString * const PreferencesDidChangeNotification;
 
 @property (nonatomic) NSInteger zoomLevel;
 @property (nonatomic) NSInteger apertureSize;
-@property (nonatomic) ApertureColor apertureColor;
+@property (nonatomic) ApertureOutline apertureOutline;
 @property (nonatomic) NSInteger clickInSwatchAction;
 @property (nonatomic) NSInteger dragInSwatchAction;
 

@@ -139,7 +139,6 @@ static OSStatus sHandleEvent(EventHandlerCallRef inHandlerCallRef, EventRef inEv
         [_shortcutIDToRefMap setObject:[NSValue valueWithPointer:hotKeyRef] forKey:shortcutIDAsNumber];
         [_shortcutIDToShortcutMap setObject:shortcut forKey:shortcutIDAsNumber];
     }
-
 }
 
 

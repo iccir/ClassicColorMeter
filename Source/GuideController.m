@@ -167,13 +167,13 @@
     [self _updateLocation];
     [self _updateContents];
     
-    if ([_cursor isYLocked]) {
+    if (_enabled && [_cursor isYLocked]) {
         [_horizontalWindow display];
     } else {
         [_horizontalWindow orderOut:self];
     }
 
-    if ([_cursor isXLocked]) {
+    if (_enabled && [_cursor isXLocked]) {
         [_verticalWindow display];
     } else {
         [_verticalWindow orderOut:self];
