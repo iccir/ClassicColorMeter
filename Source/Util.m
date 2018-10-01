@@ -241,12 +241,22 @@ NSArray *ColorModeGetComponentLabels(ColorMode mode)
 
 NSImage *GetSnapshotImageForView(NSView *view)
 {
+/*
     NSRect   bounds = [view bounds];
     NSImage *image  = [[NSImage alloc] initWithSize:bounds.size];
+
 
     [image lockFocus];
     [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
     [image unlockFocus];
+*/
+    NSRect bounds = [view bounds];
+
+    NSBitmapImageRep *rep =[view bitmapImageRepForCachingDisplayInRect:bounds];
+    [view cacheDisplayInRect:bounds toBitmapImageRep:rep];
+
+    NSImage *image = [[NSImage alloc] initWithSize:bounds.size];
+    [image addRepresentation:rep];
 
     return image;
 }

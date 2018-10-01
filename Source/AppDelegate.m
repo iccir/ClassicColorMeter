@@ -1053,16 +1053,22 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     
     BOOL showSliders = _isHoldingColor && [[Preferences sharedInstance] showsHoldColorSliders];
 
+    CGFloat scale = [_window backingScaleFactor];
+
+    [leftSnapshot   setContents:GetSnapshotImageForView(leftContainer)];
+    [middleSnapshot setContents:GetSnapshotImageForView(middleContainer)];
+    [rightSnapshot  setContents:GetSnapshotImageForView(rightContainer)];
+
+    [leftSnapshot   setContentsScale:scale];
+    [middleSnapshot setContentsScale:scale];
+    [rightSnapshot  setContentsScale:scale];
+
+    setSnapshotsHidden(NO);
+
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0.3];
+        [context setDuration:3.3];
         CGFloat xOffset  = showSliders ? -126.0 : 0.0;
-
-        setSnapshotsHidden(NO);
-
-        [leftSnapshot   setContents:GetSnapshotImageForView(leftContainer)];
-        [middleSnapshot setContents:GetSnapshotImageForView(middleContainer)];
-        [rightSnapshot  setContents:GetSnapshotImageForView(rightContainer)];
-
+        
         layout(leftContainer,   leftSnapshot,   &xOffset);
         layout(middleContainer, middleSnapshot, &xOffset);
         layout(rightContainer,  rightSnapshot,  &xOffset);

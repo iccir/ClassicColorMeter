@@ -151,9 +151,10 @@
         CGContextStrokeRect(context, CGRectInset(apertureRect, 0.5, 0.5));
     }
 
+    [[NSColor colorNamed:@"PreviewBorder"] set];
+    
     CGRect strokeRect = NSInsetRect(bounds, onePixel / 2.0, onePixel / 2.0);
     CGContextSetLineWidth(context, onePixel);
-    CGContextSetGrayStrokeColor(context, 0.0, 0.33);
     CGContextStrokeRect(context, strokeRect);
     
     CGContextRestoreGState(context);
