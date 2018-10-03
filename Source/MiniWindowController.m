@@ -69,14 +69,12 @@
     [_miniMainView setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
     [_miniEffectView addSubview:_miniMainView];
 
-    if ([NSFont respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        CGFloat  pointSize      = [[[self miniValue1] font] pointSize];
-        NSFont  *monospacedFont = [NSFont monospacedDigitSystemFontOfSize:pointSize weight:NSFontWeightRegular];
+    CGFloat  pointSize      = [[[self miniValue1] font] pointSize];
+    NSFont  *monospacedFont = [NSFont monospacedDigitSystemFontOfSize:pointSize weight:NSFontWeightRegular];
 
-        [[self miniValue1] setFont:monospacedFont];
-        [[self miniValue2] setFont:monospacedFont];
-        [[self miniValue3] setFont:monospacedFont];
-    }
+    [[self miniValue1] setFont:monospacedFont];
+    [[self miniValue2] setFont:monospacedFont];
+    [[self miniValue3] setFont:monospacedFont];
 
     void (^setupMiniLabel)(NSTextField *) = ^(NSTextField *miniLabel) {
         [miniLabel setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
@@ -153,7 +151,7 @@
 - (void) _updateTextFields
 {
     NSString * __autoreleasing strings[3];
-    [_color getComponentsForMode:_colorMode options:(_options | ColorStringForMiniWindow) colors:NULL strings:strings];
+    [_color getComponentsForMode:_colorMode options:(_options | ColorStringForMiniWindow) outOfRange:NULL strings:strings];
 
     if (strings[0]) [[self miniValue1] setStringValue:strings[0]];
     if (strings[1]) [[self miniValue2] setStringValue:strings[1]];

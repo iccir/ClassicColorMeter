@@ -26,8 +26,17 @@
 - (id) init
 {
     if ((self = [super init])) {
-        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskMouseMoved handler:^(NSEvent *event) {
-            [self _handleMouseMoved];
+        NSEventMask globalMask =
+            NSEventMaskMouseMoved |
+            NSEventMaskLeftMouseDown  | NSEventMaskLeftMouseUp |
+            NSEventMaskRightMouseDown | NSEventMaskRightMouseUp;
+
+        _globalMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMask handler:^(NSEvent *event) {
+            if ([event type] == NSEventTypeMouseMoved) {
+                [self _handleMouseMoved];
+            } else {
+                [self _handleMouseButton];
+            }
         }];
 
         _localMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskMouseMoved handler:^(NSEvent *event) {
@@ -70,6 +79,14 @@
         for (id<MouseCursorListener> listener in _listeners) {
             [listener mouseCursorMovedToDisplay:_displayID];
         }
+    }
+}
+
+
+- (void) _handleMouseButton
+{
+    for (id<MouseCursorListener> listener in _listeners) {
+        [listener mouseButtonsChanged];
     }
 }
 

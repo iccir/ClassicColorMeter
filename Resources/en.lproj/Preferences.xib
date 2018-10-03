@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14306.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesController">
             <connections>
-                <outlet property="apertureColorPopUp" destination="13" id="38"/>
-                <outlet property="arrowKeysButton" destination="253" id="295"/>
-                <outlet property="clickInSwatchButton" destination="62" id="94"/>
-                <outlet property="clickInSwatchPopUp" destination="46" id="96"/>
-                <outlet property="conversionItem" destination="374" id="381"/>
-                <outlet property="conversionPane" destination="337" id="380"/>
-                <outlet property="dragInSwatchButton" destination="65" id="95"/>
-                <outlet property="dragInSwatchPopUp" destination="68" id="97"/>
-                <outlet property="enableMyClippedColorButton" destination="350" id="384"/>
-                <outlet property="enableSystemClippedColorButton" destination="357" id="383"/>
+                <outlet property="advancedItem" destination="rFN-2o-vDW" id="bti-Pj-cTg"/>
+                <outlet property="advancedPane" destination="c1u-Vt-SHg" id="Zyk-L9-Vwd"/>
                 <outlet property="generalItem" destination="174" id="298"/>
                 <outlet property="generalPane" destination="251" id="291"/>
                 <outlet property="hexColorSnippetShortcutView" destination="284" id="304"/>
@@ -26,20 +18,11 @@
                 <outlet property="keyboardPane" destination="252" id="292"/>
                 <outlet property="lockPositionShortcutView" destination="331" id="336"/>
                 <outlet property="nsColorSnippetShortcutView" destination="280" id="302"/>
-                <outlet property="restoreDisplayInSRGBButton" destination="IXq-I9-nq1" id="Pn7-co-U7g"/>
                 <outlet property="rgbColorSnippetShortcutView" destination="286" id="305"/>
                 <outlet property="rgbaColorSnippetShortcutView" destination="288" id="306"/>
                 <outlet property="showApplicationShortcutView" destination="257" id="296"/>
-                <outlet property="showLockGuidesButton" destination="326" id="329"/>
-                <outlet property="showsHoldColorSlidersButton" destination="118" id="140"/>
                 <outlet property="toolbar" destination="166" id="301"/>
                 <outlet property="uiColorSnippetShortcutView" destination="282" id="303"/>
-                <outlet property="useLowercaseHexButton" destination="82" id="98"/>
-                <outlet property="useMyClippedValueButton" destination="353" id="388"/>
-                <outlet property="usePoundPrefixButton" destination="23" id="112"/>
-                <outlet property="useSystemClippedValueButton" destination="358" id="387"/>
-                <outlet property="usesDifferentColorSpaceInHoldColorButton" destination="132" id="138"/>
-                <outlet property="usesMainColorSpaceForCopyAsTextButton" destination="135" id="139"/>
                 <outlet property="window" destination="164" id="290"/>
             </connections>
         </customObject>
@@ -60,34 +43,36 @@
                             <action selector="selectPane:" target="-2" id="293"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="B7BD9DA7-316E-4674-9FB5-37551103C0C8" label="Conversion" paletteLabel="Conversion" tag="1" image="NSColorPanel" selectable="YES" id="374">
-                        <connections>
-                            <action selector="selectPane:" target="-2" id="379"/>
-                        </connections>
-                    </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="077EBF4D-F4C6-4BA1-A729-1D0EA90DBF73" label="Keyboard" paletteLabel="Keyboard" tag="2" image="command" selectable="YES" id="172">
+                    <toolbarItem implicitItemIdentifier="077EBF4D-F4C6-4BA1-A729-1D0EA90DBF73" label="Keyboard" paletteLabel="Keyboard" tag="1" image="command" selectable="YES" id="172">
                         <connections>
                             <action selector="selectPane:" target="-2" id="294"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="167"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="170"/>
+                    <toolbarItem implicitItemIdentifier="EAA7081C-4755-431A-BC50-3BB821A410F6" label="Advanced" paletteLabel="Advanced" tag="2" image="NSAdvanced" selectable="YES" id="rFN-2o-vDW">
+                        <size key="minSize" width="128" height="128"/>
+                        <size key="maxSize" width="128" height="128"/>
+                        <connections>
+                            <action selector="selectPane:" target="-2" id="H3O-h2-kw6"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="174"/>
-                    <toolbarItem reference="374"/>
                     <toolbarItem reference="172"/>
+                    <toolbarItem reference="rFN-2o-vDW"/>
                     <toolbarItem reference="170"/>
                 </defaultToolbarItems>
             </toolbar>
             <point key="canvasLocation" x="737" y="245"/>
         </window>
         <customView id="251" userLabel="General Pane">
-            <rect key="frame" x="0.0" y="0.0" width="368" height="330"/>
+            <rect key="frame" x="0.0" y="0.0" width="368" height="296"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" id="68">
-                    <rect key="frame" x="186" y="206" width="165" height="26"/>
+                    <rect key="frame" x="187" y="223" width="164" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="72" id="69">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -114,29 +99,43 @@
                         </menu>
                     </popUpButtonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="88"/>
+                        <binding destination="-2" name="selectedTag" keyPath="self.preferences.dragInSwatchAction" id="Jry-vH-fN7"/>
+                        <binding destination="-2" name="enabled" keyPath="self.preferences.dragInSwatchEnabled" id="vP3-f1-6CZ"/>
                     </connections>
                 </popUpButton>
                 <button id="82">
-                    <rect key="frame" x="18" y="182" width="256" height="18"/>
+                    <rect key="frame" x="18" y="128" width="256" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use lower-case letters for hex values" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="83">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="91"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.usesLowercaseHex" id="pOn-Sn-doz"/>
+                    </connections>
+                </button>
+                <button id="B4N-Ko-xkh">
+                    <rect key="frame" x="18" y="190" width="271" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Highlight out of range components in red" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="qIT-BI-6ok">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="rKt-AB-x5v"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.highlightsOutOfRange" id="Wbj-xY-LC7"/>
                     </connections>
                 </button>
                 <button id="135">
-                    <rect key="frame" x="37" y="47" width="288" height="18"/>
+                    <rect key="frame" x="37" y="42" width="288" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use primary color space for 'Copy as Text'" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="136">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="142"/>
+                        <binding destination="-2" name="enabled" keyPath="self.preferences.usesDifferentColorSpaceInHoldColor" id="GF7-Er-Iml"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.usesMainColorSpaceForCopyAsText" id="yGT-FS-7s0"/>
                     </connections>
                 </button>
                 <button id="118">
@@ -147,79 +146,44 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="143"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.showsHoldColorSliders" id="nU2-ue-3bo"/>
                     </connections>
                 </button>
                 <button id="65">
-                    <rect key="frame" x="18" y="211" width="165" height="18"/>
+                    <rect key="frame" x="18" y="228" width="165" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Drag in swatch copies:" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="66">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="90"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.dragInSwatchEnabled" id="ukw-z3-ohE"/>
                     </connections>
                 </button>
-                <popUpButton hidden="YES" verticalHuggingPriority="750" id="13">
-                    <rect key="frame" x="166" y="286" width="185" height="26"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="14">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="15">
-                            <items>
-                                <menuItem title="Black and White" tag="3" id="16"/>
-                                <menuItem isSeparatorItem="YES" tag="-1" id="19"/>
-                                <menuItem title="Black" id="17"/>
-                                <menuItem title="Gray" tag="1" id="18"/>
-                                <menuItem title="White" tag="2" id="20">
-                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                </menuItem>
-                            </items>
-                        </menu>
-                    </popUpButtonCell>
-                    <connections>
-                        <action selector="updatePreferences:" target="-2" id="86"/>
-                    </connections>
-                </popUpButton>
                 <button id="62">
-                    <rect key="frame" x="18" y="240" width="165" height="18"/>
+                    <rect key="frame" x="18" y="256" width="165" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Click in swatch copies:" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="63">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="89"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.clickInSwatchEnabled" id="EKJ-zE-usF"/>
                     </connections>
                 </button>
-                <box verticalHuggingPriority="750" boxType="separator" id="85">
-                    <rect key="frame" x="10" y="272" width="348" height="5"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                </box>
                 <button id="132">
-                    <rect key="frame" x="18" y="76" width="306" height="18"/>
+                    <rect key="frame" x="18" y="66" width="306" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use separate color space in Hold Color mode" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="133">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="141"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.usesDifferentColorSpaceInHoldColor" id="hAn-8Y-2gd"/>
                     </connections>
                 </button>
-                <textField hidden="YES" verticalHuggingPriority="750" id="3">
-                    <rect key="frame" x="9" y="292" width="155" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Aperture Color:" id="4">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <popUpButton verticalHuggingPriority="750" id="46">
-                    <rect key="frame" x="186" y="235" width="164" height="26"/>
+                    <rect key="frame" x="187" y="251" width="164" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="59" id="47">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -246,37 +210,35 @@
                         </menu>
                     </popUpButtonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="87"/>
+                        <binding destination="-2" name="selectedTag" keyPath="self.preferences.clickInSwatchAction" id="lEJ-9v-QmI"/>
+                        <binding destination="-2" name="enabled" keyPath="self.preferences.clickInSwatchEnabled" id="h1o-s4-IgE"/>
                     </connections>
                 </popUpButton>
-                <box verticalHuggingPriority="750" boxType="separator" id="110">
-                    <rect key="frame" x="10" y="108" width="348" height="5"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                </box>
                 <button id="23">
-                    <rect key="frame" x="18" y="153" width="287" height="18"/>
+                    <rect key="frame" x="18" y="104" width="287" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Include pound sign prefix with hex values" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="24">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="113"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.usesPoundPrefix" id="fMO-ca-fel"/>
                     </connections>
                 </button>
-                <button hidden="YES" id="326">
-                    <rect key="frame" x="18" y="124" width="244" height="18"/>
+                <button id="R6P-mr-sHO">
+                    <rect key="frame" x="18" y="166" width="309" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Show guides when locking position" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="327">
+                    <buttonCell key="cell" type="check" title="Clips out of range components to nearest value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Olc-uR-Kqn">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="330"/>
+                        <action selector="updatePreferences:" target="-2" id="fFI-mk-cRT"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.clipsOutOfRange" id="tYp-st-Zzc"/>
                     </connections>
                 </button>
             </subviews>
-            <point key="canvasLocation" x="-227" y="724"/>
+            <point key="canvasLocation" x="-227" y="707"/>
         </customView>
         <customView id="252" userLabel="Keyboard Pane" colorLabel="IBBuiltInLabel-Red">
             <rect key="frame" x="0.0" y="0.0" width="368" height="333"/>
@@ -290,7 +252,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="updatePreferences:" target="-2" id="312"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.arrowKeysEnabled" id="7dT-4N-k5j"/>
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" id="256">
@@ -426,115 +388,14 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                 </box>
             </subviews>
+            <point key="canvasLocation" x="139" y="383.5"/>
         </customView>
-        <customView id="337">
-            <rect key="frame" x="0.0" y="0.0" width="368" height="329"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <button id="350">
-                    <rect key="frame" x="18" y="189" width="115" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Highlight in red" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="351">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="updatePreferences:" target="-2" id="392"/>
-                    </connections>
-                </button>
-                <button misplaced="YES" id="353">
-                    <rect key="frame" x="150" y="189" width="156" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Show raw value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="354">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="updatePreferences:" target="-2" id="394"/>
-                    </connections>
-                </button>
-                <textField verticalHuggingPriority="750" id="344">
-                    <rect key="frame" x="18" y="292" width="196" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="When the system clips a color:" id="345">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <textField verticalHuggingPriority="750" id="346">
-                    <rect key="frame" x="18" y="217" width="249" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="When Classic Color Meter clips a color:" id="347">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <button misplaced="YES" id="357">
-                    <rect key="frame" x="18" y="264" width="121" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Highlight in blue" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="363">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="updatePreferences:" target="-2" id="391"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" id="TmJ-To-Wfv">
-                    <rect key="frame" x="210" y="13" width="144" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Learn More" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yBN-Qx-rgy">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="learnAboutConversion:" target="-2" id="zno-az-dwQ"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" id="IXq-I9-nq1">
-                    <rect key="frame" x="14" y="13" width="195" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Restore “Show as sRGB”" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="COp-hB-3lJ">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="restoreDefaultSRGBMode:" target="-2" id="VKn-Lm-TV4"/>
-                    </connections>
-                </button>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Hqt-H1-Z74">
-                    <rect key="frame" x="18" y="61" width="332" height="98"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="kd2-NV-q0C">
-                        <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Modern versions of macOS automatically convert images and colors into the display's color space.  However, colors should always be specified in a standard color space, such as sRGB or Display P3.
- It is recommended that you display all colors in sRGB and use Classic Color Meter with design software also in sRGB mode.</string>
-                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <button misplaced="YES" id="358">
-                    <rect key="frame" x="150" y="264" width="156" height="18"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Keep clipped value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="362">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="updatePreferences:" target="-2" id="389"/>
-                    </connections>
-                </button>
-            </subviews>
-            <point key="canvasLocation" x="574" y="675"/>
-        </customView>
-        <customView id="c1u-Vt-SHg">
-            <rect key="frame" x="0.0" y="0.0" width="368" height="329"/>
+        <customView id="c1u-Vt-SHg" userLabel="Advanced Pane">
+            <rect key="frame" x="0.0" y="0.0" width="368" height="143"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button id="GpM-z0-4as">
-                    <rect key="frame" x="18" y="293" width="282" height="18"/>
+                    <rect key="frame" x="18" y="107" width="282" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show legacy color spaces and conversions" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="egl-42-EtQ">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -542,10 +403,11 @@
                     </buttonCell>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="zeP-O2-wVp"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.showsLegacyColorSpaces" id="MzR-Q8-e0C"/>
                     </connections>
                 </button>
                 <button id="ahx-sa-S0w">
-                    <rect key="frame" x="18" y="59" width="341" height="18"/>
+                    <rect key="frame" x="18" y="42" width="341" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show Luma/Chroma color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="QHe-25-zH4">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -553,48 +415,40 @@
                     </buttonCell>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="yA9-0D-tdq"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.showsLumaChromaColorSpaces" id="QUy-gW-iCF"/>
+                    </connections>
+                </button>
+                <button id="mg5-xb-ROI">
+                    <rect key="frame" x="18" y="18" width="341" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Show additional CIE color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Brr-bx-yQi">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="updatePreferences:" target="-2" id="AAA-m0-Vgq"/>
+                        <binding destination="-2" name="value" keyPath="self.preferences.showsAdditionalCIEColorSpaces" id="Vis-TH-did"/>
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" id="mb1-XM-52I">
-                    <rect key="frame" x="172" y="54" width="144" height="32"/>
+                    <rect key="frame" x="32" y="71" width="120" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Learn More" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8bX-SU-HeB">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="learnAboutConversion:" target="-2" id="KM6-9w-pzQ"/>
+                        <action selector="learnAboutLegacySpaces:" target="-2" id="a2T-Do-CVT"/>
                     </connections>
                 </button>
-                <button verticalHuggingPriority="750" id="zUF-jx-5vo">
-                    <rect key="frame" x="14" y="13" width="195" height="32"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="push" title="Restore “Show as sRGB”" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="2Zs-vz-GQL">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="restoreDefaultSRGBMode:" target="-2" id="GR0-tf-nfx"/>
-                    </connections>
-                </button>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Tp7-IM-tV1">
-                    <rect key="frame" x="18" y="189" width="332" height="98"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="9Pg-3q-9Z1">
-                        <font key="font" metaFont="smallSystem"/>
-                        <string key="title">Modern versions of macOS automatically convert images and colors into the display's color space.  However, colors should always be specified in a standard color space, such as sRGB or Display P3.
- It is recommended that you display all colors in sRGB and use Classic Color Meter with design software also in sRGB mode.</string>
-                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
             </subviews>
-            <point key="canvasLocation" x="147" y="920.5"/>
+            <point key="canvasLocation" x="147" y="827.5"/>
         </customView>
+        <userDefaultsController representsSharedInstance="YES" id="AzM-68-qPx"/>
     </objects>
     <resources>
-        <image name="NSColorPanel" width="32" height="32"/>
-        <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSAdvanced" width="128" height="128"/>
+        <image name="NSPreferencesGeneral" width="128" height="128"/>
         <image name="command" width="32" height="32"/>
     </resources>
 </document>

@@ -13,36 +13,11 @@
 
 #include <dlfcn.h>
 
-
-NSString * const ProductSiteURLString = @"http://iccir.com/projects/classic-color-meter";
-NSString * const FeedbackURLString    = @"http://iccir.com/projects/classic-color-meter/feedback";
-NSString * const ConversionsURLString = @"http://iccir.com/articles/osx-color-conversions";
-NSString * const AppStoreURLString    = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
-
-
-CFStringRef sColorSpaceDisplayP3 = NULL;
-CFStringRef sColorSpaceROMMRGB   = NULL;
-
-CFStringRef GetColorSpaceDisplayP3()
-{
-    if (!sColorSpaceDisplayP3) {
-        CFStringRef *location = dlsym(RTLD_NEXT, "kCGColorSpaceDisplayP3");
-        if (location) sColorSpaceDisplayP3 = *location;
-    }
-    
-    return sColorSpaceDisplayP3;
-}
-
-
-CFStringRef GetColorSpaceROMMRGB()
-{
-    if (!sColorSpaceROMMRGB) {
-        CFStringRef *location = dlsym(RTLD_NEXT, "kCGColorSpaceROMMRGB");
-        if (location) sColorSpaceROMMRGB = *location;
-    }
-    
-    return sColorSpaceROMMRGB;
-}
+NSString * const FeedbackURLString     = @"https://www.ricciadams.com/contact/classic-color-meter";
+NSString * const ProductSiteURLString  = @"https://www.ricciadams.com/projects/classic-color-meter";
+NSString * const LegacySpacesURLString = @"https://www.ricciadams.com/projects/classic-color-meter#faq-legacy";
+NSString * const ConversionsURLString  = @"https://www.ricciadams.com/articles/osx-color-conversions";
+NSString * const AppStoreURLString     = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
 
 
 BOOL ColorModeIsRGB(ColorMode mode)

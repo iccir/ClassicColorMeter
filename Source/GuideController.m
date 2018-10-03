@@ -181,6 +181,12 @@
 }
 
 
+- (void) mouseButtonsChanged
+{
+    // No implementation
+}
+
+
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
     [self _updateLocation];

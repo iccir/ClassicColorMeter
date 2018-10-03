@@ -46,6 +46,7 @@
 
 
 @protocol MouseCursorListener <NSObject>
+- (void) mouseButtonsChanged;
 - (void) mouseCursorMovedToLocation:(CGPoint)position;
 - (void) mouseCursorMovedToDisplay:(CGDirectDisplayID)display;
 @end

@@ -177,8 +177,15 @@
 }
 
 
+- (void) mouseButtonsChanged
+{
+    // No implementation
+}
+
+
 - (void) mouseCursorMovedToDisplay:(CGDirectDisplayID)display
 {
+    // No implementation
 }
 
 

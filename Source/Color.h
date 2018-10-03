@@ -24,19 +24,11 @@ typedef NS_ENUM(NSInteger, ColorComponent) {
 };
 
 
-typedef NS_ENUM(NSInteger, ColorStringColor) {
-    ColorStringColorNormal,
-    ColorStringColorClipped,
-    ColorStringColorSystemClipped
-};
-
-
 typedef NS_OPTIONS(NSUInteger, ColorStringOptions) {
-    ColorStringUsesLowercaseHex        = 1 << 0,
-    ColorStringUsesPoundPrefix         = 1 << 1,
-    ColorStringUsesClippedValues       = 1 << 2,
-    ColorStringUsesSystemClippedValues = 1 << 3,
-    ColorStringForMiniWindow           = 1 << 4
+    ColorStringUsesLowercaseHex = 1 << 0,
+    ColorStringUsesPoundPrefix  = 1 << 1,
+    ColorStringClipsOutOfRange  = 1 << 2,
+    ColorStringForMiniWindow    = 1 << 4
 };
 
 
@@ -48,7 +40,7 @@ typedef NS_OPTIONS(NSUInteger, ColorStringOptions) {
 
 - (void) getComponentsForMode: (ColorMode) mode
                       options: (ColorStringOptions) options
-                       colors: (ColorStringColor[3]) colors
+                   outOfRange: (BOOL[3]) outOfRange
                       strings: (NSString * __autoreleasing [3]) strings;
 
 - (NSString *) clipboardStringForMode: (ColorMode) mode

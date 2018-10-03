@@ -248,7 +248,7 @@ static void sMakeStrings(
     ColorStringOptions options,
     NSString * __autoreleasing *outClipboard,
     NSString * __autoreleasing outString[3],
-    ColorStringColor outColor[3]
+    BOOL outOfRange[3]
 )
 {
     NSString *value1    = nil;
@@ -259,54 +259,14 @@ static void sMakeStrings(
     float red, green, blue;
     [color getRed:&red green:&green blue:&blue];
 
-    BOOL lowercaseHex      = (options & ColorStringUsesLowercaseHex) > 0;
-    BOOL usesPoundPrefix   = (options & ColorStringUsesPoundPrefix) > 0;
-    BOOL usesClipped       = (options & ColorStringUsesClippedValues) > 0;
-    BOOL usesSystemClipped = (options & ColorStringUsesSystemClippedValues) > 0;
-    BOOL forMiniWindow     = (options & ColorStringForMiniWindow) > 0;
+    BOOL lowercaseHex    = (options & ColorStringUsesLowercaseHex) > 0;
+    BOOL usesPoundPrefix = (options & ColorStringUsesPoundPrefix)  > 0;
+    BOOL clips           = (options & ColorStringClipsOutOfRange)  > 0;
+    BOOL forMiniWindow   = (options & ColorStringForMiniWindow)    > 0;
     
-    BOOL clipped1 = NO;
-    BOOL clipped2 = NO;
-    BOOL clipped3 = NO;
-    BOOL clamped1 = NO;
-    BOOL clamped2 = NO;
-    BOOL clamped3 = NO;
-
-    if (color->_rawValid) {
-        long rRaw = lround(color->_rawRed   * 255);
-        long gRaw = lround(color->_rawGreen * 255);
-        long bRaw = lround(color->_rawBlue  * 255);
-        long r255 = lround(red   * 255);
-        long g255 = lround(green * 255);
-        long b255 = lround(blue  * 255);
-    
-        if (rRaw >= 255 && r255 <= 254) {
-            clamped1 = YES;
-            if (usesSystemClipped) red = 1.0;
-
-        } else if (rRaw <= 0 && r255 >= 1) {
-            clamped1 = YES;
-            if (usesSystemClipped) red = 0.0;
-        }
-
-        if (gRaw >= 255 && g255 <= 254) {
-            clamped2 = YES;
-            if (usesSystemClipped) green = 1.0;
-
-        } else if (gRaw <= 0 && g255 >= 1) {
-            clamped2 = YES;
-            if (usesSystemClipped) green = 0.0;
-        }
-
-        if (bRaw >= 255 && b255 <= 254) {
-            clamped3 = YES;
-            if (usesSystemClipped) blue = 1.0;
-        
-        } else if (bRaw <= 0 && b255 >= 1) {
-            clamped3 = YES;
-            if (usesSystemClipped) blue = 0.0;
-        }
-    }
+    BOOL outOfRange1 = NO;
+    BOOL outOfRange2 = NO;
+    BOOL outOfRange3 = NO;
 
     if (mode == ColorMode_RGB_Percentage) {
         red   *= 100;
@@ -315,14 +275,14 @@ static void sMakeStrings(
 
         // Clip if needed
         {
-            if      (red   >= 100.0499) { if (usesClipped) { red   = 100.0; } clipped1 = YES; }
-            else if (red   <=  -0.0499) { if (usesClipped) { red   =   0.0; } clipped1 = YES; }
+            if      (red   >= 100.0499) { if (clips) { red   = 100.0; } outOfRange1 = YES; }
+            else if (red   <=  -0.0499) { if (clips) { red   =   0.0; } outOfRange1 = YES; }
 
-            if      (green >= 100.0499) { if (usesClipped) { green = 100.0; } clipped2 = YES; }
-            else if (green <=  -0.0499) { if (usesClipped) { green =   0.0; } clipped2 = YES; }
+            if      (green >= 100.0499) { if (clips) { green = 100.0; } outOfRange2 = YES; }
+            else if (green <=  -0.0499) { if (clips) { green =   0.0; } outOfRange2 = YES; }
 
-            if      (blue  >= 100.0499) { if (usesClipped) { blue  = 100.0; } clipped3 = YES; }
-            else if (blue  <=  -0.0499) { if (usesClipped) { blue  =   0.0; } clipped3 = YES; }
+            if      (blue  >= 100.0499) { if (clips) { blue  = 100.0; } outOfRange3 = YES; }
+            else if (blue  <=  -0.0499) { if (clips) { blue  =   0.0; } outOfRange3 = YES; }
         }
 
         value1 = [NSString stringWithFormat:@"%0.1lf", red];
@@ -337,29 +297,29 @@ static void sMakeStrings(
         long redClipped, greenClipped, blueClipped;
         
         {
-            if      (redLong   > 255) { redClipped   = 255; clipped1 = YES; }
-            else if (redLong   < 0)   { redClipped   = 0;   clipped1 = YES; }
+            if      (redLong   > 255) { redClipped   = 255; outOfRange1 = YES; }
+            else if (redLong   < 0)   { redClipped   = 0;   outOfRange1 = YES; }
             else                      { redClipped   = redLong; }
 
-            if      (greenLong > 255) { greenClipped = 255; clipped2 = YES; }
-            else if (greenLong < 0)   { greenClipped = 0;   clipped2 = YES; }
+            if      (greenLong > 255) { greenClipped = 255; outOfRange2 = YES; }
+            else if (greenLong < 0)   { greenClipped = 0;   outOfRange2 = YES; }
             else                      { greenClipped = greenLong; }
 
-            if      (blueLong  > 255) { blueClipped  = 255; clipped3 = YES; }
-            else if (blueLong  < 0)   { blueClipped  = 0;   clipped3 = YES; }
+            if      (blueLong  > 255) { blueClipped  = 255; outOfRange3 = YES; }
+            else if (blueLong  < 0)   { blueClipped  = 0;   outOfRange3 = YES; }
             else                      { blueClipped  = blueLong; }
         }
         
         if (mode == ColorMode_RGB_Value_8) {
-            value1 = [NSString stringWithFormat:@"%ld", (usesClipped ? redClipped   : redLong)  ];
-            value2 = [NSString stringWithFormat:@"%ld", (usesClipped ? greenClipped : greenLong)];
-            value3 = [NSString stringWithFormat:@"%ld", (usesClipped ? blueClipped  : blueLong) ];
+            value1 = [NSString stringWithFormat:@"%ld", (clips ? redClipped   : redLong)  ];
+            value2 = [NSString stringWithFormat:@"%ld", (clips ? greenClipped : greenLong)];
+            value3 = [NSString stringWithFormat:@"%ld", (clips ? blueClipped  : blueLong) ];
         } else {
             NSString *format = lowercaseHex ? @"%02lx" : @"%02lX";
 
-            value1 = sGetHexString(format, usesClipped ? redClipped   : redLong);
-            value2 = sGetHexString(format, usesClipped ? greenClipped : greenLong);
-            value3 = sGetHexString(format, usesClipped ? blueClipped  : blueLong);
+            value1 = sGetHexString(format, clips ? redClipped   : redLong);
+            value2 = sGetHexString(format, clips ? greenClipped : greenLong);
+            value3 = sGetHexString(format, clips ? blueClipped  : blueLong);
         }
 
         if (mode == ColorMode_RGB_HexValue_8) {
@@ -376,14 +336,14 @@ static void sMakeStrings(
         long blueLong  = lroundf(blue  * 65535);
         
         {
-            if      (redLong   > 65535) { if (usesClipped) { redLong   = 65535; } clipped1 = YES; }
-            else if (redLong   < 0)     { if (usesClipped) { redLong   = 0;     } clipped1 = YES; }
+            if      (redLong   > 65535) { if (clips) { redLong   = 65535; } outOfRange1 = YES; }
+            else if (redLong   < 0)     { if (clips) { redLong   = 0;     } outOfRange1 = YES; }
 
-            if      (greenLong > 65535) { if (usesClipped) { greenLong = 65535; } clipped2 = YES; }
-            else if (greenLong < 0)     { if (usesClipped) { greenLong = 0;     } clipped2 = YES; }
+            if      (greenLong > 65535) { if (clips) { greenLong = 65535; } outOfRange2 = YES; }
+            else if (greenLong < 0)     { if (clips) { greenLong = 0;     } outOfRange2 = YES; }
 
-            if      (blueLong  > 65535) { if (usesClipped) { blueLong  = 65535; } clipped3 = YES; }
-            else if (blueLong  < 0)     { if (usesClipped) { blueLong  = 0;     } clipped3 = YES; }
+            if      (blueLong  > 65535) { if (clips) { blueLong  = 65535; } outOfRange3 = YES; }
+            else if (blueLong  < 0)     { if (clips) { blueLong  = 0;     } outOfRange3 = YES; }
         }
 
         if (mode == ColorMode_RGB_Value_16) {
@@ -474,11 +434,11 @@ static void sMakeStrings(
         while (h > 360) { h -= 360; }
         while (h < 0)   { h += 360; }
 
-        if      (s > 100) { if (usesClipped) { s = 100; } clipped2 = YES; }
-        else if (s < 0)   { if (usesClipped) { s = 0;   } clipped2 = YES; }
+        if      (s > 100) { if (clips) { s = 100; } outOfRange2 = YES; }
+        else if (s < 0)   { if (clips) { s = 0;   } outOfRange2 = YES; }
 
-        if      (bl > 100) { if (usesClipped) { bl = 100; } clipped3 = YES; }
-        else if (bl < 0)   { if (usesClipped) { bl = 0;   } clipped3 = YES; }
+        if      (bl > 100) { if (clips) { bl = 100; } outOfRange3 = YES; }
+        else if (bl < 0)   { if (clips) { bl = 0;   } outOfRange3 = YES; }
 
         value1 = [NSString stringWithFormat:@"%ld", h];
         value2 = [NSString stringWithFormat:@"%ld", s];
@@ -499,20 +459,10 @@ static void sMakeStrings(
         outString[2] = value3;
     }
 
-    if (outColor) {
-        ColorStringColor (^getColor)(BOOL, BOOL) = ^(BOOL clamped, BOOL clipped) {
-            if (clamped) {
-                return ColorStringColorSystemClipped;
-            } else if (clipped) {
-                return ColorStringColorClipped;
-            } else {
-                return ColorStringColorNormal;
-            }
-        };
-
-        outColor[0] = getColor(clamped1, clipped1);
-        outColor[1] = getColor(clamped2, clipped2);
-        outColor[2] = getColor(clamped3, clipped3);
+    if (outOfRange) {
+        outOfRange[0] = outOfRange1;
+        outOfRange[1] = outOfRange2;
+        outOfRange[2] = outOfRange3;
     }
 
     if (outClipboard) {
@@ -686,10 +636,10 @@ static void sMakeStrings(
 
 - (void) getComponentsForMode: (ColorMode) mode
                       options: (ColorStringOptions) options
-                       colors: (ColorStringColor[3]) colors
+                   outOfRange: (BOOL[3]) outOfRange
                       strings: (NSString * __autoreleasing [3]) strings
 {
-    sMakeStrings(self, mode, options, NULL, strings, colors);
+    sMakeStrings(self, mode, options, NULL, strings, outOfRange);
 }
 
 
@@ -867,10 +817,19 @@ static void sMakeStrings(
         _colorSpace = CGColorSpaceRetain(colorSpace);
     }
 
+    static CFDictionaryRef useExtendedRange = NULL;
+    if (!useExtendedRange) {
+        extern NSString *kColorSyncConvertUseExtendedRange;
+
+        useExtendedRange = CFBridgingRetain(@{
+            kColorSyncConvertUseExtendedRange: @YES
+        });
+    }
+
     if (transform && ColorSyncTransformConvert(transform, 1, 1,
         &dst, kColorSync32BitFloat, 0, 12,
         &src, kColorSync32BitFloat, 0, 12,
-        NULL)
+        useExtendedRange)
     ) {
         _rawValid = YES;
         _red   = dst[0];

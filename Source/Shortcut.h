@@ -10,6 +10,8 @@
 
 @interface Shortcut : NSObject
 
++ (Shortcut *) emptyShortcut;
+
 + (NSString *) stringForModifierFlags:(NSUInteger)modifierFlags;
 + (NSString *) stringForKeyCode:(unsigned short)keyCode;
 

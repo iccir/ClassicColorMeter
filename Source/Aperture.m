@@ -224,20 +224,12 @@
         _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 
     } else if (_colorConversion == ColorConversionDisplayInP3) {
-        CFStringRef displayP3 = GetColorSpaceDisplayP3();
-        
-        if (displayP3) {
-            toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.DisplayP3"));
-            _targetColorSpace = CGColorSpaceCreateWithName(displayP3);
-        }
+        toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.DisplayP3"));
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceDisplayP3);
 
     } else if (_colorConversion == ColorConversionDisplayInROMMRGB) {
-        CFStringRef rommRGB = GetColorSpaceROMMRGB();
-
-        if (rommRGB) {
-            toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.ROMMRGB"));
-            _targetColorSpace = CGColorSpaceCreateWithName(rommRGB);
-        }
+        toProfile = ColorSyncProfileCreateWithName(CFSTR("com.apple.ColorSync.ROMMRGB"));
+        _targetColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceROMMRGB);
 
     } else if ((displayID != mainID) && (_colorConversion == ColorConversionConvertToMainDisplay)) {
         toProfile = ColorSyncProfileCreateWithDisplayID(mainID);
@@ -326,6 +318,12 @@
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
     _needsUpdate = YES;
+}
+
+
+- (void) mouseButtonsChanged
+{
+
 }
 
 

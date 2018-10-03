@@ -30,13 +30,6 @@
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
 		55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */; };
 		55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */; };
-		55C12AC421193C780096CBB3 /* ConfigProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */; };
-		55C12AC521193C780096CBB3 /* ConfigRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AAF21193C780096CBB3 /* ConfigRelease.xcconfig */; };
-		55C12AD621193C780096CBB3 /* ConfigDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */; };
-		55C12AD721193C780096CBB3 /* TargetCCM.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC221193C780096CBB3 /* TargetCCM.xcconfig */; };
-		55C12AD821193C780096CBB3 /* Base.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AC321193C780096CBB3 /* Base.xcconfig */; };
-		55C12ADC21193D000096CBB3 /* CCM_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */; };
-		55C12ADE21193D000096CBB3 /* CCM_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */; };
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
@@ -47,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		550351642164447000616120 /* CCM_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCM_Profile.xcconfig; sourceTree = "<group>"; };
 		550F240C13E3838F0026A060 /* ColorSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorSliderCell.h; path = Source/ColorSliderCell.h; sourceTree = "<group>"; };
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
@@ -199,10 +193,10 @@
 		55C12AAD21193C780096CBB3 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */,
 				55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */,
 				55C12AAF21193C780096CBB3 /* ConfigRelease.xcconfig */,
 				55C12AB121193C780096CBB3 /* Combined */,
-				55C12AC121193C780096CBB3 /* ConfigDebug.xcconfig */,
 				55C12AC221193C780096CBB3 /* TargetCCM.xcconfig */,
 				55C12AC321193C780096CBB3 /* Base.xcconfig */,
 			);
@@ -213,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */,
+				550351642164447000616120 /* CCM_Profile.xcconfig */,
 				55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */,
 			);
 			path = Combined;
@@ -339,17 +334,10 @@
 				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
 				55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */,
 				55F709C31B0021A90029405B /* Recorder.xib in Resources */,
-				55C12AC521193C780096CBB3 /* ConfigRelease.xcconfig in Resources */,
-				55C12AD721193C780096CBB3 /* TargetCCM.xcconfig in Resources */,
 				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
-				55C12ADE21193D000096CBB3 /* CCM_Release.xcconfig in Resources */,
-				55C12AC421193C780096CBB3 /* ConfigProfile.xcconfig in Resources */,
 				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
 				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
-				55C12ADC21193D000096CBB3 /* CCM_Debug.xcconfig in Resources */,
-				55C12AD621193C780096CBB3 /* ConfigDebug.xcconfig in Resources */,
 				5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */,
-				55C12AD821193C780096CBB3 /* Base.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +441,21 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		55035166216444B600616120 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 115;
+			};
+			name = Profile;
+		};
+		55035167216444B600616120 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 550351642164447000616120 /* CCM_Profile.xcconfig */;
+			buildSettings = {
+			};
+			name = Profile;
+		};
 		55E67D9B13CFC3000040DFDE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -490,6 +493,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				55E67D9B13CFC3000040DFDE /* Debug */,
+				55035166216444B600616120 /* Profile */,
 				55E67D9C13CFC3000040DFDE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -499,6 +503,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				55E67D9E13CFC3000040DFDE /* Debug */,
+				55035167216444B600616120 /* Profile */,
 				55E67D9F13CFC3000040DFDE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -19,6 +19,15 @@ static CFStringRef *sKeyCodeToStringMap = nil;
 
 @implementation Shortcut
 
+
++ (Shortcut *) emptyShortcut
+{
+    static Shortcut *sEmptyShortcut = nil;
+    if (!sEmptyShortcut) sEmptyShortcut = [[self alloc] initWithKeyCode:UINT16_MAX modifierFlags:0];
+    return sEmptyShortcut;
+}
+
+
 + (void) initialize
 {
     static dispatch_once_t onceToken;

@@ -50,8 +50,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 @property (nonatomic, strong) IBOutlet NSView        *middleContainer;
 @property (nonatomic, strong) IBOutlet NSView        *rightContainer;
 
-@property (nonatomic, strong) IBOutlet NSMenuItem    *p3MenuItem;
-@property (nonatomic, strong) IBOutlet NSMenuItem    *rommRGBMenuItem;
+@property (nonatomic, strong) IBOutlet NSMenuItem    *convertToGenericRGBMenuItem;
+@property (nonatomic, strong) IBOutlet NSMenuItem    *convertToMainDisplayMenuItem;
 
 @property (nonatomic, strong) IBOutlet NSPopUpButton *colorModePopUp;
 @property (nonatomic, strong) IBOutlet NSSlider      *apertureSizeSlider;
@@ -119,11 +119,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 - (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DidUpdateSRGB"]) {
-        [[Preferences sharedInstance] setColorConversion:ColorConversionDisplayInSRGB];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"DidUpdateSRGB"];
-    }
-
     _cursor   = [MouseCursor sharedInstance];
     _color    = [[Color alloc] init];
     _aperture = [[Aperture alloc] init];
@@ -134,14 +129,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [(ColorSliderCell *)[[self slider2] cell] setColor:_color];
     [(ColorSliderCell *)[[self slider3] cell] setColor:_color];
 
-    if ([NSFont respondsToSelector:@selector(monospacedDigitSystemFontOfSize:weight:)]) {
-        CGFloat  pointSize      = [[[self value1] font] pointSize];
-        NSFont  *monospacedFont = [NSFont monospacedDigitSystemFontOfSize:pointSize weight:NSFontWeightRegular];
+    CGFloat  pointSize      = [[[self value1] font] pointSize];
+    NSFont  *monospacedFont = [NSFont monospacedDigitSystemFontOfSize:pointSize weight:NSFontWeightRegular];
 
-        [[self value1] setFont:monospacedFont];
-        [[self value2] setFont:monospacedFont];
-        [[self value3] setFont:monospacedFont];
-    }
+    [[self value1] setFont:monospacedFont];
+    [[self value2] setFont:monospacedFont];
+    [[self value3] setFont:monospacedFont];
 
     [[self resultView] setColor:_color];
     [[self resultView] setDelegate:self];
@@ -155,37 +148,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         return [self _handleLocalEvent:inEvent];
     }];
 
-    NSMenu *menu = [[self colorModePopUp] menu];
-    [menu removeAllItems];
-
-    void (^addMenu)(ColorMode, NSString *) = ^(ColorMode mode, NSString *title) {
-        NSMenuItem *item  = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
-        [item setTag:mode];
-        [menu addItem:item];
-    };
-  
-    addMenu( ColorMode_RGB_Percentage,  NSLocalizedString(@"RGB, percentage",      nil) );
-    addMenu( ColorMode_RGB_Value_8,     NSLocalizedString(@"RGB, decimal, 8-bit",  nil) );
-    addMenu( ColorMode_RGB_Value_16,    NSLocalizedString(@"RGB, decimal, 16-bit", nil) );
-    addMenu( ColorMode_RGB_HexValue_8,  NSLocalizedString(@"RGB, hex, 8-bit",      nil) );
-    addMenu( ColorMode_RGB_HexValue_16, NSLocalizedString(@"RGB, hex, 16-bit",     nil) );
-    [menu addItem:[NSMenuItem separatorItem]];
-    addMenu( ColorMode_HSB,             NSLocalizedString(@"HSB",                  nil) );
-    addMenu( ColorMode_HSL,             NSLocalizedString(@"HSL",                  nil) );
-    [menu addItem:[NSMenuItem separatorItem]];
-    addMenu( ColorMode_YPbPr_601,       NSLocalizedString(@"Y'PrPb ITU-R BT.601",  nil) );
-    addMenu( ColorMode_YPbPr_709,       NSLocalizedString(@"Y'PrPb ITU-R BT.709",  nil) );
-    addMenu( ColorMode_YCbCr_601,       NSLocalizedString(@"Y'CbCr ITU-R BT.601",  nil) );
-    addMenu( ColorMode_YCbCr_709,       NSLocalizedString(@"Y'CbCr ITU-R BT.709",  nil) );
-    [menu addItem:[NSMenuItem separatorItem]];
-    addMenu( ColorMode_CIE_1931,        NSLocalizedString(@"CIE 1931",             nil) );
-    addMenu( ColorMode_CIE_1976,        NSLocalizedString(@"CIE 1976",             nil) );
-    addMenu( ColorMode_CIE_Lab,         NSLocalizedString(@"CIE L*a*b*",           nil) );
-    addMenu( ColorMode_Tristimulus,     NSLocalizedString(@"Tristimulus",          nil) );
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification        object:nil];
-    
-   
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
+       
     NSWindow *window = [self window];
     NSRect frame = [window frame];
     frame.size.width = 316;
@@ -203,15 +167,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [_aperture update];
     
     [[self resultView] setDrawsBorder:YES];
-        
-    if (!GetColorSpaceDisplayP3()) {
-        [[self p3MenuItem] setHidden:YES];
-    }
-    
-    if (!GetColorSpaceROMMRGB()) {
-        [[self rommRGBMenuItem] setHidden:YES];
-    }
-    
+
     [window makeKeyAndOrderFront:self];
     [window selectPreviousKeyView:self];
 
@@ -357,6 +313,61 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (void) _updatePopUpMenuItems
+{
+    Preferences *preferences = [Preferences sharedInstance];
+
+    BOOL showsLegacy = [preferences showsLegacyColorSpaces];
+
+    NSMenu *menu = [[self colorModePopUp] menu];
+    [menu removeAllItems];
+
+    void (^addMenu)(ColorMode, NSString *) = ^(ColorMode mode, NSString *title) {
+        NSMenuItem *item  = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
+        [item setTag:mode];
+        [menu addItem:item];
+    };
+  
+    addMenu( ColorMode_RGB_Percentage, NSLocalizedString(@"RGB, percentage", nil) );
+  
+    if (showsLegacy) {
+        addMenu( ColorMode_RGB_Value_8,     NSLocalizedString(@"RGB, decimal, 8-bit",  nil) );
+        addMenu( ColorMode_RGB_Value_16,    NSLocalizedString(@"RGB, decimal, 16-bit", nil) );
+        addMenu( ColorMode_RGB_HexValue_8,  NSLocalizedString(@"RGB, hex, 8-bit",      nil) );
+        addMenu( ColorMode_RGB_HexValue_16, NSLocalizedString(@"RGB, hex, 16-bit",     nil) );
+    } else {
+        addMenu( ColorMode_RGB_Value_8,     NSLocalizedString(@"RGB, decimal",         nil) );
+        addMenu( ColorMode_RGB_HexValue_8,  NSLocalizedString(@"RGB, hex",             nil) );
+    }
+  
+    [menu addItem:[NSMenuItem separatorItem]];
+    addMenu( ColorMode_HSB, NSLocalizedString(@"HSB", nil) );
+    addMenu( ColorMode_HSL, NSLocalizedString(@"HSL", nil) );
+
+    if ([preferences showsLumaChromaColorSpaces]) {
+        [menu addItem:[NSMenuItem separatorItem]];
+        addMenu( ColorMode_YPbPr_601, NSLocalizedString(@"Y'PrPb ITU-R BT.601", nil) );
+        addMenu( ColorMode_YPbPr_709, NSLocalizedString(@"Y'PrPb ITU-R BT.709", nil) );
+        addMenu( ColorMode_YCbCr_601, NSLocalizedString(@"Y'CbCr ITU-R BT.601", nil) );
+        addMenu( ColorMode_YCbCr_709, NSLocalizedString(@"Y'CbCr ITU-R BT.709", nil) );
+    }
+
+    [menu addItem:[NSMenuItem separatorItem]];
+
+    if ([preferences showsAdditionalCIEColorSpaces]) {
+        addMenu( ColorMode_CIE_1931,    NSLocalizedString(@"CIE 1931",    nil) );
+        addMenu( ColorMode_CIE_1976,    NSLocalizedString(@"CIE 1976",    nil) );
+        addMenu( ColorMode_CIE_Lab,     NSLocalizedString(@"CIE L*a*b*",  nil) );
+        addMenu( ColorMode_Tristimulus, NSLocalizedString(@"Tristimulus", nil) );
+    } else {
+        addMenu( ColorMode_CIE_Lab,     NSLocalizedString(@"CIE L*a*b*",  nil) );
+    }
+    
+    [[self convertToGenericRGBMenuItem]  setHidden:!showsLegacy];
+    [[self convertToMainDisplayMenuItem] setHidden:!showsLegacy];
+}
+
+
 - (void) _updateHoldLabels
 {
     ColorMode mode  = [self _currentColorMode];
@@ -427,7 +438,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-- (void) _updatePopUpAndComponentLabels
+- (void) _updatePopUpSelectionAndComponentLabels
 {
     ColorMode colorMode = [self _currentColorMode];
 
@@ -461,7 +472,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     ColorComponent component2 = ColorComponentNone;
     ColorComponent component3 = ColorComponentNone;
 
-    
     if (isRGB) {
         isEnabled = YES;
 
@@ -511,20 +521,17 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSTextField *value2 = [self value2];
     NSTextField *value3 = [self value3];
 
-    NSColor *(^getColorForColor)(ColorStringColor) = ^(ColorStringColor color) {
-        if (color == ColorStringColorClipped && [preferences highlightsMyClippedValues]) {
-            return [NSColor colorNamed:@"MyClipped"];
-
-        } else if (color == ColorStringColorSystemClipped && [preferences highlightsSystemClippedValues]) {
-            return [NSColor colorNamed:@"SystemClipped"];
+    NSColor *(^getColor)(BOOL) = ^(BOOL outOfRange) {
+        if (outOfRange && [preferences highlightsOutOfRange]) {
+            return [NSColor colorNamed:@"OutOfRange"];
         }
         
         return [NSColor textColor];
     };
 
     NSString * __autoreleasing strings[3];
-    ColorStringColor colors[3];
-    [_color getComponentsForMode:colorMode options:_colorStringOptions colors:colors strings:strings];
+    BOOL outOfRange[3];
+    [_color getComponentsForMode:colorMode options:_colorStringOptions outOfRange:outOfRange strings:strings];
 
     if (strings[0]) [value1 setStringValue:strings[0]];
     if (strings[1]) [value2 setStringValue:strings[1]];
@@ -540,9 +547,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         [value3 setTextColor:black];
 
     } else {
-        [value1 setTextColor:getColorForColor(colors[0])];
-        [value2 setTextColor:getColorForColor(colors[1])];
-        [value3 setTextColor:getColorForColor(colors[2])];
+        [value1 setTextColor:getColor(outOfRange[0])];
+        [value2 setTextColor:getColor(outOfRange[1])];
+        [value3 setTextColor:getColor(outOfRange[2])];
     }
 
     [value1 setEditable:isEditable];
@@ -604,10 +611,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     _showMouseCoordinates = [preferences showMouseCoordinates];
     
     _colorStringOptions = 0;
-    if (_usesLowercaseHex) _colorStringOptions |= ColorStringUsesLowercaseHex;
-    if (_usesPoundPrefix)  _colorStringOptions |= ColorStringUsesPoundPrefix;
-    if ([preferences usesSystemClippedValues]) _colorStringOptions |= ColorStringUsesSystemClippedValues;
-    if ([preferences usesMyClippedValues])     _colorStringOptions |= ColorStringUsesClippedValues;
+    if (_usesLowercaseHex)             _colorStringOptions |= ColorStringUsesLowercaseHex;
+    if (_usesPoundPrefix)              _colorStringOptions |= ColorStringUsesPoundPrefix;
+    if ([preferences clipsOutOfRange]) _colorStringOptions |= ColorStringClipsOutOfRange;
 
     BOOL showsHoldLabels = [preferences showsHoldLabels];
     [[self topHoldLabelButton]    setHidden:!showsHoldLabels];
@@ -679,7 +685,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         [[self window] setLevel:NSNormalWindowLevel];
     }
 
-    [self _updatePopUpAndComponentLabels];
+    [self _updatePopUpMenuItems];
+    [self _updatePopUpSelectionAndComponentLabels];
     [self _updateSliders];
     [self _updateHoldLabels];
     [self _updateTextFields];
@@ -957,6 +964,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     Color *colorCopy = [_color copy];
 
     NSDraggingItem *draggingItem = [[NSDraggingItem alloc] initWithPasteboardWriter:pboardWriter];
+    
+    [draggingItem setDraggingFrame:[[self resultView] bounds]];
 
     [draggingItem setImageComponentsProvider: ^{
         NSDraggingImageComponent *component = [self _draggingImageComponentForColor:colorCopy action:colorAction];
@@ -1100,7 +1109,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     Preferences *preferences = [Preferences sharedInstance];
 
     if ([preferences clickInSwatchEnabled]) {
-        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
         
         id<NSPasteboardWriting> pboardWriter = [self _pasteboardWriterForColorAction:[preferences clickInSwatchAction]];
 
@@ -1168,7 +1177,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     }
 
     if (colorAction != UnknownColorAction) {
-        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+        NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
         
         id<NSPasteboardWriting> writer = [self _pasteboardWriterForColorAction:colorAction];
         [pboard clearContents];
@@ -1404,7 +1413,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 - (IBAction) copyImage:(id)sender
 {
     NSImage *image = [self _imageFromPreviewView];
-    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
     [self _addImage:image toPasteboard:pboard];
 }
 
@@ -1438,7 +1447,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 //        [self _updateScreenshot];
 //    }
 
-    [self _updatePopUpAndComponentLabels];
+    [self _updatePopUpSelectionAndComponentLabels];
     [self _updateSliders];
     [self _updateTextFields];
     [self _updateHoldLabels];
@@ -1451,7 +1460,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 - (IBAction) pasteTextAsColor:(id)sender
 {
-    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
     NSString     *string = [pboard stringForType:NSPasteboardTypeString];
 
     Color *parsedColor = [Color colorWithString:string];
@@ -1477,7 +1486,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 - (IBAction) performColorActionForSender:(id)sender
 {
     NSInteger tag = [sender tag];
-    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSGeneralPboard];
+    NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
     
     id<NSPasteboardWriting> writer = [self _pasteboardWriterForColorAction:tag];
     

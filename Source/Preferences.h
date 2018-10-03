@@ -34,11 +34,8 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) NSString *rgbColorSnippetTemplate;
 @property (nonatomic) NSString *rgbaColorSnippetTemplate;
 
-@property (nonatomic) BOOL     usesMyClippedValues;
-@property (nonatomic) BOOL     highlightsMyClippedValues;
-
-@property (nonatomic) BOOL     usesSystemClippedValues;
-@property (nonatomic) BOOL     highlightsSystemClippedValues;
+@property (nonatomic) BOOL     highlightsOutOfRange;
+@property (nonatomic) BOOL     clipsOutOfRange;
 
 @property (nonatomic) Shortcut *showApplicationShortcut;
 @property (nonatomic) Shortcut *holdColorShortcut;
@@ -63,6 +60,10 @@ extern NSString * const PreferencesDidChangeNotification;
 @property (nonatomic) BOOL showsLockGuides;
 @property (nonatomic) BOOL usesDifferentColorSpaceInHoldColor;
 @property (nonatomic) BOOL usesMainColorSpaceForCopyAsText;
+
+@property (nonatomic) BOOL showsLegacyColorSpaces;
+@property (nonatomic) BOOL showsLumaChromaColorSpaces;
+@property (nonatomic) BOOL showsAdditionalCIEColorSpaces;
 
 @property (nonatomic) BOOL showsColorWindow;
 @property (nonatomic) BOOL showsMiniWindow;
