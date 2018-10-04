@@ -216,15 +216,13 @@ NSArray *ColorModeGetComponentLabels(ColorMode mode)
 
 NSImage *GetSnapshotImageForView(NSView *view)
 {
-/*
-    NSRect   bounds = [view bounds];
-    NSImage *image  = [[NSImage alloc] initWithSize:bounds.size];
+    BOOL wasHidden = [view isHidden];
 
-
-    [image lockFocus];
-    [view displayRectIgnoringOpacity:[view bounds] inContext:[NSGraphicsContext currentContext]];
-    [image unlockFocus];
-*/
+    if (wasHidden) {
+        [view setHidden:NO];
+        [view display];
+    }
+    
     NSRect bounds = [view bounds];
 
     NSBitmapImageRep *rep =[view bitmapImageRepForCachingDisplayInRect:bounds];
@@ -232,6 +230,8 @@ NSImage *GetSnapshotImageForView(NSView *view)
 
     NSImage *image = [[NSImage alloc] initWithSize:bounds.size];
     [image addRepresentation:rep];
+    
+    [view setHidden:wasHidden];
 
     return image;
 }
@@ -353,5 +353,22 @@ void DoPopOutAnimation(NSView *view)
 
     [CATransaction commit];
 }
+
+
+BOOL IsAppearanceDarkAqua(NSView *view)
+{
+    if (@available(macOS 10.14, *)) {
+        NSAppearance *effectiveAppearance =[view effectiveAppearance];
+        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
+       
+        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
+
+        return [bestMatch isEqualToString:NSAppearanceNameDarkAqua];
+
+    } else {
+        return NO;
+    }
+}
+
 
 

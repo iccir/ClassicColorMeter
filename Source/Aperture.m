@@ -8,6 +8,9 @@
 
 #import "Aperture.h"
 #import "MouseCursor.h"
+#import "ScreenCapturer.h"
+
+
 
 
 @interface Aperture () <MouseCursorListener>
@@ -17,6 +20,7 @@
 
 
 @implementation Aperture {
+    ScreenCapturer        *_capturer;
     CFMutableDictionaryRef _displayToScaleFactorMap;
     ColorSyncTransformRef  _colorSyncTransform;
     CGColorSpaceRef        _targetColorSpace;
@@ -24,7 +28,8 @@
     NSTimeInterval         _lastUpdateTimeInterval;
     CGRect                 _screenBounds;
     CGRect                 _captureRect;
-    BOOL                   _needsUpdate;
+    BOOL                   _needsUpdateDueToMove;
+    BOOL                   _needsUpdateDueToButton;
     BOOL                   _canHaveMixedScaleFactors;
     BOOL                   _hasMixedScaleFactors;
 }
@@ -33,6 +38,7 @@
 - (id) init
 {
     if ((self = [super init])) {
+        _capturer = [[ScreenCapturer alloc] init];
         _cursor = [MouseCursor sharedInstance];
     
         [_cursor addListener:self];
@@ -40,6 +46,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScreenColorSpaceDidChange:) name:NSScreenColorSpaceDidChangeNotification object:nil];
 
         _timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
+        [_timer setTolerance:(1.0 / 30.0)];
+
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
         
         _zoomLevel = 1;
@@ -78,7 +86,18 @@
     NSTimeInterval now   = [NSDate timeIntervalSinceReferenceDate];
     BOOL needsUpdateTick = (now - _lastUpdateTimeInterval) > 0.5;
     
-    if (_updatesContinuously || _needsUpdate || needsUpdateTick) {
+    if (_updatesContinuously) {
+        [_capturer setMaxFPS:0];
+    } else {
+        [_capturer setMaxFPS:12];
+    }
+
+    if (_updatesContinuously || _needsUpdateDueToButton || needsUpdateTick) {
+        [_capturer invalidate];
+        _needsUpdateDueToButton = NO;
+    }
+    
+    if (_updatesContinuously || _needsUpdateDueToMove || needsUpdateTick) {
         [self _updateOffsetAndCaptureRect];
 
         if (_canHaveMixedScaleFactors) {
@@ -94,8 +113,6 @@
 
 - (void) _updateImage
 {
-    CGImageRelease(_image);
-
     CGWindowImageOption imageOption = kCGWindowImageDefault;
     
     if (_hasMixedScaleFactors) {
@@ -106,27 +123,16 @@
         }
     }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    BOOL needsAirplayWorkaround = CGCursorIsDrawnInFramebuffer();
-#pragma clang diagnostic pop
+    CGImageRef newImage = [_capturer captureRect:_captureRect imageOption:imageOption];
+    
+    if (newImage) {
+        CGImageRelease(_image);   
+        _image = newImage;
 
-    if (needsAirplayWorkaround) {
-        CGWindowID cursorWindowID = [_cursor windowIDForSoftwareCursor];
-        
-        if (cursorWindowID != kCGNullWindowID) {
-            _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionOnScreenBelowWindow, cursorWindowID, imageOption);
-        } else {
-            _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
-        }
-        
-    } else {
-        _image = CGWindowListCreateImage(_captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
+        [_delegate aperture:self didUpdateImage:_image];
+
+        _needsUpdateDueToButton = _needsUpdateDueToMove = NO;
     }
-
-    [_delegate aperture:self didUpdateImage:_image];
-
-    _needsUpdate = NO;
 }
 
 
@@ -188,7 +194,7 @@
 - (void) _updateAperture
 {
     CGFloat pointsToAverage = ((_apertureSize * 2) + 1) * (8.0 / (_zoomLevel * _scaleFactor));
-    CGFloat averageOffset = ((_screenBounds.size.width - pointsToAverage) / 2.0);
+    CGFloat averageOffset   = ((_screenBounds.size.width - pointsToAverage) / 2.0);
 
     _apertureRect = CGRectMake( averageOffset,  averageOffset, pointsToAverage, pointsToAverage);
 }
@@ -317,13 +323,13 @@
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
-    _needsUpdate = YES;
+    _needsUpdateDueToMove = YES;
 }
 
 
 - (void) mouseButtonsChanged
 {
-
+    _needsUpdateDueToButton = YES;
 }
 
 
@@ -490,6 +496,9 @@
 {
     if (_apertureSize != apertureSize) {
         _apertureSize = apertureSize;
+        
+        [_capturer invalidate];
+
         [self _updateAperture];
         [self _updateImage];
     }
@@ -505,6 +514,8 @@
     if (_zoomLevel != zoomLevel) {
         _zoomLevel = zoomLevel;
         
+        [_capturer invalidate];
+
         [self _updateScreenBounds];
         [self _updateOffsetAndCaptureRect];
         [self _updateAperture];

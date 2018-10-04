@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5503516D2164583100616120 /* ScreenCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5503516C2164583100616120 /* ScreenCapturer.m */; };
+		550351732165A17300616120 /* WindowContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 550351722165A17300616120 /* WindowContentView.m */; };
 		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
 		55234B491420321E00D10B8C /* ShortcutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B481420321E00D10B8C /* ShortcutView.m */; };
@@ -41,6 +43,10 @@
 
 /* Begin PBXFileReference section */
 		550351642164447000616120 /* CCM_Profile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCM_Profile.xcconfig; sourceTree = "<group>"; };
+		5503516B2164583100616120 /* ScreenCapturer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScreenCapturer.h; path = Source/ScreenCapturer.h; sourceTree = "<group>"; };
+		5503516C2164583100616120 /* ScreenCapturer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScreenCapturer.m; path = Source/ScreenCapturer.m; sourceTree = "<group>"; };
+		550351712165A17300616120 /* WindowContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WindowContentView.h; path = Source/WindowContentView.h; sourceTree = "<group>"; };
+		550351722165A17300616120 /* WindowContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WindowContentView.m; path = Source/WindowContentView.m; sourceTree = "<group>"; };
 		550F240C13E3838F0026A060 /* ColorSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorSliderCell.h; path = Source/ColorSliderCell.h; sourceTree = "<group>"; };
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
@@ -145,6 +151,8 @@
 				55234B481420321E00D10B8C /* ShortcutView.m */,
 				55D569621422B01000F7B77B /* RecessedButton.h */,
 				55D569631422B01000F7B77B /* RecessedButton.m */,
+				550351712165A17300616120 /* WindowContentView.h */,
+				550351722165A17300616120 /* WindowContentView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -182,6 +190,8 @@
 				55633919158AB033007FE0A6 /* MouseCursor.m */,
 				558444A913D3C9CE006C6F51 /* Preferences.h */,
 				558444AA13D3C9CE006C6F51 /* Preferences.m */,
+				5503516B2164583100616120 /* ScreenCapturer.h */,
+				5503516C2164583100616120 /* ScreenCapturer.m */,
 				55234B4B1420323B00D10B8C /* Shortcut.h */,
 				55234B4C1420323B00D10B8C /* Shortcut.m */,
 				558444A613D3C9CE006C6F51 /* Util.h */,
@@ -374,9 +384,11 @@
 				55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */,
 				550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */,
 				5518713F13E62E5500272170 /* Color.m in Sources */,
+				5503516D2164583100616120 /* ScreenCapturer.m in Sources */,
 				55234B491420321E00D10B8C /* ShortcutView.m in Sources */,
 				55234B4D1420323B00D10B8C /* Shortcut.m in Sources */,
 				55234B501420325A00D10B8C /* ShortcutManager.m in Sources */,
+				550351732165A17300616120 /* WindowContentView.m in Sources */,
 				55234B6514217C6900D10B8C /* SnippetsController.m in Sources */,
 				55F709C01B0021520029405B /* RecorderController.m in Sources */,
 				55D569641422B01100F7B77B /* RecessedButton.m in Sources */,

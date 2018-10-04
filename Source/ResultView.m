@@ -92,7 +92,8 @@ static CGFloat sDistanceForDrag = 10.0;
     CGContextFillRect(context, bounds);
     
     if (_drawsBorder) {
-        [[NSColor colorNamed:@"PreviewBorder"] set];
+        CGFloat borderAlpha = IsAppearanceDarkAqua(self) ? 0.5 : 0.33;
+        [[NSColor colorWithWhite:0 alpha:borderAlpha] set];
 
         if ([[self window] backingScaleFactor] > 1) {
             CGRect strokeRect = NSInsetRect(bounds, 0.25, 0.25);

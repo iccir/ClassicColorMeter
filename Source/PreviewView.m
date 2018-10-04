@@ -15,13 +15,35 @@
 
 
 @implementation PreviewView {
-    NSImage *_backgroundImage;
+    NSTextField *_topLabelField;
+    NSTextField *_bottomLabelField;
 }
 
 
 - (void) awakeFromNib
 {
     [[MouseCursor sharedInstance] addListener:self];
+
+    NSTextField *(^makeLabel)() = ^{
+        NSTextField *label = [NSTextField labelWithString:@""];
+
+        [label setFont:[NSFont monospacedDigitSystemFontOfSize:12 weight:NSFontWeightMedium]];
+        [label setAlignment:NSTextAlignmentCenter];
+        [label setTextColor:[NSColor whiteColor]];
+
+        [label setBackgroundColor:[NSColor colorWithWhite:0 alpha:0.5]];
+        [label setDrawsBackground:YES];
+
+        [label setHidden:YES];
+
+        [self addSubview:label];
+
+        return label;
+    };
+
+    _topLabelField    = makeLabel();
+    _bottomLabelField = makeLabel();
+    
 }
 
 
@@ -40,45 +62,48 @@
 }
 
 
+- (void) layout
+{
+    // Do not call super
+    
+    CGRect  bounds = [self bounds];
+    CGFloat onePixel = 1.0 / [[self window] backingScaleFactor];
+
+    // Layout bottom label
+    {
+        CGRect bottomFrame = bounds;
+        bottomFrame.size.height = 18;
+        bottomFrame = CGRectInset(bottomFrame, onePixel, onePixel);
+
+        [_bottomLabelField setFrame:bottomFrame];
+    }
+
+    // Layout top label
+    {
+        CGRect topFrame = bounds;
+        topFrame.size.height = 16;
+        topFrame.origin.y = bounds.size.height - topFrame.size.height;
+        topFrame = CGRectInset(topFrame, onePixel, onePixel);
+
+        [_topLabelField setFrame:topFrame];
+    }
+}
+
+
 - (void) drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     CGContextSaveGState(context);
  
-    if (!_backgroundImage) _backgroundImage = [NSImage imageNamed:@"background"];
-    [_backgroundImage drawAtPoint:NSMakePoint(0, 0) fromRect:NSMakeRect(0, 0, 120, 120) operation:NSCompositingOperationSourceOver fraction:1.0];
-
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;
-    
+
+    [[NSColor colorWithWhite:0.25 alpha:1.0] set];
+    NSRectFill(bounds); 
+       
     CGFloat scale = [[self window] backingScaleFactor];
     CGFloat onePixel  = 1.0 / scale;
 
-    void (^drawTextBox)(NSString *, BOOL) = ^(NSString *text, BOOL onTop) {
-        NSDictionary *attributes = @{
-            NSFontAttributeName: [NSFont monospacedDigitSystemFontOfSize:12 weight:NSFontWeightMedium],
-            NSForegroundColorAttributeName: [NSColor whiteColor]
-        };
-        
-        CGRect textRect = [text boundingRectWithSize:NSMakeSize(INFINITY, INFINITY) options:0 attributes:attributes];
-        CGRect boxRect  = CGRectMake(onePixel, onePixel, bounds.size.width - (onePixel * 2), textRect.size.height);
-
-        textRect.origin.x += round((bounds.size.width - textRect.size.width) / 2.0);
-
-        if (onTop) {
-            textRect.origin.y = (bounds.size.height - textRect.size.height) + 3;
-            boxRect.origin.y  = (bounds.size.height - textRect.size.height) - onePixel;
-            
-        } else {
-            textRect.origin.y = 4.0;
-        }
-
-        CGContextSetGrayFillColor(context, 0.0, 0.5);
-        CGContextFillRect(context, boxRect);
-
-        [text drawWithRect:textRect options:0 attributes:attributes];
-    };
-    
     if (_image) {
         CGContextSetInterpolationQuality(context, kCGInterpolationNone);
 
@@ -97,24 +122,6 @@
         zoomedImageBounds.origin.y += (_offset.y * _zoomLevel) - zoomTweak;
         
         CGContextDrawImage(context, zoomedImageBounds, _image);
-    }
-
-    if (_showsLocation) {
-        MouseCursor *cursor = [MouseCursor sharedInstance];
-        CGPoint location = [cursor location];
-
-        NSString *locationString;
-        if ([cursor inRetinaPixelMode]) {
-            locationString = [[NSString alloc] initWithFormat:@"%.1lf, %.1lf", (double)location.x, (double)location.y];
-        } else {
-            locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)location.x, (long)location.y];
-        }
-
-        drawTextBox(locationString, NO);
-    }
-
-    if ([_statusText length]) {
-        drawTextBox(_statusText, YES);
     }
 
     // Draw aperture
@@ -151,8 +158,9 @@
         CGContextStrokeRect(context, CGRectInset(apertureRect, 0.5, 0.5));
     }
 
-    [[NSColor colorNamed:@"PreviewBorder"] set];
-    
+    CGFloat borderAlpha = IsAppearanceDarkAqua(self) ? 0.5 : 0.33;
+    [[NSColor colorWithWhite:0 alpha:borderAlpha] set];
+
     CGRect strokeRect = NSInsetRect(bounds, onePixel / 2.0, onePixel / 2.0);
     CGContextSetLineWidth(context, onePixel);
     CGContextStrokeRect(context, strokeRect);
@@ -167,12 +175,34 @@
 }
 
 
+#pragma mark - Private Methods
+
+- (void) _updateBottomLabel
+{
+    NSString *locationString;
+
+    if (_showsLocation) {
+        MouseCursor *cursor = [MouseCursor sharedInstance];
+        CGPoint location = [cursor location];
+
+        if ([cursor inRetinaPixelMode]) {
+            locationString = [[NSString alloc] initWithFormat:@"%.1lf, %.1lf", (double)location.x, (double)location.y];
+        } else {
+            locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)location.x, (long)location.y];
+        }
+    }
+
+    [_bottomLabelField setHidden:([locationString length] == 0)];
+    [_bottomLabelField setStringValue:locationString ? locationString : @""];
+}
+
+
 #pragma mark - Mouse Cursor
 
 - (void) mouseCursorMovedToLocation:(CGPoint)position
 {
     if (_showsLocation) {
-        [self setNeedsDisplay:YES];
+        [self _updateBottomLabel];
     }
 }
 
@@ -255,7 +285,7 @@
 {
     if (_showsLocation != showsLocation) {
         _showsLocation = showsLocation;
-        [self setNeedsDisplay:YES];
+        [self _updateBottomLabel];
     }
 }
 
@@ -264,7 +294,9 @@
 {
     if (_statusText != statusText) {
         _statusText = statusText;
-        [self setNeedsDisplay:YES];
+        
+        [_topLabelField setHidden:[_statusText length] == 0];
+        [_topLabelField setStringValue:_statusText ? _statusText : @""];
     }
 }
 

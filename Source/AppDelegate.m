@@ -154,11 +154,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSRect frame = [window frame];
     frame.size.width = 316;
     [window setFrame:frame display:NO animate:NO];
-
-    [window setContentBorderThickness:0.0 forEdge:NSMinYEdge];
-    [window setContentBorderThickness:172.0 forEdge:NSMaxYEdge];
-    [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-    [window setAutorecalculatesContentBorderThickness:NO forEdge:NSMaxYEdge];
+    [window setOpaque:YES];
 
     [self _setupHoldAnimation];
 
@@ -523,7 +519,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     NSColor *(^getColor)(BOOL) = ^(BOOL outOfRange) {
         if (outOfRange && [preferences highlightsOutOfRange]) {
-            return [NSColor colorNamed:@"OutOfRange"];
+            return [NSColor systemRedColor];
         }
         
         return [NSColor textColor];
@@ -1075,7 +1071,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     setSnapshotsHidden(NO);
 
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:3.3];
+        [context setDuration:0.25];
         CGFloat xOffset  = showSliders ? -126.0 : 0.0;
         
         layout(leftContainer,   leftSnapshot,   &xOffset);

@@ -58,6 +58,13 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
         }
     }
     
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+    
+    CGContextSaveGState(context);
+
+    CGContextSetAllowsFontSmoothing(context, YES);
+    CGContextSetShouldSmoothFonts(context, YES);
+
     NSRect rect = [super drawTitle:title withFrame:frame inView:controlView];
     
     if (drawArrow) {
@@ -65,6 +72,8 @@ static NSBezierPath *sGetArrowPath(CGRect rect)
         _arrowRect = CGRectZero;
     }
     
+    CGContextRestoreGState(context);
+
     return rect;
 }
 

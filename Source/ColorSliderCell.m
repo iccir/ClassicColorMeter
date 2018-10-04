@@ -60,20 +60,19 @@
     CGFloat minRadius = MIN(xRadius, yRadius);
     
     CGContextSaveGState(context);
-    CGContextSaveGState(context);
 
     NSBezierPath *barPath = [NSBezierPath bezierPathWithRoundedRect:aRect xRadius:minRadius yRadius:minRadius];
 
     NSColor *foregroundColor = [NSColor textColor];
 
-    CGContextSetStrokeColorWithColor(context, [[foregroundColor colorWithAlphaComponent:0.5] CGColor]);
-    [barPath stroke];
-
-    CGContextRestoreGState(context);
+    CGContextSetStrokeColorWithColor(context, [[foregroundColor colorWithAlphaComponent:0.35] CGColor]);
 
     [barPath addClip];
     
     [self _drawColorBackgroundInRect:aRect context:context];
+
+    [barPath stroke];
+
 
     CGContextRestoreGState(context);
 }
@@ -81,8 +80,37 @@
 
 - (void) drawKnob:(NSRect)rect
 {
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+
     if ([self isEnabled]) {
-        [super drawKnob:rect];
+        if (IsAppearanceDarkAqua([self controlView])) {
+            rect = CGRectInset(rect, 3, 3);
+
+            [[_color NSColor] set];
+
+            CGContextSaveGState(context);
+
+            NSShadow *shadow = [[NSShadow alloc] init];
+            
+            [shadow setShadowBlurRadius:1];
+            [shadow setShadowColor:[NSColor colorWithWhite:0.0 alpha:0.5]];
+            [shadow setShadowOffset:NSMakeSize(0, -0.5)];
+            [shadow set];
+
+            NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:rect];
+            [path fill];
+
+            CGContextRestoreGState(context);
+
+            [path addClip];
+
+            CGContextSetStrokeColorWithColor(context, [[[NSColor textColor] colorWithAlphaComponent:0.35] CGColor]);
+            [path setLineWidth:2];
+            [path stroke];
+
+        } else {
+            [super drawKnob:rect];
+        }
     }
 }
 

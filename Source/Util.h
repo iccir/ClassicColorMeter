@@ -31,3 +31,5 @@ extern CGImageRef   CreateImage(CGSize size, BOOL opaque, CGFloat scale, void (^
 extern NSString *GetArrowJoinerString(void);
 
 extern void DoPopOutAnimation(NSView *view);
+
+extern BOOL IsAppearanceDarkAqua(NSView *view);
