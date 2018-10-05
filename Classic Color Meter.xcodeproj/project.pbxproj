@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5503516D2164583100616120 /* ScreenCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5503516C2164583100616120 /* ScreenCapturer.m */; };
 		550351732165A17300616120 /* WindowContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 550351722165A17300616120 /* WindowContentView.m */; };
+		550351762166256500616120 /* ReceiptValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 550351752166256500616120 /* ReceiptValidation.m */; };
 		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
 		55234B491420321E00D10B8C /* ShortcutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B481420321E00D10B8C /* ShortcutView.m */; };
@@ -47,6 +48,7 @@
 		5503516C2164583100616120 /* ScreenCapturer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScreenCapturer.m; path = Source/ScreenCapturer.m; sourceTree = "<group>"; };
 		550351712165A17300616120 /* WindowContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WindowContentView.h; path = Source/WindowContentView.h; sourceTree = "<group>"; };
 		550351722165A17300616120 /* WindowContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WindowContentView.m; path = Source/WindowContentView.m; sourceTree = "<group>"; };
+		550351752166256500616120 /* ReceiptValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReceiptValidation.m; path = Source/ReceiptValidation.m; sourceTree = "<group>"; };
 		550F240C13E3838F0026A060 /* ColorSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorSliderCell.h; path = Source/ColorSliderCell.h; sourceTree = "<group>"; };
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				558444A813D3C9CE006C6F51 /* main.m */,
+				550351752166256500616120 /* ReceiptValidation.m */,
 				558444AD13D3C9CE006C6F51 /* Prefix.pch */,
 				558444A113D3C8F0006C6F51 /* Model */,
 				5584449F13D3C8BA006C6F51 /* Views */,
@@ -366,7 +369,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "which rcbump\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi";
+			shellScript = "which rcbump\nif [ $? -eq 0 ]; then\n    rcbump build\n    exit $?\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -384,6 +387,7 @@
 				55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */,
 				550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */,
 				5518713F13E62E5500272170 /* Color.m in Sources */,
+				550351762166256500616120 /* ReceiptValidation.m in Sources */,
 				5503516D2164583100616120 /* ScreenCapturer.m in Sources */,
 				55234B491420321E00D10B8C /* ShortcutView.m in Sources */,
 				55234B4D1420323B00D10B8C /* Shortcut.m in Sources */,

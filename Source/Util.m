@@ -13,11 +13,29 @@
 
 #include <dlfcn.h>
 
-NSString * const FeedbackURLString     = @"https://www.ricciadams.com/contact/classic-color-meter";
-NSString * const ProductSiteURLString  = @"https://www.ricciadams.com/projects/classic-color-meter";
-NSString * const LegacySpacesURLString = @"https://www.ricciadams.com/projects/classic-color-meter#faq-legacy";
-NSString * const ConversionsURLString  = @"https://www.ricciadams.com/articles/osx-color-conversions";
-NSString * const AppStoreURLString     = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
+NSString * const FeedbackURLString      = @"https://www.ricciadams.com/contact/classic-color-meter";
+NSString * const ProductSiteURLString   = @"https://www.ricciadams.com/projects/classic-color-meter";
+NSString * const LegacySpacesURLString  = @"https://www.ricciadams.com/projects/classic-color-meter#faq-legacy";
+NSString * const PrivacyPolicyURLString = @"https://www.ricciadams.com/privacy/classic-color-meter";
+NSString * const ConversionsURLString   = @"https://www.ricciadams.com/articles/osx-color-conversions";
+NSString * const AppStoreURLString      = @"macappstore://itunes.apple.com/us/app/classic-color-meter/id451640037?mt=12";
+
+
+NSString *GetAppBuildString(void)
+{
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:(__bridge id)kCFBundleVersionKey];
+}
+
+
+NSUInteger GetCombinedBuildNumber(NSString *string)
+{
+    NSArray *components = [string componentsSeparatedByString:@"."];
+ 
+    NSString *majorString = [components count] > 0 ? [components firstObject] : nil;
+    NSString *minorString = [components count] > 1 ? [components lastObject]  : nil;
+
+    return ([majorString integerValue] << 16) + [minorString integerValue];
+}
 
 
 BOOL ColorModeIsRGB(ColorMode mode)

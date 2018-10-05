@@ -16,6 +16,9 @@ extern NSString * const PreferencesDidChangeNotification;
 
 + (id) sharedInstance;
 
+@property (nonatomic, readonly) NSString *latestBuildString;
+
+- (void) migrateIfNeeded;
 - (void) restoreCodeSnippets;
 
 @property (nonatomic) ColorMode colorMode;

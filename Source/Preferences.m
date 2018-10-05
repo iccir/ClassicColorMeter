@@ -122,7 +122,10 @@ static void sBuildMaps(void)
 }
 
 
-@implementation Preferences
+@implementation Preferences {
+    NSUInteger _migrationFromBuild;
+    BOOL _didMigrate;
+}
 
 
 + (id) sharedInstance
@@ -143,9 +146,47 @@ static void sBuildMaps(void)
 {
     if ((self = [super init])) {
         [self _loadAndObserve];
+
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+        NSString *currentBuildString = GetAppBuildString();
+        NSString *latestBuildString  = [defaults objectForKey:@"LatestBuild"];
+
+        NSUInteger currentBuild = GetCombinedBuildNumber(currentBuildString);
+        NSUInteger latestBuild  = GetCombinedBuildNumber(latestBuildString);
+
+        if (currentBuild > latestBuild) {
+            _migrationFromBuild = latestBuild;
+            [defaults setObject:currentBuildString forKey:@"LatestBuild"];
+            latestBuildString = currentBuildString;
+        }
+
+        [defaults setObject:currentBuildString forKey:@"LastBuild"];
+
+        _latestBuildString = latestBuildString;
     }
 
     return self;
+}
+
+- (void) migrateIfNeeded
+{
+    NSUInteger fromBuild = _migrationFromBuild;
+
+    // If fromBuild is 0, this is either the first launch under the new
+    // migration system or a fresh installation of the app. In either case,
+    // do nothing
+    //
+    if (!fromBuild || _didMigrate) return;
+
+    // Migrate to version 200
+    if (fromBuild < GetCombinedBuildNumber(@"200")) {
+        [self setShowsLegacyColorSpaces:YES];
+        [self setShowsLumaChromaColorSpaces:YES];
+        [self setShowsAdditionalCIEColorSpaces:YES];
+    }
+
+    _didMigrate = YES;
 }
 
 

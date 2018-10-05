@@ -291,7 +291,7 @@
                             <menuItem title="Color Window" id="935">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="showColorWindow:" target="494" id="944"/>
+                                    <action selector="toggleColorWindow:" target="494" id="jf1-5b-6Fj"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Mini Window" id="Zvh-RW-FTc">
@@ -327,14 +327,28 @@
                                     <action selector="sendFeedback:" target="494" id="689"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="View on App Store…" id="956">
+                            <menuItem isSeparatorItem="YES" id="BGk-cK-dVO"/>
+                            <menuItem title="View Website" id="956">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="viewOnAppStore:" target="494" id="961"/>
+                                    <action selector="viewSite:" target="494" id="MHX-t7-lpC"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View on App Store" id="Yg8-ht-plh">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewOnAppStore:" target="494" id="lGV-UF-7ar"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="HhK-jY-VqH"/>
+                            <menuItem title="View Privacy Policy" id="N4s-vi-0p8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewPrivacyPolicy:" target="494" id="009-yZ-MdH"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="955"/>
-                            <menuItem title="Learn about Color Conversion…" id="958">
+                            <menuItem title="Learn about Color Conversion" id="958">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="learnAboutConversion:" target="494" id="960"/>

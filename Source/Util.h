@@ -10,9 +10,13 @@
 
 extern NSString * const ProductSiteURLString;
 extern NSString * const LegacySpacesURLString;
+extern NSString * const PrivacyPolicyURLString;
 extern NSString * const ConversionsURLString;
 extern NSString * const FeedbackURLString;
 extern NSString * const AppStoreURLString;
+
+extern NSString  *GetAppBuildString(void);
+extern NSUInteger GetCombinedBuildNumber(NSString *string);
 
 extern BOOL ColorModeIsRGB(ColorMode mode);
 extern BOOL ColorModeIsHue(ColorMode mode);

@@ -158,6 +158,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     [self _setupHoldAnimation];
 
+    [[Preferences sharedInstance] migrateIfNeeded];
     [self _handlePreferencesDidChange:nil];
     
     [_aperture update];
@@ -234,6 +235,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     } else if (action == @selector(toggleFloatWindow:)) {
         [menuItem setState:[[Preferences sharedInstance] floatWindow]];
+
+    } else if (action == @selector(toggleColorWindow:)) {
+        [menuItem setState:[[self colorWindow] isVisible]];
 
     } else if (action == @selector(toggleMiniWindow:)) {
         [menuItem setState:[[_miniWindowController window] isVisible]];
@@ -1284,6 +1288,21 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (IBAction) toggleColorWindow:(id)sender
+{
+    NSWindow *colorWindow = [self colorWindow];
+    BOOL      isVisible   = [colorWindow isVisible];
+
+    if (isVisible) {
+        [colorWindow orderOut:self];
+    } else {
+        [colorWindow makeKeyAndOrderFront:self];
+    }
+    
+    [[Preferences sharedInstance] setShowsColorWindow:!isVisible];    
+}
+
+
 - (IBAction) toggleMiniWindow:(id)sender
 {
     if (!_miniWindowController) {
@@ -1399,13 +1418,6 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
-- (IBAction) showColorWindow:(id)sender
-{
-    [[self colorWindow] makeKeyAndOrderFront:self];
-    [[Preferences sharedInstance] setShowsColorWindow:YES];
-}
-
-
 - (IBAction) copyImage:(id)sender
 {
     NSImage *image = [self _imageFromPreviewView];
@@ -1500,6 +1512,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 - (IBAction) viewSite:(id)sender
 {
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ProductSiteURLString]];
+}
+
+
+- (IBAction) viewPrivacyPolicy:(id)sender
+{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:PrivacyPolicyURLString]];
 }
 
 
