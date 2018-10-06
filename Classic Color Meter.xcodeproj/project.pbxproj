@@ -473,6 +473,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 550351642164447000616120 /* CCM_Profile.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 			};
 			name = Profile;
 		};
@@ -496,6 +497,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55C12AD921193D000096CBB3 /* CCM_Debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 			};
 			name = Debug;
 		};
@@ -503,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55C12ADB21193D000096CBB3 /* CCM_Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = XXXXXXXXXX;
 			};
 			name = Release;
 		};
