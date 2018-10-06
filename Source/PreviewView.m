@@ -81,7 +81,7 @@
     // Layout top label
     {
         CGRect topFrame = bounds;
-        topFrame.size.height = 16;
+        topFrame.size.height = 18;
         topFrame.origin.y = bounds.size.height - topFrame.size.height;
         topFrame = CGRectInset(topFrame, onePixel, onePixel);
 

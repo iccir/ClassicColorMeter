@@ -148,8 +148,9 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         return [self _handleLocalEvent:inEvent];
     }];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:) name:PreferencesDidChangeNotification object:nil];
-       
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handlePreferencesDidChange:)          name:PreferencesDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleWindowDidChangeOcclusionState:) name:NSWindowDidChangeOcclusionStateNotification object:nil];
+
     NSWindow *window = [self window];
     NSRect frame = [window frame];
     frame.size.width = 316;
@@ -560,6 +561,30 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (void) _updateApertureTimer
+{
+    NSWindow *mainWindow  = [self window];
+    NSWindow *colorWindow = [self colorWindow];
+    NSWindow *miniWindow  = [_miniWindowController window];
+
+    BOOL (^needsUpdates)(NSWindow *) = ^(NSWindow *window) {
+        if (![window isVisible]) return NO;
+    
+        NSWindowOcclusionState occlusionState = [window occlusionState];
+        return (BOOL)((occlusionState & NSWindowOcclusionStateVisible) > 0);
+    };
+
+    BOOL usesTimer = !_isHoldingColor && (
+        _recorderController != nil ||
+        needsUpdates(mainWindow)   ||
+        needsUpdates(colorWindow)  ||
+        needsUpdates(miniWindow)
+    );
+
+    [_aperture setUsesTimer:usesTimer];
+}
+
+
 - (void) aperture:(Aperture *)aperture didUpdateImage:(CGImageRef)image
 {
     if (!_isHoldingColor) {
@@ -698,6 +723,12 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 }
 
 
+- (void) _handleWindowDidChangeOcclusionState:(NSNotification *)note
+{
+    [self _updateApertureTimer];
+}
+
+
 - (void) _updateStatusText
 {
     // Update position status
@@ -741,6 +772,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
 - (NSImage *) _imageFromPreviewView
 {
+    [_aperture update];
+
     NSSize   size  = [[self previewView] bounds].size;
     NSImage *image = [[NSImage alloc] initWithSize:size];
     
@@ -1177,6 +1210,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     }
 
     if (colorAction != UnknownColorAction) {
+        [_aperture update];
+
         NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSPasteboardNameGeneral];
         
         id<NSPasteboardWriting> writer = [self _pasteboardWriterForColorAction:colorAction];
@@ -1285,6 +1320,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     }
     
     [_recorderController showWindow:self];
+    [self _updateApertureTimer];
 }
 
 
@@ -1299,7 +1335,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
         [colorWindow makeKeyAndOrderFront:self];
     }
     
-    [[Preferences sharedInstance] setShowsColorWindow:!isVisible];    
+    [[Preferences sharedInstance] setShowsColorWindow:!isVisible];  
+    [self _updateApertureTimer];
 }
 
 
@@ -1312,6 +1349,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     }
     
     [_miniWindowController toggle];
+    [self _updateApertureTimer];
 }
 
 
@@ -1459,6 +1497,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [self _updateSliders];
     [self _updateTextFields];
     [self _updateHoldLabels];
+    [self _updateApertureTimer];
 
     if ([[Preferences sharedInstance] showsHoldColorSliders]) {
         [self _animateSnapshotsIfNeeded];

@@ -11,8 +11,6 @@
 #import "ScreenCapturer.h"
 
 
-
-
 @interface Aperture () <MouseCursorListener>
 @property (nonatomic) MouseCursor *cursor;
 @property (nonatomic) NSTimer *timer;
@@ -38,22 +36,18 @@
 - (id) init
 {
     if ((self = [super init])) {
+        _zoomLevel = 1;
+
         _capturer = [[ScreenCapturer alloc] init];
         _cursor = [MouseCursor sharedInstance];
     
         [_cursor addListener:self];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleScreenColorSpaceDidChange:) name:NSScreenColorSpaceDidChangeNotification object:nil];
-
-        _timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
-        [_timer setTolerance:(1.0 / 30.0)];
-
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
         
-        _zoomLevel = 1;
-
         [self _updateImage];
         [self _updateColorProfile];
+        [self _updateTimer];
     }
 
     return self;
@@ -80,6 +74,21 @@
 
 
 #pragma mark - Private Methods
+
+- (void) _updateTimer
+{
+    if (_usesTimer && !_timer) {
+        _timer = [NSTimer timerWithTimeInterval:(1.0 / 30.0) target:self selector:@selector(_timerTick:) userInfo:nil repeats:YES];
+        [_timer setTolerance:(1.0 / 30.0)];
+
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+
+    } else if (!_usesTimer && _timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
+}
+
 
 - (void) _timerTick:(NSTimer *)timer
 {
@@ -529,6 +538,15 @@
     if (_colorConversion != colorConversion) {
         _colorConversion = colorConversion;
         [self _updateColorProfile];
+    }
+}
+
+
+- (void) setUsesTimer:(BOOL)usesTimer
+{
+    if (_usesTimer != usesTimer) {
+        _usesTimer = usesTimer;
+        [self _updateTimer];
     }
 }
 

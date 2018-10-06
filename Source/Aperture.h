@@ -32,6 +32,8 @@
 @property (nonatomic, readonly) NSString *longColorProfileLabel;
 @property (nonatomic, readonly) NSString *shortColorProfileLabel;
 
+@property (nonatomic) BOOL usesTimer;
+
 @end
 
 

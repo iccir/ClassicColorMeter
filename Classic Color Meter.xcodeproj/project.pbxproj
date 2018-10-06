@@ -289,7 +289,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55E67D9D13CFC3000040DFDE /* Build configuration list for PBXNativeTarget "Classic Color Meter" */;
 			buildPhases = (
-				552EDB851BA513FD0031CB4E /* run rchook */,
+				552EDB851BA513FD0031CB4E /* run rcbump */,
 				55E67D7B13CFC3000040DFDE /* Sources */,
 				55E67D7C13CFC3000040DFDE /* Frameworks */,
 				55E67D7D13CFC3000040DFDE /* Resources */,
@@ -357,14 +357,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		552EDB851BA513FD0031CB4E /* run rchook */ = {
+		552EDB851BA513FD0031CB4E /* run rcbump */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "run rchook";
+			name = "run rcbump";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
