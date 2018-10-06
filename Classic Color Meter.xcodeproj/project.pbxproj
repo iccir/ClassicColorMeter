@@ -10,6 +10,7 @@
 		5503516D2164583100616120 /* ScreenCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5503516C2164583100616120 /* ScreenCapturer.m */; };
 		550351732165A17300616120 /* WindowContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 550351722165A17300616120 /* WindowContentView.m */; };
 		550351762166256500616120 /* ReceiptValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 550351752166256500616120 /* ReceiptValidation.m */; };
+		55035178216848E300616120 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55035177216848E300616120 /* Security.framework */; };
 		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
 		55234B491420321E00D10B8C /* ShortcutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B481420321E00D10B8C /* ShortcutView.m */; };
@@ -49,6 +50,7 @@
 		550351712165A17300616120 /* WindowContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WindowContentView.h; path = Source/WindowContentView.h; sourceTree = "<group>"; };
 		550351722165A17300616120 /* WindowContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = WindowContentView.m; path = Source/WindowContentView.m; sourceTree = "<group>"; };
 		550351752166256500616120 /* ReceiptValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReceiptValidation.m; path = Source/ReceiptValidation.m; sourceTree = "<group>"; };
+		55035177216848E300616120 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		550F240C13E3838F0026A060 /* ColorSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorSliderCell.h; path = Source/ColorSliderCell.h; sourceTree = "<group>"; };
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55035178216848E300616120 /* Security.framework in Frameworks */,
 				55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */,
 				558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */,
 				55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */,
@@ -249,6 +252,7 @@
 		55E67D8213CFC3000040DFDE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55035177216848E300616120 /* Security.framework */,
 				55234B5514203AB800D10B8C /* Carbon.framework */,
 				558444D213D41184006C6F51 /* ApplicationServices.framework */,
 				55E67DC613D38E950040DFDE /* QuartzCore.framework */,
