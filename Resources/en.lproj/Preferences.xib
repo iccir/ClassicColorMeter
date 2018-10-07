@@ -226,9 +226,9 @@
                     </connections>
                 </button>
                 <button id="R6P-mr-sHO">
-                    <rect key="frame" x="18" y="166" width="309" height="18"/>
+                    <rect key="frame" x="18" y="166" width="302" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Clips out of range components to nearest value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Olc-uR-Kqn">
+                    <buttonCell key="cell" type="check" title="Clip out of range components to nearest value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Olc-uR-Kqn">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
