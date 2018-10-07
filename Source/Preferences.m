@@ -237,9 +237,53 @@ static void sBuildMaps(void)
 }
 
 
+- (void) _fixColorModes
+{
+    ColorMode colorMode     = [self colorMode];
+    ColorMode holdColorMode = [self holdColorMode];
+
+    BOOL showsLegacyColorSpaces        = [self showsLegacyColorSpaces];
+    BOOL showsLumaChromaColorSpaces    = [self showsLumaChromaColorSpaces];
+    BOOL showsAdditionalCIEColorSpaces = [self showsAdditionalCIEColorSpaces];
+
+    BOOL (^fixMode)(ColorMode *) = ^(ColorMode *mode) {
+        BOOL result = NO;
+
+        if ((!showsLegacyColorSpaces        && ColorModeIsLegacy(colorMode))     ||
+            (!showsLumaChromaColorSpaces    && ColorModeIsLumaChroma(colorMode)) ||
+            (!showsAdditionalCIEColorSpaces && ColorModeIsXYZ(colorMode))
+        ) {
+            *mode = ColorMode_RGB_Percentage;
+            result = YES;
+        }
+
+        return result;
+    };
+    
+    if (fixMode(&colorMode)) {
+        [self setColorMode:colorMode];
+    }
+
+    if (fixMode(&holdColorMode)) {
+        [self setHoldColorMode:holdColorMode];
+    }
+    
+    if (!showsLegacyColorSpaces) {
+        ColorConversion colorConversion = [self colorConversion];
+
+        if (colorConversion == ColorConversionDisplayInGenericRGB ||
+            colorConversion == ColorConversionConvertToMainDisplay
+        ) {
+            [self setColorConversion:ColorConversionNone];
+        }
+    }
+}
+
+
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (object == self) {
+        [self _fixColorModes];
         [[NSNotificationCenter defaultCenter] postNotificationName:PreferencesDidChangeNotification object:self];
         [self _save];
     }

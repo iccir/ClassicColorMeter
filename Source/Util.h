@@ -21,6 +21,8 @@ extern NSUInteger GetCombinedBuildNumber(NSString *string);
 extern BOOL ColorModeIsRGB(ColorMode mode);
 extern BOOL ColorModeIsHue(ColorMode mode);
 extern BOOL ColorModeIsXYZ(ColorMode mode);
+extern BOOL ColorModeIsLumaChroma(ColorMode mode);
+extern BOOL ColorModeIsLegacy(ColorMode mode);
 
 extern NSArray *ColorModeGetComponentLabels(ColorMode mode);
 extern NSArray *ColorModeGetLongestStrings(ColorMode mode);

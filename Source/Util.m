@@ -48,6 +48,13 @@ BOOL ColorModeIsRGB(ColorMode mode)
 }
 
 
+BOOL ColorModeIsLegacy(ColorMode mode)
+{
+    return (mode == ColorMode_RGB_Value_16)   ||
+           (mode == ColorMode_RGB_HexValue_16);
+}
+
+
 BOOL ColorModeIsHue(ColorMode mode)
 {
     return (mode == ColorMode_HSB) || (mode == ColorMode_HSL);
@@ -60,6 +67,16 @@ BOOL ColorModeIsXYZ(ColorMode mode)
            (mode == ColorMode_CIE_1976) ||
            (mode == ColorMode_Tristimulus);
 }
+
+
+BOOL ColorModeIsLumaChroma(ColorMode mode)
+{
+    return (mode == ColorMode_YPbPr_601) ||
+           (mode == ColorMode_YPbPr_709) ||
+           (mode == ColorMode_YCbCr_601) ||
+           (mode == ColorMode_YCbCr_709);
+}
+
 
 
 float ColorModeParseComponentString(ColorMode mode, ColorComponent component, NSString *string)
