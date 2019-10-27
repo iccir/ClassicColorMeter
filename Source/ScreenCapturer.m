@@ -8,6 +8,118 @@
 #import "ScreenCapturer.h"
 
 
+@implementation ScreenCapturer {
+    BOOL _didPermissionCheck;
+
+    CGRect _lastCaptureRect;
+    CGWindowImageOption _lastImageOptions;
+    CGImageRef _lastCaptureImage;
+    CGFloat _lastCaptureScale;
+    
+    NSTimeInterval _lastTimeInterval;
+}
+
+
+- (void) dealloc
+{
+    [self invalidate];
+}
+
+
+#pragma mark - Permissions
+
+static NSInteger sGetPermissionDialogCount(void)
+{
+    CFArrayRef list = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, 0);
+    NSInteger count = 0;
+
+    if (list) {
+        for (NSInteger i = 0; i < CFArrayGetCount(list); i++) {
+            CFDictionaryRef dictionary = CFArrayGetValueAtIndex(list, i);
+
+            NSString *processName = (__bridge NSString *) CFDictionaryGetValue(dictionary, kCGWindowOwnerName);
+
+            if ([processName containsString:@"universalAccess"]) {
+                count++;
+            }
+        }
+
+        CFRelease(list);
+    }
+    
+    return count;
+}
+
+
+static BOOL sIsScreenCaptureBlocked(void)
+{
+    CFArrayRef list = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, 0);
+    BOOL result = NO;
+
+    if (list) {
+        for (NSInteger i = 0; i < CFArrayGetCount(list); i++) {
+            CFDictionaryRef dictionary = CFArrayGetValueAtIndex(list, i);
+
+            NSNumber *sharingType = (__bridge NSNumber *) CFDictionaryGetValue(dictionary, kCGWindowSharingState);
+            NSNumber *windowLevel = (__bridge NSNumber *) CFDictionaryGetValue(dictionary, kCGWindowLayer);
+            NSString *processName = (__bridge NSString *) CFDictionaryGetValue(dictionary, kCGWindowOwnerName);
+
+            if ([processName isEqualToString:@"Dock"]) {
+                if ([windowLevel integerValue] == kCGDockWindowLevel) {
+                    if ([sharingType integerValue] == kCGWindowSharingNone) {
+                        result = YES;
+                    }
+                    
+                    break;
+                }
+            }
+        }
+    
+        CFRelease(list);
+    }
+
+    return result;
+}
+
+
+static void sShowPermissionDialog(void)
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    [alert setMessageText:NSLocalizedString(@"Classic Color Meter needs permission to record this computer's screen.", nil)];
+    [alert setInformativeText:NSLocalizedString(@"Grant access to this application in Security & Privacy preferences, located in System Preferences.", nil)];
+
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Open System Preferences", nil)];
+    
+    if ([alert runModal] == NSAlertSecondButtonReturn) {
+        NSURL *url = [NSURL URLWithString:@"x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"];
+        [[NSWorkspace sharedWorkspace] openURL:url];
+    }
+}
+
+
+static void sCheckScreenCapturePermission(void)
+{
+    if (!sIsScreenCaptureBlocked()) return;
+
+    NSInteger initialCount = sGetPermissionDialogCount();
+
+    // Trigger screen capture
+    CGImageRef image = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionAll, 0, kCGWindowImageDefault);
+    CGImageRelease(image);
+
+    // Wait 250ms and check count again
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(250 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+        if (sGetPermissionDialogCount() <= initialCount) {
+            sShowPermissionDialog();
+        }
+    });
+}
+
+
+#pragma mark - Capture
+
 static CGWindowID sGetWindowIDForSoftwareCursor()
 {
     CFArrayRef descriptionList = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID);
@@ -39,19 +151,15 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
 }
 
 
-@implementation ScreenCapturer {
-    CGRect _lastCaptureRect;
-    CGWindowImageOption _lastImageOptions;
-    CGImageRef _lastCaptureImage;
-    CGFloat _lastCaptureScale;
-    
-    NSTimeInterval _lastTimeInterval;
-}
-
-
-- (void) dealloc
+- (void) invalidate
 {
-    [self invalidate];
+    CGImageRelease(_lastCaptureImage);
+    _lastCaptureImage = NULL;
+
+    _lastCaptureRect  = CGRectZero;
+    _lastImageOptions = 0;
+    
+    _lastTimeInterval = 0;
 }
 
 
@@ -63,6 +171,14 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     BOOL needsAirplayWorkaround = CGCursorIsDrawnInFramebuffer();
 #pragma clang diagnostic pop
+
+    if (!_didPermissionCheck) {
+        if (@available(macOS 10.15, *)) {
+            sCheckScreenCapturePermission();
+        }
+
+        _didPermissionCheck = YES;
+    }
 
     if (needsAirplayWorkaround) {
         CGWindowID cursorWindowID = sGetWindowIDForSoftwareCursor();
@@ -80,18 +196,6 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
     _lastCaptureScale = CGImageGetWidth(_lastCaptureImage) / captureRect.size.width;
     _lastCaptureRect  = captureRect;
     _lastImageOptions = imageOption;
-}
-
-
-- (void) invalidate
-{
-    CGImageRelease(_lastCaptureImage);
-    _lastCaptureImage = NULL;
-
-    _lastCaptureRect  = CGRectZero;
-    _lastImageOptions = 0;
-    
-    _lastTimeInterval = 0;
 }
 
 
