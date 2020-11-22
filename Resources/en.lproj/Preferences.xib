@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -28,31 +28,29 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Preferences" animationBehavior="default" id="164">
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Preferences" animationBehavior="default" toolbarStyle="preference" id="164">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="163" y="695" width="480" height="180"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <view key="contentView" id="165">
                 <rect key="frame" x="0.0" y="0.0" width="480" height="180"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             </view>
             <toolbar key="toolbar" implicitIdentifier="0BB9A39A-86B3-41BA-831B-1DE94554B3DE" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="166">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="EA2B5BAC-DDE9-45E3-9EF1-898EA0A3F46C" label="General" paletteLabel="General" image="NSPreferencesGeneral" selectable="YES" id="174">
+                    <toolbarItem implicitItemIdentifier="EA2B5BAC-DDE9-45E3-9EF1-898EA0A3F46C" label="General" paletteLabel="General" image="NSPreferencesGeneral" sizingBehavior="auto" selectable="YES" id="174">
                         <connections>
                             <action selector="selectPane:" target="-2" id="293"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="077EBF4D-F4C6-4BA1-A729-1D0EA90DBF73" label="Keyboard" paletteLabel="Keyboard" tag="1" image="command" selectable="YES" id="172">
+                    <toolbarItem implicitItemIdentifier="077EBF4D-F4C6-4BA1-A729-1D0EA90DBF73" label="Keyboard" paletteLabel="Keyboard" tag="1" image="command" sizingBehavior="auto" selectable="YES" id="172">
                         <connections>
                             <action selector="selectPane:" target="-2" id="294"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="167"/>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="170"/>
-                    <toolbarItem implicitItemIdentifier="EAA7081C-4755-431A-BC50-3BB821A410F6" label="Advanced" paletteLabel="Advanced" tag="2" image="NSAdvanced" selectable="YES" id="rFN-2o-vDW">
-                        <size key="minSize" width="128" height="128"/>
-                        <size key="maxSize" width="128" height="128"/>
+                    <toolbarItem implicitItemIdentifier="EAA7081C-4755-431A-BC50-3BB821A410F6" label="Advanced" paletteLabel="Advanced" tag="2" image="NSAdvanced" sizingBehavior="auto" selectable="YES" id="rFN-2o-vDW">
                         <connections>
                             <action selector="selectPane:" target="-2" id="H3O-h2-kw6"/>
                         </connections>
@@ -71,7 +69,7 @@
             <rect key="frame" x="0.0" y="0.0" width="368" height="296"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <popUpButton verticalHuggingPriority="750" id="68">
+                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="68">
                     <rect key="frame" x="187" y="223" width="164" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="72" id="69">
@@ -103,7 +101,7 @@
                         <binding destination="-2" name="enabled" keyPath="self.preferences.dragInSwatchEnabled" id="vP3-f1-6CZ"/>
                     </connections>
                 </popUpButton>
-                <button id="82">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="82">
                     <rect key="frame" x="18" y="128" width="256" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use lower-case letters for hex values" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="83">
@@ -114,7 +112,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.usesLowercaseHex" id="pOn-Sn-doz"/>
                     </connections>
                 </button>
-                <button id="B4N-Ko-xkh">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B4N-Ko-xkh">
                     <rect key="frame" x="18" y="190" width="271" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Highlight out of range components in red" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="qIT-BI-6ok">
@@ -126,7 +124,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.highlightsOutOfRange" id="Wbj-xY-LC7"/>
                     </connections>
                 </button>
-                <button id="135">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="135">
                     <rect key="frame" x="37" y="42" width="288" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use primary color space for 'Copy as Text'" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="136">
@@ -138,7 +136,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.usesMainColorSpaceForCopyAsText" id="yGT-FS-7s0"/>
                     </connections>
                 </button>
-                <button id="118">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="118">
                     <rect key="frame" x="18" y="18" width="228" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show sliders in Hold Color mode" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="119">
@@ -149,7 +147,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.showsHoldColorSliders" id="nU2-ue-3bo"/>
                     </connections>
                 </button>
-                <button id="65">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="65">
                     <rect key="frame" x="18" y="228" width="165" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Drag in swatch copies:" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="66">
@@ -160,7 +158,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.dragInSwatchEnabled" id="ukw-z3-ohE"/>
                     </connections>
                 </button>
-                <button id="62">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="62">
                     <rect key="frame" x="18" y="256" width="165" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Click in swatch copies:" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="63">
@@ -171,7 +169,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.clickInSwatchEnabled" id="EKJ-zE-usF"/>
                     </connections>
                 </button>
-                <button id="132">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="132">
                     <rect key="frame" x="18" y="66" width="306" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Use separate color space in Hold Color mode" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="133">
@@ -182,7 +180,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.usesDifferentColorSpaceInHoldColor" id="hAn-8Y-2gd"/>
                     </connections>
                 </button>
-                <popUpButton verticalHuggingPriority="750" id="46">
+                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="46">
                     <rect key="frame" x="187" y="251" width="164" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="Color" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="59" id="47">
@@ -214,7 +212,7 @@
                         <binding destination="-2" name="enabled" keyPath="self.preferences.clickInSwatchEnabled" id="h1o-s4-IgE"/>
                     </connections>
                 </popUpButton>
-                <button id="23">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="23">
                     <rect key="frame" x="18" y="104" width="287" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Include pound sign prefix with hex values" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="24">
@@ -225,7 +223,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.usesPoundPrefix" id="fMO-ca-fel"/>
                     </connections>
                 </button>
-                <button id="R6P-mr-sHO">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R6P-mr-sHO">
                     <rect key="frame" x="18" y="166" width="302" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Clip out of range components to nearest value" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Olc-uR-Kqn">
@@ -244,7 +242,7 @@
             <rect key="frame" x="0.0" y="0.0" width="368" height="333"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button id="253">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="253">
                     <rect key="frame" x="59" y="18" width="249" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Move mouse cursor with arrow keys" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="254">
@@ -255,7 +253,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.arrowKeysEnabled" id="7dT-4N-k5j"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="256">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="256">
                     <rect key="frame" x="17" y="294" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Activate application" id="261">
@@ -264,63 +262,63 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <customView id="257" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="257" customClass="ShortcutView">
                     <rect key="frame" x="206" y="291" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="263"/>
                     </connections>
                 </customView>
-                <customView id="258" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="258" customClass="ShortcutView">
                     <rect key="frame" x="206" y="261" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="262"/>
                     </connections>
                 </customView>
-                <customView id="331" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="331" customClass="ShortcutView">
                     <rect key="frame" x="206" y="231" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="335"/>
                     </connections>
                 </customView>
-                <customView id="280" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="280" customClass="ShortcutView">
                     <rect key="frame" x="206" y="189" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="307"/>
                     </connections>
                 </customView>
-                <customView id="282" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="282" customClass="ShortcutView">
                     <rect key="frame" x="206" y="159" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="308"/>
                     </connections>
                 </customView>
-                <customView id="284" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="284" customClass="ShortcutView">
                     <rect key="frame" x="206" y="129" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="309"/>
                     </connections>
                 </customView>
-                <customView id="286" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="286" customClass="ShortcutView">
                     <rect key="frame" x="206" y="99" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="310"/>
                     </connections>
                 </customView>
-                <customView id="288" customClass="ShortcutView">
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="288" customClass="ShortcutView">
                     <rect key="frame" x="206" y="69" width="142" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <connections>
                         <action selector="updatePreferences:" target="-2" id="311"/>
                     </connections>
                 </customView>
-                <textField verticalHuggingPriority="750" id="259">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="259">
                     <rect key="frame" x="17" y="264" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Hold Color" id="260">
@@ -329,7 +327,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="333">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="333">
                     <rect key="frame" x="17" y="234" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Lock Position" id="334">
@@ -338,7 +336,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="264">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="264">
                     <rect key="frame" x="17" y="192" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Copy as NSColor Snippet" id="265">
@@ -347,7 +345,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="266">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="266">
                     <rect key="frame" x="17" y="162" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Copy as UIColor Snippet" id="267">
@@ -356,7 +354,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="268">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="268">
                     <rect key="frame" x="17" y="132" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Copy as HTML Hex Snippet" id="271">
@@ -365,7 +363,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="269">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="269">
                     <rect key="frame" x="17" y="102" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Copy as CSS rgb() Snippet" id="270">
@@ -374,7 +372,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="276">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="276">
                     <rect key="frame" x="17" y="72" width="182" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Copy as CSS rgba() Snippet" id="277">
@@ -383,7 +381,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box verticalHuggingPriority="750" boxType="separator" id="279">
+                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="279">
                     <rect key="frame" x="10" y="50" width="348" height="5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                 </box>
@@ -394,7 +392,7 @@
             <rect key="frame" x="0.0" y="0.0" width="368" height="143"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button id="GpM-z0-4as">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GpM-z0-4as">
                     <rect key="frame" x="18" y="107" width="282" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show legacy color spaces and conversions" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="egl-42-EtQ">
@@ -406,7 +404,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.showsLegacyColorSpaces" id="MzR-Q8-e0C"/>
                     </connections>
                 </button>
-                <button id="ahx-sa-S0w">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ahx-sa-S0w">
                     <rect key="frame" x="18" y="42" width="341" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show Luma/Chroma color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="QHe-25-zH4">
@@ -418,7 +416,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.showsLumaChromaColorSpaces" id="QUy-gW-iCF"/>
                     </connections>
                 </button>
-                <button id="mg5-xb-ROI">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mg5-xb-ROI">
                     <rect key="frame" x="18" y="18" width="341" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Show additional CIE color spaces" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Brr-bx-yQi">
@@ -430,7 +428,7 @@
                         <binding destination="-2" name="value" keyPath="self.preferences.showsAdditionalCIEColorSpaces" id="Vis-TH-did"/>
                     </connections>
                 </button>
-                <button verticalHuggingPriority="750" id="mb1-XM-52I">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mb1-XM-52I">
                     <rect key="frame" x="32" y="71" width="120" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Learn More" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8bX-SU-HeB">
@@ -447,8 +445,8 @@
         <userDefaultsController representsSharedInstance="YES" id="AzM-68-qPx"/>
     </objects>
     <resources>
-        <image name="NSAdvanced" width="128" height="128"/>
-        <image name="NSPreferencesGeneral" width="128" height="128"/>
+        <image name="NSAdvanced" width="32" height="32"/>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
         <image name="command" width="32" height="32"/>
     </resources>
 </document>

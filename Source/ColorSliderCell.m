@@ -78,39 +78,44 @@
 }
 
 
-- (void) drawKnob:(NSRect)rect
+
+- (void) drawKnob:(NSRect)knobRect
 {
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
 
     if ([self isEnabled]) {
+        CGRect trackRect = [self barRectFlipped:YES];
+    
+        knobRect = CGRectMake(CGRectGetMidX(knobRect), CGRectGetMidY(trackRect), 0, 0);
+        knobRect = CGRectInset(knobRect, -8, -8);
+        
+        [[_color NSColor] set];
+
+        CGContextSaveGState(context);
+
+        NSShadow *shadow = [[NSShadow alloc] init];
+        
+        [shadow setShadowBlurRadius:2];
+        [shadow setShadowColor:[NSColor colorWithWhite:0.0 alpha:0.65]];
+        [shadow setShadowOffset:NSMakeSize(0, -0.5)];
+        [shadow set];
+
+        NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:knobRect];
+        [path fill];
+
+        CGContextRestoreGState(context);
+
+        [path addClip];
+        
+        NSColor *strokeColor = [NSColor whiteColor];
+        
         if (IsAppearanceDarkAqua([self controlView])) {
-            rect = CGRectInset(rect, 3, 3);
-
-            [[_color NSColor] set];
-
-            CGContextSaveGState(context);
-
-            NSShadow *shadow = [[NSShadow alloc] init];
-            
-            [shadow setShadowBlurRadius:1];
-            [shadow setShadowColor:[NSColor colorWithWhite:0.0 alpha:0.5]];
-            [shadow setShadowOffset:NSMakeSize(0, -0.5)];
-            [shadow set];
-
-            NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:rect];
-            [path fill];
-
-            CGContextRestoreGState(context);
-
-            [path addClip];
-
-            CGContextSetStrokeColorWithColor(context, [[[NSColor textColor] colorWithAlphaComponent:0.35] CGColor]);
-            [path setLineWidth:2];
-            [path stroke];
-
-        } else {
-            [super drawKnob:rect];
+            strokeColor = [strokeColor colorWithAlphaComponent:0.3];
         }
+        
+        CGContextSetStrokeColorWithColor(context, [strokeColor CGColor]);
+        [path setLineWidth:4];
+        [path stroke];
     }
 }
 

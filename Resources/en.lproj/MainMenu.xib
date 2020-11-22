@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -35,6 +35,7 @@
                 <outlet property="slider1" destination="703" id="715"/>
                 <outlet property="slider2" destination="705" id="716"/>
                 <outlet property="slider3" destination="707" id="717"/>
+                <outlet property="sliderContainer" destination="Hyw-1I-l2v" id="hzY-fh-3id"/>
                 <outlet property="topHoldLabelButton" destination="872" id="874"/>
                 <outlet property="value1" destination="616" id="631"/>
                 <outlet property="value2" destination="618" id="632"/>
@@ -366,59 +367,65 @@
         <window title="Classic Color Meter" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="MainWindow" animationBehavior="default" titlebarAppearsTransparent="YES" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="139" y="740" width="442" height="170"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="contentRect" x="139" y="740" width="442" height="174"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <view key="contentView" id="372" customClass="WindowContentView">
-                <rect key="frame" x="0.0" y="0.0" width="442" height="170"/>
+                <rect key="frame" x="0.0" y="0.0" width="442" height="174"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="709">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="709">
                         <rect key="frame" x="6" y="0.0" width="120" height="148"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <slider toolTip="Adjust the aperture size" verticalHuggingPriority="750" id="549">
-                                <rect key="frame" x="0.0" y="5" width="120" height="17"/>
+                            <slider toolTip="Adjust the aperture size" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="549">
+                                <rect key="frame" x="0.0" y="4" width="120" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="7" tickMarkPosition="below" numberOfTickMarks="8" allowsTickMarkValuesOnly="YES" sliderType="linear" id="550"/>
                                 <connections>
                                     <action selector="changeApertureSize:" target="494" id="611"/>
                                 </connections>
                             </slider>
-                            <customView id="591" customClass="PreviewView">
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="591" customClass="PreviewView">
                                 <rect key="frame" x="0.0" y="28" width="120" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                         </subviews>
                     </customView>
-                    <customView id="710">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="710">
                         <rect key="frame" x="316" y="2" width="120" height="146"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <slider verticalHuggingPriority="750" id="705">
-                                <rect key="frame" x="-2" y="60" width="124" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="706" customClass="ColorSliderCell"/>
-                                <connections>
-                                    <action selector="updateComponent:" target="494" id="719"/>
-                                </connections>
-                            </slider>
-                            <slider verticalHuggingPriority="750" id="707">
-                                <rect key="frame" x="-2" y="26" width="124" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="708" customClass="ColorSliderCell"/>
-                                <connections>
-                                    <action selector="updateComponent:" target="494" id="720"/>
-                                </connections>
-                            </slider>
-                            <slider verticalHuggingPriority="750" id="703">
-                                <rect key="frame" x="-2" y="94" width="124" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="704" customClass="ColorSliderCell"/>
-                                <connections>
-                                    <action selector="updateComponent:" target="494" id="718"/>
-                                </connections>
-                            </slider>
-                            <button verticalHuggingPriority="750" id="870" customClass="RecessedButton">
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hyw-1I-l2v">
+                                <rect key="frame" x="0.0" y="21" width="120" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="703">
+                                        <rect key="frame" x="0.0" y="68" width="120" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="704" customClass="ColorSliderCell"/>
+                                        <connections>
+                                            <action selector="updateComponent:" target="494" id="718"/>
+                                        </connections>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="705">
+                                        <rect key="frame" x="0.0" y="34" width="120" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="706" customClass="ColorSliderCell"/>
+                                        <connections>
+                                            <action selector="updateComponent:" target="494" id="719"/>
+                                        </connections>
+                                    </slider>
+                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="707">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="708" customClass="ColorSliderCell"/>
+                                        <connections>
+                                            <action selector="updateComponent:" target="494" id="720"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                            </customView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="870" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="2" width="120" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt; &gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="871" customClass="RecessedButtonCell">
@@ -429,7 +436,7 @@
                                     <action selector="writeBottomLabelValueToPasteboard:" target="494" id="934"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" id="872" customClass="RecessedButton">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="872" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="125" width="120" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt; &gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="873" customClass="RecessedButtonCell">
@@ -442,11 +449,11 @@
                             </button>
                         </subviews>
                     </customView>
-                    <customView id="711">
-                        <rect key="frame" x="132" y="2" width="178" height="146"/>
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="711">
+                        <rect key="frame" x="132" y="2" width="178" height="148"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <popUpButton verticalHuggingPriority="750" id="536">
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="536">
                                 <rect key="frame" x="-2" y="122" width="183" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="537">
@@ -458,7 +465,7 @@
                                     <action selector="changeColorMode:" target="494" id="648"/>
                                 </connections>
                             </popUpButton>
-                            <customView id="613" customClass="ResultView">
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="613" customClass="ResultView">
                                 <rect key="frame" x="0.0" y="26" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
@@ -474,7 +481,7 @@
                                     <action selector="updateComponent:" target="494" id="721"/>
                                 </connections>
                             </textField>
-                            <textField verticalHuggingPriority="750" id="622">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="622">
                                 <rect key="frame" x="87" y="96" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="X" id="623">
@@ -483,7 +490,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" id="624">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="624">
                                 <rect key="frame" x="87" y="62" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Y" id="625">
@@ -492,7 +499,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" id="618">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="618">
                                 <rect key="frame" x="118" y="60" width="60" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="619">
@@ -504,7 +511,7 @@
                                     <action selector="updateComponent:" target="494" id="722"/>
                                 </connections>
                             </textField>
-                            <textField verticalHuggingPriority="750" id="620">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="620">
                                 <rect key="frame" x="118" y="26" width="60" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="621">
@@ -516,7 +523,7 @@
                                     <action selector="updateComponent:" target="494" id="723"/>
                                 </connections>
                             </textField>
-                            <textField verticalHuggingPriority="750" id="626">
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="626">
                                 <rect key="frame" x="87" y="28" width="34" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Z" id="627">
@@ -525,7 +532,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField hidden="YES" verticalHuggingPriority="750" id="930">
+                            <textField hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="930">
                                 <rect key="frame" x="-3" y="5" width="184" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" id="931">
@@ -534,7 +541,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" id="867" customClass="RecessedButton">
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="867" customClass="RecessedButton">
                                 <rect key="frame" x="0.0" y="2" width="178" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="recessed" title="&lt;&lt;DO NOT LOCALIZE&gt;&gt;" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="868" customClass="RecessedButtonCell">
@@ -611,13 +618,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <rect key="contentRect" x="552" y="518" width="240" height="240"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="200" height="100"/>
             <view key="contentView" id="938">
                 <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="941" customClass="ResultView">
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="941" customClass="ResultView">
                         <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>
