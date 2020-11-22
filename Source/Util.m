@@ -260,7 +260,7 @@ NSImage *GetSnapshotImageForView(NSView *view)
     
     NSRect bounds = [view bounds];
 
-    NSBitmapImageRep *rep =[view bitmapImageRepForCachingDisplayInRect:bounds];
+    NSBitmapImageRep *rep = [view bitmapImageRepForCachingDisplayInRect:bounds];
     [view cacheDisplayInRect:bounds toBitmapImageRep:rep];
 
     NSImage *image = [[NSImage alloc] initWithSize:bounds.size];

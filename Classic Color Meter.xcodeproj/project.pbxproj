@@ -18,8 +18,12 @@
 		55234B501420325A00D10B8C /* ShortcutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B4F1420325A00D10B8C /* ShortcutManager.m */; };
 		55234B5614203AB800D10B8C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55234B5514203AB800D10B8C /* Carbon.framework */; };
 		55234B6514217C6900D10B8C /* SnippetsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B6414217C6900D10B8C /* SnippetsController.m */; };
-		55234B6814217D5700D10B8C /* Snippets.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55234B6614217D5700D10B8C /* Snippets.xib */; };
 		5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5537D76D19CFD00600DE8117 /* Assets.xcassets */; };
+		5542E475256A738100942C40 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5542E474256A738100942C40 /* MainMenu.xib */; };
+		5542E47C256A73CB00942C40 /* MiniWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5542E478256A73CB00942C40 /* MiniWindow.xib */; };
+		5542E47D256A73CB00942C40 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5542E479256A73CB00942C40 /* Preferences.xib */; };
+		5542E47E256A73CB00942C40 /* Recorder.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5542E47A256A73CB00942C40 /* Recorder.xib */; };
+		5542E47F256A73CB00942C40 /* Snippets.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5542E47B256A73CB00942C40 /* Snippets.xib */; };
 		5563391A158AB033007FE0A6 /* MouseCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55633919158AB033007FE0A6 /* MouseCursor.m */; };
 		556356C0158AC929005FD42E /* Aperture.m in Sources */ = {isa = PBXBuildFile; fileRef = 556356BF158AC929005FD42E /* Aperture.m */; };
 		557EFF5A158F0D6C0081CC6A /* GuideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 557EFF59158F0D6C0081CC6A /* GuideController.m */; };
@@ -29,18 +33,13 @@
 		558444B613D3C9CE006C6F51 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444AA13D3C9CE006C6F51 /* Preferences.m */; };
 		558444B813D3C9CE006C6F51 /* PreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444AF13D3C9CE006C6F51 /* PreviewView.m */; };
 		558444B913D3C9CE006C6F51 /* ResultView.m in Sources */ = {isa = PBXBuildFile; fileRef = 558444B113D3C9CE006C6F51 /* ResultView.m */; };
-		558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 558444C713D3CA3E006C6F51 /* InfoPlist.strings */; };
-		558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558444C913D3CA3E006C6F51 /* MainMenu.xib */; };
 		558444D313D41184006C6F51 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558444D213D41184006C6F51 /* ApplicationServices.framework */; };
-		55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */; };
 		55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */; };
 		55D569641422B01100F7B77B /* RecessedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D569631422B01000F7B77B /* RecessedButton.m */; };
 		55E67D8413CFC3000040DFDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67D8313CFC3000040DFDE /* Cocoa.framework */; };
 		55E67DC713D38E950040DFDE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55E67DC613D38E950040DFDE /* QuartzCore.framework */; };
 		55F709C01B0021520029405B /* RecorderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F709BF1B0021520029405B /* RecorderController.m */; };
-		55F709C31B0021A90029405B /* Recorder.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F709C11B0021A90029405B /* Recorder.xib */; };
 		55FD8BCE13E2134200446286 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55FD8BCD13E2134200446286 /* PreferencesController.m */; };
-		55FD8BD113E2145800446286 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55FD8BCF13E2145800446286 /* Preferences.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,9 +63,13 @@
 		55234B5514203AB800D10B8C /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		55234B6314217C6900D10B8C /* SnippetsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SnippetsController.h; path = Source/SnippetsController.h; sourceTree = "<group>"; };
 		55234B6414217C6900D10B8C /* SnippetsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SnippetsController.m; path = Source/SnippetsController.m; sourceTree = "<group>"; };
-		55234B6714217D5700D10B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Snippets.xib; sourceTree = SOURCE_ROOT; };
 		552B411D13D4FB30000EB55C /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = Source/Types.h; sourceTree = "<group>"; };
 		5537D76D19CFD00600DE8117 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		5542E474256A738100942C40 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainMenu.xib; path = Resources/MainMenu.xib; sourceTree = "<group>"; };
+		5542E478256A73CB00942C40 /* MiniWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MiniWindow.xib; path = Resources/MiniWindow.xib; sourceTree = "<group>"; };
+		5542E479256A73CB00942C40 /* Preferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Preferences.xib; path = Resources/Preferences.xib; sourceTree = "<group>"; };
+		5542E47A256A73CB00942C40 /* Recorder.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Recorder.xib; path = Resources/Recorder.xib; sourceTree = "<group>"; };
+		5542E47B256A73CB00942C40 /* Snippets.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Snippets.xib; path = Resources/Snippets.xib; sourceTree = "<group>"; };
 		55633918158AB033007FE0A6 /* MouseCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseCursor.h; path = Source/MouseCursor.h; sourceTree = "<group>"; };
 		55633919158AB033007FE0A6 /* MouseCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MouseCursor.m; path = Source/MouseCursor.m; sourceTree = "<group>"; };
 		556356BE158AC929005FD42E /* Aperture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Aperture.h; path = Source/Aperture.h; sourceTree = "<group>"; };
@@ -86,10 +89,7 @@
 		558444B013D3C9CE006C6F51 /* ResultView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResultView.h; path = Source/ResultView.h; sourceTree = "<group>"; };
 		558444B113D3C9CE006C6F51 /* ResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResultView.m; path = Source/ResultView.m; sourceTree = "<group>"; };
 		558444BE13D3CA27006C6F51 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
-		558444C813D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
-		558444CA13D3CA3E006C6F51 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
-		55BC2E1D1D3B7B4400B15C1A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MiniWindow.xib; sourceTree = SOURCE_ROOT; };
 		55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MiniWindowController.m; path = Source/MiniWindowController.m; sourceTree = "<group>"; };
 		55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiniWindowController.h; path = Source/MiniWindowController.h; sourceTree = "<group>"; };
 		55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigProfile.xcconfig; sourceTree = "<group>"; };
@@ -109,10 +109,8 @@
 		55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Classic Color Meter.entitlements"; sourceTree = "<group>"; };
 		55F709BE1B0021520029405B /* RecorderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecorderController.h; path = Source/RecorderController.h; sourceTree = "<group>"; };
 		55F709BF1B0021520029405B /* RecorderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecorderController.m; path = Source/RecorderController.m; sourceTree = "<group>"; };
-		55F709C21B0021A90029405B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Recorder.xib; sourceTree = SOURCE_ROOT; };
 		55FD8BCC13E2134200446286 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesController.h; path = Source/PreferencesController.h; sourceTree = "<group>"; };
 		55FD8BCD13E2134200446286 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreferencesController.m; path = Source/PreferencesController.m; sourceTree = "<group>"; };
-		55FD8BD013E2145800446286 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/Preferences.xib; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,13 +273,12 @@
 			isa = PBXGroup;
 			children = (
 				5537D76D19CFD00600DE8117 /* Assets.xcassets */,
-				558444C713D3CA3E006C6F51 /* InfoPlist.strings */,
 				558444BE13D3CA27006C6F51 /* Info.plist */,
-				558444C913D3CA3E006C6F51 /* MainMenu.xib */,
-				55FD8BCF13E2145800446286 /* Preferences.xib */,
-				55234B6614217D5700D10B8C /* Snippets.xib */,
-				55F709C11B0021A90029405B /* Recorder.xib */,
-				55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */,
+				5542E474256A738100942C40 /* MainMenu.xib */,
+				5542E478256A73CB00942C40 /* MiniWindow.xib */,
+				5542E479256A73CB00942C40 /* Preferences.xib */,
+				5542E47A256A73CB00942C40 /* Recorder.xib */,
+				5542E47B256A73CB00942C40 /* Snippets.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -349,13 +346,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				558444CB13D3CA3E006C6F51 /* InfoPlist.strings in Resources */,
-				55BC2E1E1D3B7B4400B15C1A /* MiniWindow.xib in Resources */,
-				55F709C31B0021A90029405B /* Recorder.xib in Resources */,
-				558444CC13D3CA3E006C6F51 /* MainMenu.xib in Resources */,
-				55FD8BD113E2145800446286 /* Preferences.xib in Resources */,
-				55234B6814217D5700D10B8C /* Snippets.xib in Resources */,
+				5542E47C256A73CB00942C40 /* MiniWindow.xib in Resources */,
+				5542E47E256A73CB00942C40 /* Recorder.xib in Resources */,
+				5542E47F256A73CB00942C40 /* Snippets.xib in Resources */,
+				5542E475256A738100942C40 /* MainMenu.xib in Resources */,
 				5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */,
+				5542E47D256A73CB00942C40 /* Preferences.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,57 +405,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		55234B6614217D5700D10B8C /* Snippets.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55234B6714217D5700D10B8C /* en */,
-			);
-			name = Snippets.xib;
-			sourceTree = "<group>";
-		};
-		558444C713D3CA3E006C6F51 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				558444C813D3CA3E006C6F51 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		558444C913D3CA3E006C6F51 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				558444CA13D3CA3E006C6F51 /* en */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		55BC2E1C1D3B7B4400B15C1A /* MiniWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55BC2E1D1D3B7B4400B15C1A /* en */,
-			);
-			name = MiniWindow.xib;
-			sourceTree = "<group>";
-		};
-		55F709C11B0021A90029405B /* Recorder.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55F709C21B0021A90029405B /* en */,
-			);
-			name = Recorder.xib;
-			sourceTree = "<group>";
-		};
-		55FD8BCF13E2145800446286 /* Preferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55FD8BD013E2145800446286 /* en */,
-			);
-			name = Preferences.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		55035166216444B600616120 /* Profile */ = {
