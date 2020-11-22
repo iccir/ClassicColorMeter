@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 @property (nonatomic, strong) IBOutlet NSTextField   *value2;
 @property (nonatomic, strong) IBOutlet NSTextField   *value3;
 
+@property (nonatomic, strong) IBOutlet NSView        *sliderContainer;
 @property (nonatomic, strong) IBOutlet NSSlider      *slider1;
 @property (nonatomic, strong) IBOutlet NSSlider      *slider2;
 @property (nonatomic, strong) IBOutlet NSSlider      *slider3;
@@ -152,9 +153,21 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleWindowDidChangeOcclusionState:) name:NSWindowDidChangeOcclusionStateNotification object:nil];
 
     NSWindow *window = [self window];
-    NSRect frame = [window frame];
-    frame.size.width = 316;
-    [window setFrame:frame display:NO animate:NO];
+    NSRect windowFrame = [window frame];
+    windowFrame.size.width = 316;
+
+    if (@available(macOS 11.0, *)) {
+        // Nothing to do, as our XIB sets the height to 174.
+    } else {
+        // On previous versions of macOS, use a smaller height.
+        windowFrame.size.height = 170;
+        
+        NSRect sliderFrame = [[self sliderContainer] frame];
+        sliderFrame.origin.y += 2;
+        [[self sliderContainer] setFrame:sliderFrame];
+    }
+
+    [window setFrame:windowFrame display:NO animate:NO];
     [window setOpaque:YES];
 
     [self _setupHoldAnimation];
