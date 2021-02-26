@@ -86,8 +86,14 @@ static void sShowPermissionDialog(void)
 {
     NSAlert *alert = [[NSAlert alloc] init];
     
+    NSString *informativeText = [@[
+        NSLocalizedString(@"This permission is necessary for Classic Color Meter to see raw pixel data and calculate color information.", nil),
+        NSLocalizedString(@"This application does not transmit information over a network.", nil),
+        NSLocalizedString(@"Grant access to this application in Security & Privacy preferences, located in System Preferences.", nil)
+    ] componentsJoinedByString:@"\n\n"];
+    
     [alert setMessageText:NSLocalizedString(@"Classic Color Meter needs permission to record this computer's screen.", nil)];
-    [alert setInformativeText:NSLocalizedString(@"Grant access to this application in Security & Privacy preferences, located in System Preferences.", nil)];
+    [alert setInformativeText:informativeText];
 
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Open System Preferences", nil)];
@@ -173,7 +179,12 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
 #pragma clang diagnostic pop
 
     if (!_didPermissionCheck) {
-        if (@available(macOS 10.15, *)) {
+        if (@available(macOS 11, *)) {
+            if (!CGPreflightScreenCaptureAccess()) {
+                sShowPermissionDialog();
+            }
+            
+        } else if (@available(macOS 10.15, *)) {
             sCheckScreenCapturePermission();
         }
 

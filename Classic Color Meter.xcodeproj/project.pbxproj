@@ -418,6 +418,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Profile;
@@ -445,6 +446,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
@@ -456,6 +458,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XXXXXXXXXX;
+				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;

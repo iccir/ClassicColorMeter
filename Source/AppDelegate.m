@@ -157,6 +157,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     windowFrame.size.width = 316;
 
     if (@available(macOS 11.0, *)) {
+        [window setTitleVisibility:NSWindowTitleHidden];
         // Nothing to do, as our XIB sets the height to 174.
     } else {
         // On previous versions of macOS, use a smaller height.
