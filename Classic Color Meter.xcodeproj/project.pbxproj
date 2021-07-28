@@ -12,6 +12,8 @@
 		55035178216848E300616120 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55035177216848E300616120 /* Security.framework */; };
 		550F240E13E3838F0026A060 /* ColorSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 550F240D13E3838F0026A060 /* ColorSliderCell.m */; };
 		5518713F13E62E5500272170 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 5518713E13E62E5500272170 /* Color.m */; };
+		5522788E269E58D0003D3013 /* PermissionRequest.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5522788D269E58D0003D3013 /* PermissionRequest.xib */; };
+		55227891269E68CD003D3013 /* PermissionRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55227890269E68CD003D3013 /* PermissionRequestController.m */; };
 		55234B491420321E00D10B8C /* ShortcutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B481420321E00D10B8C /* ShortcutView.m */; };
 		55234B4D1420323B00D10B8C /* Shortcut.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B4C1420323B00D10B8C /* Shortcut.m */; };
 		55234B501420325A00D10B8C /* ShortcutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55234B4F1420325A00D10B8C /* ShortcutManager.m */; };
@@ -52,6 +54,9 @@
 		550F240D13E3838F0026A060 /* ColorSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColorSliderCell.m; path = Source/ColorSliderCell.m; sourceTree = "<group>"; };
 		5518713D13E62E5500272170 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = Source/Color.h; sourceTree = "<group>"; };
 		5518713E13E62E5500272170 /* Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Color.m; path = Source/Color.m; sourceTree = "<group>"; };
+		5522788D269E58D0003D3013 /* PermissionRequest.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PermissionRequest.xib; path = Resources/PermissionRequest.xib; sourceTree = "<group>"; };
+		5522788F269E68CD003D3013 /* PermissionRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PermissionRequestController.h; path = Source/PermissionRequestController.h; sourceTree = "<group>"; };
+		55227890269E68CD003D3013 /* PermissionRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PermissionRequestController.m; path = Source/PermissionRequestController.m; sourceTree = "<group>"; };
 		55234B471420321E00D10B8C /* ShortcutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShortcutView.h; path = Source/ShortcutView.h; sourceTree = "<group>"; };
 		55234B481420321E00D10B8C /* ShortcutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShortcutView.m; path = Source/ShortcutView.m; sourceTree = "<group>"; };
 		55234B4B1420323B00D10B8C /* Shortcut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shortcut.h; path = Source/Shortcut.h; sourceTree = "<group>"; };
@@ -169,6 +174,8 @@
 				558444A313D3C9CE006C6F51 /* AppDelegate.m */,
 				55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */,
 				55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */,
+				5522788F269E68CD003D3013 /* PermissionRequestController.h */,
+				55227890269E68CD003D3013 /* PermissionRequestController.m */,
 				55FD8BCC13E2134200446286 /* PreferencesController.h */,
 				55FD8BCD13E2134200446286 /* PreferencesController.m */,
 				55234B6314217C6900D10B8C /* SnippetsController.h */,
@@ -274,6 +281,7 @@
 				5542E474256A738100942C40 /* MainMenu.xib */,
 				5542E478256A73CB00942C40 /* MiniWindow.xib */,
 				5542E479256A73CB00942C40 /* Preferences.xib */,
+				5522788D269E58D0003D3013 /* PermissionRequest.xib */,
 				5542E47A256A73CB00942C40 /* Recorder.xib */,
 				5542E47B256A73CB00942C40 /* Snippets.xib */,
 			);
@@ -349,6 +357,7 @@
 				5542E475256A738100942C40 /* MainMenu.xib in Resources */,
 				5537D76E19CFD00600DE8117 /* Assets.xcassets in Resources */,
 				5542E47D256A73CB00942C40 /* Preferences.xib in Resources */,
+				5522788E269E58D0003D3013 /* PermissionRequest.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +401,7 @@
 				550351732165A17300616120 /* WindowContentView.m in Sources */,
 				55234B6514217C6900D10B8C /* SnippetsController.m in Sources */,
 				55F709C01B0021520029405B /* RecorderController.m in Sources */,
+				55227891269E68CD003D3013 /* PermissionRequestController.m in Sources */,
 				55D569641422B01100F7B77B /* RecessedButton.m in Sources */,
 				5563391A158AB033007FE0A6 /* MouseCursor.m in Sources */,
 				55BC2E201D3B7B8000B15C1A /* MiniWindowController.m in Sources */,

@@ -19,6 +19,7 @@
 @property (nonatomic) ApertureOutline apertureOutline;
 @property (nonatomic) NSInteger zoomLevel;
 
+@property (nonatomic) NSString *errorText;
 @property (nonatomic) NSString *statusText;
 
 @property (nonatomic) BOOL showsLocation;

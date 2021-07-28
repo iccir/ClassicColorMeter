@@ -10,6 +10,8 @@
 
 @interface ScreenCapturer : NSObject
 
++ (BOOL) hasScreenCaptureAccess;
+
 - (void) invalidate;
 - (CGImageRef) captureRect:(CGRect)captureRect imageOption:(CGWindowImageOption)imageOption CF_RETURNS_RETAINED;
 

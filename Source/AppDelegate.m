@@ -23,6 +23,8 @@
 #import "MiniWindowController.h"
 #import "SnippetsController.h"
 #import "RecorderController.h"
+#import "PermissionRequestController.h"
+#import "ScreenCapturer.h"
 #import "Util.h"
 
 
@@ -95,10 +97,11 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSImage        *_middleViewImage;
     NSImage        *_rightViewImage;
         
-    PreferencesController *_preferencesController;
-    SnippetsController    *_snippetsController;
-    RecorderController    *_recorderController;
-    MiniWindowController  *_miniWindowController;
+    PreferencesController       *_preferencesController;
+    SnippetsController          *_snippetsController;
+    RecorderController          *_recorderController;
+    MiniWindowController        *_miniWindowController;
+    PermissionRequestController *_permissionRequestController;
 
     MouseCursor           *_cursor;
     Aperture              *_aperture;
@@ -189,6 +192,11 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 
     if ([[Preferences sharedInstance] showsColorWindow]) {
         [_colorWindow orderFront:nil];
+    }
+    
+    if (![ScreenCapturer hasScreenCaptureAccess]) {
+        [self showPermissionRequestWindow:nil];
+        [_previewView setErrorText:NSLocalizedString(@"Screen Recording access is needed to see other windows.", nil)];
     }
 }
 
@@ -1374,6 +1382,17 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     }
     
     [_preferencesController showWindow:self];
+}
+
+
+
+- (IBAction) showPermissionRequestWindow:(id)sender
+{
+    if (!_permissionRequestController) {
+        _permissionRequestController = [[PermissionRequestController alloc] init];
+    }
+    
+    [_permissionRequestController showWindow:self];
 }
 
 

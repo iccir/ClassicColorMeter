@@ -17,6 +17,7 @@
 @implementation PreviewView {
     NSTextField *_topLabelField;
     NSTextField *_bottomLabelField;
+    NSTextField *_errorLabelField;
 }
 
 
@@ -43,7 +44,12 @@
 
     _topLabelField    = makeLabel();
     _bottomLabelField = makeLabel();
+    _errorLabelField  = makeLabel();
     
+    [_errorLabelField setFont:[NSFont monospacedDigitSystemFontOfSize:11.0 weight:NSFontWeightSemibold]];
+    [_errorLabelField setBackgroundColor:[NSColor colorWithWhite:0 alpha:0.75]];
+    [_errorLabelField setLineBreakMode:NSLineBreakByWordWrapping];
+    [_errorLabelField setMaximumNumberOfLines:0];
 }
 
 
@@ -69,23 +75,39 @@
     CGRect  bounds = [self bounds];
     CGFloat onePixel = 1.0 / [[self window] backingScaleFactor];
 
+    // Layout error label
+    {
+        CGRect insetBounds = CGRectInset(bounds, onePixel, onePixel);
+
+        NSSize size = [_errorLabelField sizeThatFits:insetBounds.size];
+    
+        NSRect frame = insetBounds;
+        frame.size = size;
+        frame.origin.x = onePixel + ((frame.size.width - size.width) / 2.0);
+        frame.size.height += 1;
+        frame.size.width = insetBounds.size.width;
+        
+        [_errorLabelField setFrame:frame];
+    }
+
     // Layout bottom label
     {
-        CGRect bottomFrame = bounds;
-        bottomFrame.size.height = 18;
-        bottomFrame = CGRectInset(bottomFrame, onePixel, onePixel);
+        CGRect frame = bounds;
+        frame.size.height = 18;
+        
+        frame = CGRectInset(frame, onePixel, onePixel);
 
-        [_bottomLabelField setFrame:bottomFrame];
+        [_bottomLabelField setFrame:frame];
     }
 
     // Layout top label
     {
-        CGRect topFrame = bounds;
-        topFrame.size.height = 18;
-        topFrame.origin.y = bounds.size.height - topFrame.size.height;
-        topFrame = CGRectInset(topFrame, onePixel, onePixel);
+        CGRect frame = bounds;
+        frame.size.height = 18;
+        frame.origin.y = bounds.size.height - frame.size.height;
+        frame = CGRectInset(frame, onePixel, onePixel);
 
-        [_topLabelField setFrame:topFrame];
+        [_topLabelField setFrame:frame];
     }
 }
 
@@ -177,23 +199,46 @@
 
 #pragma mark - Private Methods
 
+
+- (void) _updateErrorLabel
+{
+    NSString *stringValue = _errorText;
+
+    [_errorLabelField setHidden:([stringValue length] == 0)];
+    [_errorLabelField setStringValue:stringValue ? stringValue : @""];
+}
+
+
+- (void) _updateTopLabel
+{
+    NSString *stringValue;
+
+    if ([_errorText length] == 0) {
+        stringValue = _statusText;
+    }
+
+    [_topLabelField setHidden:[stringValue length] == 0];
+    [_topLabelField setStringValue:stringValue ? stringValue : @""];
+}
+
+
 - (void) _updateBottomLabel
 {
-    NSString *locationString;
+    NSString *stringValue;
 
-    if (_showsLocation) {
+    if (_showsLocation && ([_errorText length] == 0)) {
         MouseCursor *cursor = [MouseCursor sharedInstance];
         CGPoint location = [cursor location];
 
         if ([cursor inRetinaPixelMode]) {
-            locationString = [[NSString alloc] initWithFormat:@"%.1lf, %.1lf", (double)location.x, (double)location.y];
+            stringValue = [[NSString alloc] initWithFormat:@"%.1lf, %.1lf", (double)location.x, (double)location.y];
         } else {
-            locationString = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)location.x, (long)location.y];
+            stringValue = [[NSString alloc] initWithFormat:@"%ld, %ld", (long)location.x, (long)location.y];
         }
     }
 
-    [_bottomLabelField setHidden:([locationString length] == 0)];
-    [_bottomLabelField setStringValue:locationString ? locationString : @""];
+    [_bottomLabelField setHidden:([stringValue length] == 0)];
+    [_bottomLabelField setStringValue:stringValue ? stringValue : @""];
 }
 
 
@@ -290,13 +335,27 @@
 }
 
 
+
+
+- (void) setErrorText:(NSString *)errorText
+{
+    if (_errorText != errorText) {
+        _errorText = errorText;
+
+        [self _updateErrorLabel];
+        [self _updateTopLabel];
+        [self _updateBottomLabel];
+
+        [self setNeedsLayout:YES];
+    }
+}
+
+
 - (void) setStatusText:(NSString *)statusText
 {
     if (_statusText != statusText) {
         _statusText = statusText;
-        
-        [_topLabelField setHidden:[_statusText length] == 0];
-        [_topLabelField setStringValue:_statusText ? _statusText : @""];
+        [self _updateTopLabel];
     }
 }
 
