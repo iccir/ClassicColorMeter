@@ -10,6 +10,7 @@
 
 @interface ScreenCapturer : NSObject
 
++ (void) requestScreenCaptureAccess;
 + (BOOL) hasScreenCaptureAccess;
 
 - (void) invalidate;

@@ -18,6 +18,18 @@
 }
 
 
++ (void) requestScreenCaptureAccess
+{
+    if (@available(macOS 11.0, *)) {
+        CGRequestScreenCaptureAccess();
+        
+    } else {
+        CGImageRef image = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
+        CGImageRelease(image);
+    }
+}
+
+
 + (BOOL) hasScreenCaptureAccess
 {
     if (@available(macOS 11.0, *)) {

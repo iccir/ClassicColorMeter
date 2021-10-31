@@ -8,6 +8,7 @@
 
 #import "PermissionRequestController.h"
 #import "Preferences.h"
+#import "ScreenCapturer.h"
 
 
 @interface PermissionRequestController ()
@@ -22,6 +23,12 @@
 - (NSString *) windowNibName
 {
     return @"PermissionRequest";
+}
+
+
+- (IBAction) requestScreenAccess:(id)sender
+{
+    [ScreenCapturer requestScreenCaptureAccess];
 }
 
 

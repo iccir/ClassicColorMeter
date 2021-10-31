@@ -16,47 +16,60 @@
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" toolbarStyle="preference" titleVisibility="hidden" id="164">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" fullSizeContentView="YES"/>
             <windowPositionMask key="initialPositionMask" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="163" y="712" width="448" height="275"/>
+            <rect key="contentRect" x="163" y="712" width="447" height="344"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
-            <view key="contentView" misplaced="YES" id="165">
-                <rect key="frame" x="0.0" y="0.0" width="424" height="268"/>
+            <view key="contentView" id="165">
+                <rect key="frame" x="0.0" y="0.0" width="447" height="344"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="jgr-mL-JoV">
-                        <rect key="frame" x="82" y="204" width="324" height="32"/>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="jgr-mL-JoV">
+                        <rect key="frame" x="82" y="276" width="324" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Classic Color Meter needs permission to record this computer's screen." id="lkp-vQ-63M">
                             <font key="font" metaFont="systemBold"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="b6c-J1-Q6X">
-                        <rect key="frame" x="82" y="60" width="324" height="128"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="ZJr-So-Ghs"/>
-                            <constraint firstAttribute="width" priority="750" constant="320" id="jJs-jt-xJX"/>
-                        </constraints>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="b6c-J1-Q6X">
+                        <rect key="frame" x="82" y="92" width="324" height="176"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="cpe-Ff-yVc">
                             <font key="font" metaFont="system"/>
                             <string key="title">This permission is necessary for Classic Color Meter to see raw pixel data and calculate color information.
 
 Classic Color Meter does not transmit information over a network.
 
-Grant access to this application in Security &amp; Privacy preferences, located in System Preferences.</string>
+Grant access to this application in Securiy &amp; Privacy preferences, located in System Preferences.
+
+If Classic Color Meter does not appear in the list, you may need to manually Request Screen Access.</string>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="P9j-WL-aPw">
-                        <rect key="frame" x="10" y="174" width="64" height="64"/>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="P9j-WL-aPw">
+                        <rect key="frame" x="12" y="246" width="64" height="64"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="64" id="HV8-PD-b8d"/>
                             <constraint firstAttribute="width" constant="64" id="gde-Mc-esh"/>
                         </constraints>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="AppIcon" id="fi2-tx-mrI"/>
                     </imageView>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q6Q-YI-2rt">
+                    <button verticalHuggingPriority="750" id="o3j-K8-T1h">
+                        <rect key="frame" x="77" y="45" width="334" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Request Screen Access" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MZS-iu-yiQ">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="requestScreenAccess:" target="-2" id="xeN-xd-JO3"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" id="Q6Q-YI-2rt">
                         <rect key="frame" x="77" y="13" width="334" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Open System Preferences" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="w31-te-iOz">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -66,23 +79,8 @@ Grant access to this application in Security &amp; Privacy preferences, located 
                         </connections>
                     </button>
                 </subviews>
-                <constraints>
-                    <constraint firstItem="jgr-mL-JoV" firstAttribute="top" secondItem="P9j-WL-aPw" secondAttribute="top" constant="2" id="7lQ-Cg-8ft"/>
-                    <constraint firstItem="Q6Q-YI-2rt" firstAttribute="width" secondItem="b6c-J1-Q6X" secondAttribute="width" id="Dbk-oC-79g"/>
-                    <constraint firstItem="Q6Q-YI-2rt" firstAttribute="leading" secondItem="b6c-J1-Q6X" secondAttribute="leading" id="DiX-GM-Qdm"/>
-                    <constraint firstItem="b6c-J1-Q6X" firstAttribute="top" secondItem="jgr-mL-JoV" secondAttribute="bottom" constant="16" id="UIq-1t-AOe"/>
-                    <constraint firstItem="P9j-WL-aPw" firstAttribute="top" secondItem="165" secondAttribute="top" constant="30" id="Xum-vi-wyE"/>
-                    <constraint firstItem="Q6Q-YI-2rt" firstAttribute="leading" secondItem="jgr-mL-JoV" secondAttribute="leading" id="YLg-zK-nOG"/>
-                    <constraint firstItem="Q6Q-YI-2rt" firstAttribute="top" secondItem="b6c-J1-Q6X" secondAttribute="bottom" constant="20" id="b4v-nM-7SH"/>
-                    <constraint firstItem="P9j-WL-aPw" firstAttribute="leading" secondItem="165" secondAttribute="leading" constant="10" id="i20-yF-YTj"/>
-                    <constraint firstItem="jgr-mL-JoV" firstAttribute="leading" secondItem="P9j-WL-aPw" secondAttribute="trailing" constant="10" id="keR-Wg-6Ov"/>
-                    <constraint firstAttribute="bottom" secondItem="Q6Q-YI-2rt" secondAttribute="bottom" constant="20" id="q7V-CL-rZn"/>
-                    <constraint firstAttribute="trailing" secondItem="b6c-J1-Q6X" secondAttribute="trailing" constant="20" id="ul5-CV-bK2"/>
-                    <constraint firstItem="b6c-J1-Q6X" firstAttribute="leading" secondItem="jgr-mL-JoV" secondAttribute="leading" id="vKs-sA-YST"/>
-                    <constraint firstItem="jgr-mL-JoV" firstAttribute="width" secondItem="b6c-J1-Q6X" secondAttribute="width" id="zqv-2M-rQR"/>
-                </constraints>
             </view>
-            <point key="canvasLocation" x="721" y="292.5"/>
+            <point key="canvasLocation" x="707.5" y="328"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="AzM-68-qPx"/>
     </objects>
