@@ -15,6 +15,9 @@
     CGFloat _lastCaptureScale;
     
     NSTimeInterval _lastTimeInterval;
+
+    CGWindowID _softwareCursorWindowID;
+    NSTimeInterval _softwareCursorCheckTime;
 }
 
 
@@ -130,27 +133,19 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
 {
     CGImageRelease(_lastCaptureImage);
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    BOOL needsAirplayWorkaround = CGCursorIsDrawnInFramebuffer();
-#pragma clang diagnostic pop
-
     if (![ScreenCapturer hasScreenCaptureAccess]) {
         CFArrayRef desktopWindowArray = (__bridge CFArrayRef) @[ ];
     
         _lastCaptureImage = CGWindowListCreateImageFromArray(captureRect, desktopWindowArray, imageOption);
         
-    } else if (needsAirplayWorkaround) {
-        CGWindowID cursorWindowID = sGetWindowIDForSoftwareCursor();
-        
+    } else  {
+        CGWindowID cursorWindowID = _softwareCursorWindowID;
+
         if (cursorWindowID != kCGNullWindowID) {
             _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionOnScreenBelowWindow, cursorWindowID, imageOption);
         } else {
             _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
         }
-   
-    } else {
-        _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
     }
     
     _lastCaptureScale = CGImageGetWidth(_lastCaptureImage) / captureRect.size.width;
@@ -162,6 +157,11 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
 - (CGImageRef) captureRect:(CGRect)captureRect imageOption:(CGWindowImageOption)imageOption
 {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+
+    if ((now - _softwareCursorCheckTime) > 1.0) {
+        _softwareCursorWindowID = sGetWindowIDForSoftwareCursor();
+        _softwareCursorCheckTime = now;
+    }
     
     if (!CGRectContainsRect(_lastCaptureRect, captureRect) || (imageOption != _lastImageOptions)) {
         if (_maxFPS && ((now - _lastTimeInterval) < (1.0 / (double)_maxFPS))) {
