@@ -93,6 +93,7 @@
 		558444B113D3C9CE006C6F51 /* ResultView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ResultView.m; path = Source/ResultView.m; sourceTree = "<group>"; };
 		558444BE13D3CA27006C6F51 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		558444D213D41184006C6F51 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		55BA06F82C916E1400A790D2 /* Archive.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Archive.sh; path = Build/Archive.sh; sourceTree = "<group>"; };
 		55BC2E1F1D3B7B8000B15C1A /* MiniWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MiniWindowController.m; path = Source/MiniWindowController.m; sourceTree = "<group>"; };
 		55BC2E211D3B7B8500B15C1A /* MiniWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiniWindowController.h; path = Source/MiniWindowController.h; sourceTree = "<group>"; };
 		55C12AAE21193C780096CBB3 /* ConfigProfile.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ConfigProfile.xcconfig; sourceTree = "<group>"; };
@@ -208,6 +209,14 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		55BA06F72C916E0700A790D2 /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				55BA06F82C916E1400A790D2 /* Archive.sh */,
+			);
+			name = Build;
+			sourceTree = "<group>";
+		};
 		55C12AAD21193C780096CBB3 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +243,7 @@
 		55E67D7413CFC3000040DFDE = {
 			isa = PBXGroup;
 			children = (
+				55BA06F72C916E0700A790D2 /* Build */,
 				55C12AAD21193C780096CBB3 /* Config */,
 				55ECA73913D64BD000915B2A /* Classic Color Meter.entitlements */,
 				5584449E13D3C8B4006C6F51 /* Source */,
@@ -318,7 +328,7 @@
 				LastUpgradeCheck = 0900;
 				TargetAttributes = {
 					55E67D7E13CFC3000040DFDE = {
-						DevelopmentTeam = XXXXXXXXXX;
+						DevelopmentTeam = 3DF63HD22U;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
@@ -417,7 +427,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 115;
 			};
 			name = Profile;
 		};
@@ -427,7 +436,6 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -437,7 +445,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 115;
 			};
 			name = Debug;
 		};
@@ -445,7 +452,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 115;
 			};
 			name = Release;
 		};
@@ -455,7 +461,6 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -467,7 +472,6 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XXXXXXXXXX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
