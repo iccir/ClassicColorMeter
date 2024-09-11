@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -325,10 +325,10 @@
 		55E67D7613CFC3000040DFDE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 99999;
 				TargetAttributes = {
 					55E67D7E13CFC3000040DFDE = {
-						DevelopmentTeam = 3DF63HD22U;
+						DevelopmentTeam = XXXXXXXXXX;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
@@ -376,6 +376,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		552EDB851BA513FD0031CB4E /* run rcbump */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
