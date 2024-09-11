@@ -1,11 +1,5 @@
-//
-//  SnippetsController.h
-//  Classic Color Meter
-//
-//  Created by Ricci Adams on 9/14/11.
-//  Copyright (c) 2011 Ricci Adams. All rights reserved.
-//
-
+// (c) 2011-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 @interface PermissionRequestController : NSWindowController
 

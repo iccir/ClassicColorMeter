@@ -1,9 +1,5 @@
-//
-//  WindowContentView.m
-//  Classic Color Meter
-//
-//  Created by Ricci Adams on 2018-10-03.
-//
+// (c) 2018-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import "WindowContentView.h"
 

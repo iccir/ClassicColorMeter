@@ -1,10 +1,5 @@
-//
-//  MouseCursor.h
-//  Classic Color Meter
-//
-//  Created by Ricci Adams on 2012-06-14.
-//
-//
+// (c) 2012-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import <Foundation/Foundation.h>
 

@@ -1,10 +1,5 @@
-//
-//  Color.m
-//  Classic Color Meter
-//
-//  Created by Ricci Adams on 2011-07-31.
-//  Copyright 2011 Ricci Adams. All rights reserved.
-//
+// (c) 2011-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import "Color.h"
 

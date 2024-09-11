@@ -1,10 +1,5 @@
-//
-//  ShortcutManager.m
-//  Classic Color Meter
-//
-//  Created by Ricci Adams on 2011-05-01.
-//  Copyright 2011 Ricci Adams. All rights reserved.
-//
+// (c) 2011-2024 Ricci Adams
+// MIT License (or) 1-clause BSD License
 
 #import "ShortcutManager.h"
 #import <Carbon/Carbon.h>
