@@ -3,7 +3,7 @@ BUNDLE_IDENTIFIER_PREFIX = com.ricciadams.opensource
 #include? "../Private/Private.xcconfig"
 
 SDKROOT = macosx
-MACOSX_DEPLOYMENT_TARGET = 10.14
+MACOSX_DEPLOYMENT_TARGET = 11.0
 
 CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
 CLANG_CXX_LIBRARY = libc++

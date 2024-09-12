@@ -814,11 +814,8 @@ static void sMakeStrings(
 
     static CFDictionaryRef useExtendedRange = NULL;
     if (!useExtendedRange) {
-        extern NSString *kColorSyncConvertUseExtendedRange;
-
-        useExtendedRange = CFBridgingRetain(@{
-            kColorSyncConvertUseExtendedRange: @YES
-        });
+        NSString *key = (__bridge NSString *)kColorSyncConvertUseExtendedRange;
+        useExtendedRange = CFBridgingRetain(@{ key: @YES });
     }
 
     if (transform && ColorSyncTransformConvert(transform, 1, 1,
