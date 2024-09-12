@@ -83,6 +83,8 @@
     setupMiniLabel([self miniLabel3]);
     
     [self _updateColorModeLabels];
+    
+    [[self window] setMovableByWindowBackground:YES];
 }
 
 
