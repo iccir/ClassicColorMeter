@@ -35,11 +35,10 @@
 }
 
 
-#pragma mark - Capture
+#pragma mark - Software Cursor
 
-static CGWindowID sGetWindowIDForSoftwareCursor()
+static CGWindowID sFindSoftwareCursorWindowID(CFArrayRef descriptionList)
 {
-    CFArrayRef descriptionList = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID);
     CGWindowID result         = kCGNullWindowID;
     CGWindowID resultWithName = kCGNullWindowID;
 
@@ -62,11 +61,43 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
         }
     }
     
-    CFRelease(descriptionList);
     
     return resultWithName ? resultWithName : result;
 }
 
+
+- (void) _updateSoftwareCursorWindowID
+{
+    CGWindowID result = kCGNullWindowID;
+
+    if (_softwareCursorWindowID != kCGNullWindowID) {
+        NSUInteger windowIDs[] = { _softwareCursorWindowID };
+        CFArrayRef array = CFArrayCreate(NULL, (const void **)&windowIDs, 1, NULL);
+    
+        CFArrayRef descriptionList = CGWindowListCreateDescriptionFromArray(array);
+        
+        if (descriptionList) {
+            result = sFindSoftwareCursorWindowID(descriptionList);
+            CFRelease(descriptionList);
+        }
+
+        if (array) CFRelease(array);
+    }
+    
+    if (result == kCGNullWindowID) {
+        CFArrayRef descriptionList = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, kCGNullWindowID);
+        
+        if (descriptionList) {
+            result = sFindSoftwareCursorWindowID(descriptionList);
+            CFRelease(descriptionList);
+        }
+    }
+    
+    _softwareCursorWindowID = result;
+}
+
+
+#pragma mark - Capture
 
 - (void) invalidate
 {
@@ -90,10 +121,8 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
         _lastCaptureImage = CGWindowListCreateImageFromArray(captureRect, desktopWindowArray, imageOption);
         
     } else  {
-        CGWindowID cursorWindowID = _softwareCursorWindowID;
-
-        if (cursorWindowID != kCGNullWindowID) {
-            _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionOnScreenBelowWindow, cursorWindowID, imageOption);
+        if (_softwareCursorWindowID != kCGNullWindowID) {
+            _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionOnScreenBelowWindow, _softwareCursorWindowID, imageOption);
         } else {
             _lastCaptureImage = CGWindowListCreateImage(captureRect, kCGWindowListOptionAll, kCGNullWindowID, imageOption);
         }
@@ -110,7 +139,7 @@ static CGWindowID sGetWindowIDForSoftwareCursor()
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
 
     if ((now - _softwareCursorCheckTime) > 1.0) {
-        _softwareCursorWindowID = sGetWindowIDForSoftwareCursor();
+        [self _updateSoftwareCursorWindowID];
         _softwareCursorCheckTime = now;
     }
     
