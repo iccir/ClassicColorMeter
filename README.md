@@ -1,8 +1,8 @@
 # Classic Color Meter
 
 [Classic Color Meter](https://www.ricciadams.com/projects/classic-color-meter) is
-an enhanced replacement for Apple's Digital Color Meter application which I
-[sell on the Mac App Store](https://www.ricciadams.com/buy/classic-color-meter).
+an enhanced replacement for Apple's Digital Color Meter application which 
+[I sell on the Mac App Store](https://www.ricciadams.com/buy/classic-color-meter).
 
 ## Philosophy
 
