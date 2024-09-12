@@ -87,13 +87,11 @@
 
 - (void ) windowDidLoad
 {
-    if (@available(macOS 11.0, *)) {
-        [[self window] setToolbarStyle:NSWindowToolbarStylePreference];
-    
-        [[self generalItem]  setImage:[NSImage imageWithSystemSymbolName:@"gearshape"   accessibilityDescription:nil]];
-        [[self keyboardItem] setImage:[NSImage imageWithSystemSymbolName:@"keyboard"    accessibilityDescription:nil]];
-        [[self advancedItem] setImage:[NSImage imageWithSystemSymbolName:@"gearshape.2" accessibilityDescription:nil]];
-    }
+    [[self window] setToolbarStyle:NSWindowToolbarStylePreference];
+
+    [[self generalItem]  setImage:[NSImage imageWithSystemSymbolName:@"gearshape"   accessibilityDescription:nil]];
+    [[self keyboardItem] setImage:[NSImage imageWithSystemSymbolName:@"keyboard"    accessibilityDescription:nil]];
+    [[self advancedItem] setImage:[NSImage imageWithSystemSymbolName:@"gearshape.2" accessibilityDescription:nil]];
 
     [self setPreferences:[Preferences sharedInstance]];
     [self _handlePreferencesDidChange:nil];

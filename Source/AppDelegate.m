@@ -154,18 +154,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     NSRect windowFrame = [window frame];
     windowFrame.size.width = 316;
 
-    if (@available(macOS 11.0, *)) {
-        [window setTitleVisibility:NSWindowTitleHidden];
-        // Nothing to do, as our XIB sets the height to 174.
-    } else {
-        // On previous versions of macOS, use a smaller height.
-        windowFrame.size.height = 170;
-        
-        NSRect sliderFrame = [[self sliderContainer] frame];
-        sliderFrame.origin.y += 2;
-        [[self sliderContainer] setFrame:sliderFrame];
-    }
-
+    [window setTitleVisibility:NSWindowTitleHidden];
     [window setFrame:windowFrame display:NO animate:NO];
     [window setOpaque:YES];
 

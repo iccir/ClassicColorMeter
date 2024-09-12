@@ -19,58 +19,13 @@
 
 + (void) requestScreenCaptureAccess
 {
-    if (@available(macOS 11.0, *)) {
-        CGRequestScreenCaptureAccess();
-        
-    } else {
-        CGImageRef image = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionAll, kCGNullWindowID, kCGWindowImageDefault);
-        CGImageRelease(image);
-    }
+    CGRequestScreenCaptureAccess();
 }
 
 
 + (BOOL) hasScreenCaptureAccess
 {
-    if (@available(macOS 11.0, *)) {
-        return CGPreflightScreenCaptureAccess();
-
-    } else if (@available(macOS 10.15, *)) {
-        static dispatch_once_t onceToken = 0;
-        static BOOL result;
-        
-        dispatch_once(&onceToken, ^{
-            result = YES;
-        
-            CFArrayRef list = CGWindowListCopyWindowInfo(kCGWindowListOptionAll, 0);
-
-            if (list) {
-                for (NSInteger i = 0; i < CFArrayGetCount(list); i++) {
-                    CFDictionaryRef dictionary = CFArrayGetValueAtIndex(list, i);
-
-                    NSNumber *sharingType = (__bridge NSNumber *) CFDictionaryGetValue(dictionary, kCGWindowSharingState);
-                    NSNumber *windowLevel = (__bridge NSNumber *) CFDictionaryGetValue(dictionary, kCGWindowLayer);
-                    NSString *processName = (__bridge NSString *) CFDictionaryGetValue(dictionary, kCGWindowOwnerName);
-
-                    if ([processName isEqualToString:@"Dock"]) {
-                        if ([windowLevel integerValue] == kCGDockWindowLevel) {
-                            if ([sharingType integerValue] == kCGWindowSharingNone) {
-                                result = NO;
-                            }
-                            
-                            break;
-                        }
-                    }
-                }
-
-                CFRelease(list);
-            }
-        });
-        
-        return result;
-
-    } else {
-        return YES;
-    }
+    return CGPreflightScreenCaptureAccess();
 }
 
 

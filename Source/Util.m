@@ -387,17 +387,12 @@ void DoPopOutAnimation(NSView *view)
 
 BOOL IsAppearanceDarkAqua(NSView *view)
 {
-    if (@available(macOS 10.14, *)) {
-        NSAppearance *effectiveAppearance =[view effectiveAppearance];
-        NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
-       
-        NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
+    NSAppearance *effectiveAppearance =[view effectiveAppearance];
+    NSArray *names = @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ];
+   
+    NSAppearanceName bestMatch = [effectiveAppearance bestMatchFromAppearancesWithNames:names];
 
-        return [bestMatch isEqualToString:NSAppearanceNameDarkAqua];
-
-    } else {
-        return NO;
-    }
+    return [bestMatch isEqualToString:NSAppearanceNameDarkAqua];
 }
 
 
