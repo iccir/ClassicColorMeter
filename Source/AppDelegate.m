@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, ColorAction) {
 };
 
 
-@interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, CALayerDelegate, NSMenuDelegate, NSDraggingSource>
+@interface AppDelegate () <ApertureDelegate, ShortcutListener, ResultViewDelegate, CALayerDelegate, NSMenuItemValidation, NSDraggingSource>
 
 @property (nonatomic, strong) IBOutlet NSWindow      *window;
 
