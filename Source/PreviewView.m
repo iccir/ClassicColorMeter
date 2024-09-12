@@ -114,9 +114,11 @@
  
     NSRect bounds = [self bounds];
     CGRect zoomedBounds = bounds;
+    
+    NSRectClip(bounds);
 
     [[NSColor colorWithWhite:0.25 alpha:1.0] set];
-    NSRectFill(bounds); 
+    NSRectFill(bounds);
        
     CGFloat scale = [[self window] backingScaleFactor];
     CGFloat onePixel  = 1.0 / scale;
