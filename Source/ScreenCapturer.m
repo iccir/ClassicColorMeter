@@ -61,9 +61,9 @@
                         }
                     }
                 }
-            }
 
-            CFRelease(list);
+                CFRelease(list);
+            }
         });
         
         return result;
