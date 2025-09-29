@@ -1068,6 +1068,8 @@ typedef NS_ENUM(NSInteger, ColorAction) {
     [_rightSnapshot  setFrame:[[self rightContainer]  frame]];
 
     [contentView addSubview:_layerContainer];
+
+    [_layerContainer setHidden:YES];
 }
 
 
