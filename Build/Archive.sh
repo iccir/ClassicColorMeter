@@ -1,7 +1,12 @@
 #!/bin/sh
 
-BUILD_PREFIX="CCM"
-ZIP_TO="$HOME/Desktop"
+BUILD_PREFIX="${1:-$PRODUCT_NAME}"
+ZIP_TO="${2:-$HOME/Desktop}"
+
+if [ -z "$BUILD_PREFIX" ]; then
+    echo "Usage: Archive.sh <build-prefix>" >&2
+    exit 1
+fi
 
 # ----------------------------------
 # Fill variables from Private/Archive.plist
@@ -19,6 +24,7 @@ get_private_setting ()
 }
 
 TEAM_ID=$(          get_private_setting "team-id"          )
+CERTIFICATE=$(      get_private_setting "certificate"      )
 KEYCHAIN_PROFILE=$( get_private_setting "keychain-profile" )
 UPLOAD_TO=$(        get_private_setting "upload-to"        )
 PUBLIC_URL=$(       get_private_setting "public-url"       )
@@ -59,17 +65,28 @@ get_plist_build ()
     printf $(defaults read "$1" CFBundleVersion | sed 's/\s//g' )
 }
 
+
+# Prevent error log spam
+unset XCODE_DEVELOPER_DIR_PATH
+
 TMP_DIR=$(mktemp -d /tmp/"${BUILD_PREFIX}"-Archive.XXXXXX)
 STATUS_MD="${TMP_DIR}/status.md"
 
+printenv >> "${TMP_DIR}/env.txt"
+
 # 1. Export archive to tmp location and set APP_FILE, push to parent directory
 mkdir -p "${TMP_DIR}"
+defaults write "${TMP_DIR}/options.plist" signingStyle manual
 defaults write "${TMP_DIR}/options.plist" method developer-id
+defaults write "${TMP_DIR}/options.plist" provisioningProfiles -dict
 defaults write "${TMP_DIR}/options.plist" teamID "$TEAM_ID"
+defaults write "${TMP_DIR}/options.plist" signingCertificate "$CERTIFICATE"
 
 set_status "Exporting archive from Xcode."
 
-xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}"
+xcodebuild -exportArchive -archivePath "${ARCHIVE_PATH}" -exportOptionsPlist "${TMP_DIR}/options.plist" -exportPath "${TMP_DIR}" \
+    1> "${TMP_DIR}/output-xcodebuild.txt" \
+    2> "${TMP_DIR}/output-xcodebuild-err.txt"
 
 APP_FILE=$(find "${TMP_DIR}" -name "$FULL_PRODUCT_NAME" | head -1)
 
@@ -88,6 +105,7 @@ open -b com.apple.dt.Xcode "$STATUS_MD"
 
 pushd "$APP_FILE"/.. > /dev/null
 
+
 # Zip up $APP_FILE to $ZIP_FILE and upload to notarization server
 
 zip --symlinks -r "$ZIP_FILE" "$(basename "$APP_FILE")"
@@ -100,6 +118,12 @@ xcrun notarytool submit "$ZIP_FILE" \
     --wait \
     1> "${TMP_DIR}/output-notarytool-submit.plist" \
     2> "${TMP_DIR}/output-notarytool-submit-err.txt"
+
+if [ $? != 0 ]; then
+    ERROR_LOG=$(fold -w 60 -s "${TMP_DIR}/output-notarytool-submit-err.txt")
+    set_status "Error during submission." "$ERROR_LOG"
+    exit
+fi
 
 SUBMIT_ID=$(    defaults read "${TMP_DIR}/output-notarytool-submit.plist" id)
 SUBMIT_STATUS=$(defaults read "${TMP_DIR}/output-notarytool-submit.plist" status)
